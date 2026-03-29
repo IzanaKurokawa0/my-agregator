@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>А | ГосНавигатор — Сервисы регионов РФ</title>
+    <title>А | ГосНавигатор — Агрегатор услуг РФ</title>
     
     <!-- ИКОНКА ВКЛАДКИ (Красная буква А) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23e63946%22/><text y=%22.75em%22 x=%2218%22 font-size=%2280%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 fill=%22white%22>А</text></svg>">
 
-    <meta name="description" content="Единый агрегатор услуг всех регионов России. Госуслуги, ЖКХ, медицина и транспорт в один клик.">
-    
     <style>
         :root {
             --primary: #0052cc;
-            --accent-red: #e63946; /* Красный цвет для буквы А */
+            --accent-red: #e63946; 
             --bg: #f8f9fa;
             --card-bg: #ffffff;
             --text-main: #172b4d;
@@ -23,77 +21,47 @@
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.6; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.6; }
 
-        /* HEADER */
-        header { background: #fff; padding: 12px 20px; border-bottom: 1px solid #ebecf0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        header { background: #fff; padding: 12px 20px; border-bottom: 1px solid #ebecf0; position: sticky; top: 0; z-index: 1000; }
         .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
         .logo-box { 
-            background: var(--accent-red); 
-            color: white; 
-            width: 36px; 
-            height: 36px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            font-size: 22px;
-            font-family: Arial, sans-serif;
+            background: var(--accent-red); color: white; width: 36px; height: 36px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 8px; font-weight: bold; font-size: 22px; font-family: Arial;
         }
-        .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
+        .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
 
-        /* HOME SCREEN */
         #home-screen { padding: 80px 20px; max-width: 900px; margin: 0 auto; text-align: center; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero-h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; color: #091e42; line-height: 1.1; }
+        .hero-h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; color: #091e42; }
         .hero-p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
         
         .search-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
         .main-input { 
-            width: 100%; 
-            padding: 22px 30px; 
-            border-radius: 50px; 
-            border: 2px solid #dfe1e6; 
-            font-size: 1.2rem; 
-            outline: none; 
-            transition: 0.3s; 
-            box-shadow: var(--shadow);
+            width: 100%; padding: 22px 30px; border-radius: 50px; border: 2px solid #dfe1e6; 
+            font-size: 1.2rem; outline: none; transition: 0.3s; box-shadow: var(--shadow);
         }
-        .main-input:focus { border-color: var(--accent-red); box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1); }
+        .main-input:focus { border-color: var(--accent-red); }
         
         .results-list { 
-            position: absolute; 
-            top: 80px; left: 0; right: 0; 
-            background: #fff; 
-            border-radius: var(--radius); 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12); 
-            max-height: 350px; 
-            overflow-y: auto; 
-            z-index: 100; 
-            display: none; 
-            border: 1px solid #ebecf0;
+            position: absolute; top: 80px; left: 0; right: 0; 
+            background: #fff; border-radius: var(--radius); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12); max-height: 350px; overflow-y: auto; 
+            z-index: 100; display: none; border: 1px solid #ebecf0;
         }
-        .result-item { padding: 16px 25px; text-align: left; cursor: pointer; border-bottom: 1px solid #f4f5f7; display: flex; justify-content: space-between; transition: 0.2s; }
+        .result-item { padding: 16px 25px; text-align: left; cursor: pointer; border-bottom: 1px solid #f4f5f7; display: flex; justify-content: space-between; }
         .result-item:hover { background: #fff1f2; }
-        .result-item b { color: var(--accent-red); }
 
-        /* REGION DASHBOARD */
         #region-screen { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
         .region-card-header { 
-            background: #fff; 
-            padding: 40px; 
-            border-radius: var(--radius); 
-            box-shadow: var(--shadow); 
-            margin-bottom: 30px; 
-            border-top: 5px solid var(--accent-red);
+            background: #fff; padding: 40px; border-radius: var(--radius); 
+            box-shadow: var(--shadow); margin-bottom: 30px; border-top: 5px solid var(--accent-red);
         }
-        .region-card-header h2 { font-size: 2.2rem; margin-bottom: 20px; }
         
-        .emergency-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-        .e-btn { padding: 10px 20px; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .e-btn:hover { opacity: 0.8; transform: translateY(-1px); }
+        .emergency-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px;}
+        .e-btn { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .e-red { background: #ffebe6; color: #bf2600; }
         .e-blue { background: #deebff; color: #0747a6; }
 
@@ -104,26 +72,18 @@
         .card-h3 { font-size: 1.3rem; margin-bottom: 18px; color: #172b4d; border-bottom: 2px solid #f4f5f7; padding-bottom: 10px; }
         
         .link-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            text-decoration: none; 
-            color: #42526e; 
-            padding: 12px 0; 
-            border-bottom: 1px solid #f4f5f7; 
-            font-weight: 500;
+            display: flex; justify-content: space-between; align-items: center; 
+            text-decoration: none; color: #42526e; padding: 10px 0; 
+            border-bottom: 1px solid #f4f5f7; font-weight: 500;
         }
         .link-item:hover { color: var(--accent-red); }
-        .link-item:last-child { border-bottom: none; }
-        
-        .badge { font-size: 0.7rem; background: #f4f5f7; color: #5e6c84; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+        .badge { font-size: 0.7rem; background: #f4f5f7; color: #5e6c84; padding: 3px 10px; border-radius: 12px; }
 
-        footer { padding: 60px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        footer { padding: 60px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #eee; margin-top: 50px;}
 
         @media (max-width: 768px) {
             .hero-h1 { font-size: 2rem; }
             .services-grid { grid-template-columns: 1fr; }
-            .region-card-header { padding: 25px; }
         }
     </style>
 </head>
@@ -135,53 +95,44 @@
             <div class="logo-box">А</div>
             <div class="logo-text">ГосНавигатор</div>
         </a>
-        <div id="active-reg-name" style="font-weight: 700; color: var(--accent-red); font-size: 0.9rem;"></div>
+        <div id="active-reg-name" style="font-weight: 700; color: var(--accent-red);"></div>
     </div>
 </header>
 
-<!-- ГЛАВНЫЙ ЭКРАН -->
+<!-- HOME -->
 <main id="home-screen">
-    <h1 class="hero-h1">Все услуги вашего региона <br>в одном месте</h1>
-    <p class="hero-p">Выберите субъект РФ для быстрого доступа к официальным сервисам</p>
+    <h1 class="hero-h1">Все услуги вашего региона</h1>
+    <p class="hero-p">Выберите субъект РФ для доступа к официальным сервисам</p>
     
     <div class="search-container">
-        <input type="text" id="regionInput" class="main-input" placeholder="Введите название или код региона (например: 54)" autocomplete="off">
+        <input type="text" id="regionInput" class="main-input" placeholder="Название или код региона (напр. 54)" autocomplete="off">
         <div id="resultsList" class="results-list"></div>
-    </div>
-    
-    <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <a href="#reg77" style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed;">Москва</a>
-        <a href="#reg78" style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed;">Санкт-Петербург</a>
-        <a href="#reg54" style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed;">Новосибирск</a>
-        <a href="#reg16" style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed;">Татарстан</a>
     </div>
 </main>
 
-<!-- ЭКРАН РЕГИОНА -->
+<!-- REGION -->
 <main id="region-screen">
     <div class="region-card-header">
-        <h2 id="display-region-title">Загрузка...</h2>
+        <h2 id="display-region-title">Регион</h2>
         <div class="emergency-grid">
             <a href="tel:112" class="e-btn e-red">🆘 Служба 112</a>
             <a href="tel:122" class="e-btn e-blue">📞 Справка 122</a>
-            <a href="https://pos.gosuslugi.ru/backoffice/" target="_blank" class="e-btn" style="background:#e3fcef; color:#006644;">📩 Сообщить о проблеме</a>
+            <a href="https://dom.gosuslugi.ru" target="_blank" class="e-btn" style="background:#f4f5f7; color:#333;">🏠 ГИС ЖКХ</a>
         </div>
     </div>
 
     <div id="services-box" class="services-grid"></div>
     
-    <div style="margin-top: 50px; text-align: center;">
-        <button onclick="goHome()" style="background: #fff; border: 1px solid #dfe1e6; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: 600;">← Вернуться к выбору региона</button>
+    <div style="margin-top: 40px; text-align: center;">
+        <button onclick="goHome()" style="background:none; border:1px solid #ccc; padding:10px 20px; border-radius:8px; cursor:pointer;">← К выбору региона</button>
     </div>
 </main>
 
 <footer>
-    <p><b>Агрегатор «ГосНавигатор»</b> — социально значимый проект</p>
-    <p style="margin-top:10px;">Автор: Кирилл Черняков, 25132БУ. Информация обновлена в 2024 году.</p>
+    <p>© 2024 ГосНавигатор — Кирилл Черняков, 25132БУ</p>
 </footer>
 
 <script>
-// Полная база всех 89 регионов РФ
 const regionsDB = [
     ["01", "Республика Адыгея"], ["02", "Республика Башкортостан"], ["03", "Республика Бурятия"], ["04", "Республика Алтай"],
     ["05", "Республика Дагестан"], ["06", "Республика Ингушетия"], ["07", "Кабардино-Балкарская Респ."], ["08", "Республика Калмыкия"],
@@ -198,4 +149,146 @@ const regionsDB = [
     ["50", "Московская область"], ["51", "Мурманская область"], ["52", "Нижегородская область"], ["53", "Новгородская область"],
     ["54", "Новосибирская область"], ["55", "Омская область"], ["56", "Оренбургская область"], ["57", "Орловская область"],
     ["58", "Пензенская область"], ["59", "Пермский край"], ["60", "Псковская область"], ["61", "Ростовская область"],
-    ["62", "Рязанская область"], ["63", "Самарская область"], ["64", "Саратовская область"], ["65", "Са[/#Ошибка#/]Неизвестная ошибка invalid operation: the `response.text` quick accessor requires the response to contain a valid `part`, but none were returned. the candidate's [finish_reason](https://ai.google.dev/api/generate-content#finishreason) is 4. meaning that the model was reciting from copyrighted material.
+    ["62", "Рязанская область"], ["63", "Самарская область"], ["64", "Саратовская область"], ["65", "Сахалинская область"],
+    ["66", "Свердловская область"], ["67", "Смоленская область"], ["68", "Тамбовская область"], ["69", "Тверская область"],
+    ["70", "Томская область"], ["71", "Тульская область"], ["72", "Тюменская область"], ["73", "Ульяновская область"],
+    ["74", "Челябинская область"], ["75", "Забайкальский край"], ["76", "Ярославская область"], ["77", "г. Москва"],
+    ["78", "г. Санкт-Петербург"], ["79", "Еврейская автономная обл."], ["82", "Республика Крым"], ["83", "Ненецкий автономный округ"],
+    ["86", "Ханты-Мансийский АО — Югра"], ["87", "Чукотский автономный округ"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
+];
+
+// ГЕНЕРАТОР УСЛУГ ДЛЯ ВЫБРАННОГО РЕГИОНА
+function getRegionServices(code, name) {
+    return [
+        {
+            title: "🏛️ Власть и Госуслуги",
+            links: [
+                ["Портал Госуслуг", `https://${code}.gosuslugi.ru`, "Главное"],
+                ["МФЦ «Мои Документы»", "https://mfc.rf", "Визит"],
+                ["Налоговая (ЛК)", "https://lkfl2.nalog.ru", "Налоги"],
+                ["Администрация", `https://yandex.ru/search/?text=администрация+${encodeURIComponent(name)}`, "Инфо"]
+            ]
+        },
+        {
+            title: "🏥 Медицина",
+            links: [
+                ["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form", "Рецепты"],
+                ["Электронная регистратура", `https://yandex.ru/search/?text=запись+к+врачу+${encodeURIComponent(name)}`, "Регион"],
+                ["Справка 122", "tel:122", "Звонок"]
+            ]
+        },
+        {
+            title: "🚆 Транспорт",
+            links: [
+                ["Яндекс Карты (Транспорт)", "https://yandex.ru/maps", "Live"],
+                ["Билеты на автобусы", "https://www.tutu.ru", "Межгород"],
+                ["РЖД Пассажирам", "https://www.rzd.ru", "Поезда"]
+            ]
+        },
+        {
+            title: "💡 ЖКХ и Жилье",
+            links: [
+                ["ГИС ЖКХ", "https://dom.gosuslugi.ru", "Оплата"],
+                ["Система «Город»", "https://kvartplata.ru", "Чеки"],
+                ["Росреестр", "https://rosreestr.gov.ru", "Выписки"]
+            ]
+        },
+        {
+            title: "🎨 Досуг и Культура",
+            links: [
+                ["Афиша региона", `https://afisha.yandex.ru/search?text=${encodeURIComponent(name)}`, "Куда сходить"],
+                ["Пушкинская карта", "https://www.culture.ru/pushkinskaya-karta", "Молодежи"],
+                ["Kassir.ru", "https://kassir.ru", "Билеты"]
+            ]
+        }
+    ];
+}
+
+// ЛОГИКА ПОИСКА И ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ
+const regionInput = document.getElementById('regionInput');
+const resultsList = document.getElementById('resultsList');
+const homeScreen = document.getElementById('home-screen');
+const regionScreen = document.getElementById('region-screen');
+
+// Функция поиска
+regionInput.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    resultsList.innerHTML = '';
+    if (val.length < 1) { resultsList.style.display = 'none'; return; }
+
+    const filtered = regionsDB.filter(r => r[1].toLowerCase().includes(val) || r[0].includes(val));
+
+    if (filtered.length > 0) {
+        resultsList.style.display = 'block';
+        filtered.forEach(r => {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.innerHTML = `<span>${r[1]}</span> <small>${r[0]} регион</small>`;
+            div.onclick = () => { window.location.hash = 'reg' + r[0]; };
+            resultsList.appendChild(div);
+        });
+    } else {
+        resultsList.style.display = 'none';
+    }
+});
+
+// Рендеринг страницы региона
+function renderRegionPage(code) {
+    const reg = regionsDB.find(r => r[0] === code);
+    if (!reg) return goHome();
+
+    homeScreen.style.display = 'none';
+    regionScreen.style.display = 'block';
+    document.getElementById('display-region-title').innerText = reg[1];
+    document.getElementById('active-reg-name').innerText = '📍 ' + reg[1];
+
+    const container = document.getElementById('services-box');
+    container.innerHTML = '';
+
+    const services = getRegionServices(reg[0], reg[1]);
+    services.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h3 class="card-h3">${cat.title}</h3>
+            <div class="link-list">
+                ${cat.links.map(l => `
+                    <a href="${l[1]}" target="_blank" class="link-item">
+                        ${l[0]} <span class="badge">${l[2]}</span>
+                    </a>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function goHome() {
+    window.location.hash = '';
+    homeScreen.style.display = 'flex';
+    regionScreen.style.display = 'none';
+    document.getElementById('active-reg-name').innerText = '';
+    regionInput.value = '';
+    resultsList.style.display = 'none';
+}
+
+// Роутинг (обработка изменения URL)
+function handleRoute() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#reg')) {
+        renderRegionPage(hash.replace('#reg', ''));
+    } else {
+        goHome();
+    }
+}
+
+window.addEventListener('hashchange', handleRoute);
+window.addEventListener('load', handleRoute);
+
+// Скрытие результатов при клике вне поиска
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-container')) resultsList.style.display = 'none';
+});
+</script>
+</body>
+</html>
