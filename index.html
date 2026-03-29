@@ -3,87 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>А | ГосНавигатор — gos-navigator-project.ru</title>
+    <title>ГосНавигатор | Единый агрегатор услуг РФ</title>
     
-    <!-- Мета-теги для соцсетей (SEO) -->
-    <meta name="description" content="Единый агрегатор социально значимых услуг всех регионов России. Поиск госуслуг, медицины, ЖКХ и транспорта.">
-    <meta property="og:title" content="ГосНавигатор — Сервисы вашего региона">
-    <meta property="og:description" content="Все государственные и муниципальные услуги в одном месте.">
-    <meta property="og:url" content="https://gos-navigator-project.ru">
-
-    <!-- ИКОНКА (Красная буква А) -->
+    <!-- SEO & Favicon -->
+    <meta name="description" content="Интеллектуальный поиск государственных и социальных услуг во всех регионах России. Проект Кирилла Чернякова.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e63946%22/><text y=%22.75em%22 x=%2218%22 font-size=%2280%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 fill=%22white%22>А</text></svg>">
 
     <style>
         :root {
-            --accent: #e63946; 
+            --accent: #e63946;
             --primary: #0052cc;
-            --bg: #f0f2f5;
+            --bg: #f4f7fb;
+            --card-bg: #ffffff;
             --text: #172b4d;
             --muted: #6b778c;
             --radius: 20px;
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; transition: all 0.2s ease; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        /* Темная тема для комфорта */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #091e42;
+                --card-bg: #172b4d;
+                --text: #ebecf0;
+                --muted: #a5adba;
+                --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            }
+        }
 
-        /* HEADER */
-        header { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); padding: 12px 20px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        * { margin:0; padding:0; box-sizing:border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+        /* HEADER & GLASSMORPHISM */
+        header { 
+            background: rgba(255,255,255,0.7); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 20px; 
+            position: sticky; top: 0; z-index: 1000; 
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        @media (prefers-color-scheme: dark) { header { background: rgba(9, 30, 66, 0.8); } }
+
+        .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+        .logo-box { background: var(--accent); color: white; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-weight: 900; font-size: 26px; box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4); }
+        .logo-text { font-size: 1.5rem; font-weight: 850; letter-spacing: -1px; }
+
+        /* HERO SECTION */
+        #home-screen { padding: 80px 20px; max-width: 900px; margin: 0 auto; text-align: center; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero-h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; margin-bottom: 20px; letter-spacing: -2px; line-height: 1; }
+        .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 50px; max-width: 600px; margin-inline: auto; }
+
+        /* SEARCH INTERFACE */
+        .search-container { position: relative; width: 100%; max-width: 650px; margin: 0 auto; }
+        .main-search { 
+            width: 100%; padding: 25px 35px; border-radius: 50px; border: 2px solid transparent; 
+            font-size: 1.2rem; outline: none; background: var(--card-bg); color: var(--text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+        .main-search:focus { border-color: var(--accent); box-shadow: 0 0 0 5px rgba(230, 57, 70, 0.15); }
         
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
-        .logo-box { background: var(--accent); color: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 900; font-size: 24px; box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3); }
-        .logo-text { font-size: 1.4rem; font-weight: 800; color: var(--text); letter-spacing: -1px; }
-
-        /* HOME SCREEN */
-        #home-screen { padding: 100px 20px; max-width: 800px; margin: 0 auto; text-align: center; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero-h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; line-height: 1; color: #091e42; }
-        .hero-p { font-size: 1.25rem; color: var(--muted); margin-bottom: 50px; }
-
-        /* SEARCH BOX */
-        .search-box { position: relative; width: 100%; max-width: 650px; margin: 0 auto; transform: scale(1); }
-        .search-box:focus-within { transform: scale(1.02); }
-        .main-input { width: 100%; padding: 25px 35px; border-radius: 60px; border: 3px solid #fff; font-size: 1.3rem; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); background: #fff; }
-        .main-input:focus { border-color: var(--accent); }
-        
-        .suggestions { position: absolute; top: 90px; left: 0; right: 0; background: #fff; border-radius: var(--radius); box-shadow: 0 30px 60px rgba(0,0,0,0.15); max-height: 400px; overflow-y: auto; z-index: 100; display: none; padding: 10px; border: 1px solid #eee; }
-        .suggest-item { padding: 18px 25px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .suggest-item:hover { background: #fff1f2; }
-        .suggest-item b { color: var(--accent); }
+        .results-box { 
+            position: absolute; top: 90px; left: 0; right: 0; 
+            background: var(--card-bg); border-radius: var(--radius); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2); max-height: 400px; 
+            overflow-y: auto; z-index: 100; display: none; padding: 10px;
+        }
+        .result-item { padding: 15px 25px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .result-item:hover { background: var(--accent); color: white; }
 
         /* REGION DASHBOARD */
-        #region-screen { display: none; padding: 40px 20px; max-width: 1300px; margin: 0 auto; opacity: 0; transform: translateY(20px); }
-        #region-screen.active { display: block; opacity: 1; transform: translateY(0); }
+        #region-screen { display: none; padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
+        .dashboard-header { background: var(--card-bg); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; border-bottom: 5px solid var(--accent); }
+        .reg-title h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; }
         
-        .region-card-header { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px; position: relative; overflow: hidden; }
-        .region-card-header::before { content: ""; position: absolute; top: 0; left: 0; width: 8px; height: 100%; background: var(--accent); }
-        .region-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
-        .region-title-row h2 { font-size: 2.5rem; font-weight: 800; color: #091e42; }
+        .emergency-bar { display: flex; gap: 15px; flex-wrap: wrap; }
+        .e-chip { padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .e-red { background: rgba(230, 57, 70, 0.1); color: var(--accent); }
+        .e-blue { background: rgba(0, 82, 204, 0.1); color: var(--primary); }
 
-        .emergency-row { display: flex; flex-wrap: wrap; gap: 12px; }
-        .e-btn { padding: 12px 24px; border-radius: 12px; text-decoration: none; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 0 rgba(0,0,0,0.05); }
-        .e-red { background: #ffebe6; color: #bf2600; }
-        .e-blue { background: #deebff; color: #0747a6; }
-        .e-green { background: #e3fcef; color: #006644; }
-
-        /* GRID AND CARDS */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 25px; }
-        .card { background: #fff; border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); position: relative; border: 1px solid transparent; }
-        .card:hover { border-color: var(--accent); transform: translateY(-8px); }
-        .card-h3 { font-size: 1.4rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: #091e42; }
+        /* GRID SYSTEM */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.05); }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+        .card-h3 { font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: var(--accent); font-weight: 800; border-bottom: 2px solid rgba(0,0,0,0.03); padding-bottom: 10px; }
         
-        .link-list { list-style: none; }
-        .link-item { display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #42526e; padding: 12px 0; border-bottom: 1px solid #f4f5f7; font-weight: 600; font-size: 1rem; }
-        .link-item:hover { color: var(--accent); padding-left: 5px; }
-        .link-item:last-child { border-bottom: none; }
-        .badge { font-size: 0.75rem; background: #ebecf0; color: #42526e; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+        .service-link { display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--text); padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.03); font-weight: 600; font-size: 0.95rem; }
+        .service-link:hover { color: var(--primary); padding-left: 5px; }
+        .tag { font-size: 0.7rem; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 8px; color: var(--muted); }
 
-        footer { padding: 80px 20px; text-align: center; color: var(--muted); font-size: 1rem; }
+        footer { padding: 60px 20px; text-align: center; color: var(--muted); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 50px; }
 
-        @media (max-width: 768px) {
-            .hero-h1 { font-size: 2.2rem; }
-            .region-title-row { flex-direction: column; gap: 20px; }
+        @media (max-width: 600px) {
+            .dashboard-header { padding: 25px; }
             .services-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -92,52 +106,46 @@
 
 <header>
     <div class="nav-inner">
-        <a href="#" onclick="goHome()" class="logo">
+        <a href="#" onclick="location.hash=''; return false;" class="logo">
             <div class="logo-box">А</div>
             <div class="logo-text">ГосНавигатор</div>
         </a>
-        <div id="active-region-tag" style="font-weight: 800; color: var(--accent); font-size: 0.9rem; text-transform: uppercase; background: #fff1f2; padding: 5px 15px; border-radius: 20px; display: none;"></div>
+        <div id="quick-status" style="font-size: 0.8rem; font-weight: 800; opacity: 0.6;">89 РЕГИОНОВ РФ</div>
     </div>
 </header>
 
-<!-- HOME -->
 <main id="home-screen">
-    <h1 class="hero-h1">Ваш регион — <br>ваши сервисы</h1>
-    <p class="hero-p">Единая точка входа в цифровую экосистему России. Все официальные услуги на одном экране.</p>
+    <h1 class="hero-h1">Найдите услуги <br>своего региона</h1>
+    <p class="hero-p">Единая интеллектуальная система навигации по государственным, транспортным и социальным сервисам России.</p>
     
-    <div class="search-box">
-        <input type="text" id="mainSearch" class="main-input" placeholder="Введите название региона (напр. Москва)..." autocomplete="off">
-        <div id="suggestList" class="suggestions"></div>
+    <div class="search-container">
+        <input type="text" id="mainSearch" class="main-search" placeholder="Введите название или код (напр. 54)..." autocomplete="off">
+        <div id="resultsList" class="results-box"></div>
     </div>
 </main>
 
-<!-- REGION -->
 <main id="region-screen">
-    <div class="region-card-header">
-        <div class="region-title-row">
+    <div class="dashboard-header">
+        <div class="reg-title">
             <h2 id="regName">Регион</h2>
-            <button onclick="goHome()" style="background:none; border:none; color:var(--muted); cursor:pointer; font-weight:bold;">✕ Сменить регион</button>
+            <p id="regCode" style="opacity: 0.5; font-weight: bold;"></p>
         </div>
-        <div class="emergency-row">
-            <a href="tel:112" class="e-btn e-red">🆘 Служба 112</a>
-            <a href="tel:122" class="e-btn e-blue">📞 Справка 122</a>
-            <a href="https://dom.gosuslugi.ru" target="_blank" class="e-btn" style="background:#f4f5f7; color:#333;">🏠 ГИС ЖКХ</a>
-            <a href="https://pos.gosuslugi.ru/backoffice/" target="_blank" class="e-btn e-green">✉️ Обратиться к власти</a>
+        <div class="emergency-bar">
+            <a href="tel:112" class="e-chip e-red">🆘 СЛУЖБА 112</a>
+            <a href="tel:122" class="e-chip e-blue">📞 СПРАВКА 122</a>
+            <button onclick="location.hash=''; return false;" style="background:none; border:none; cursor:pointer; color:var(--muted); font-weight:bold;">✕ ЗАКРЫТЬ</button>
         </div>
     </div>
-
-    <div id="cardsGrid" class="services-grid"></div>
+    <div id="dashboardGrid" class="services-grid"></div>
 </main>
 
 <footer>
-    <p><b>gos-navigator-project.ru</b> — интеллектуальный агрегатор услуг</p>
-    <p style="margin-top:15px; font-size: 0.8rem; opacity: 0.7;">
-        Проект Кирилла Чернякова (25132БУ). Все права на логотипы принадлежат их правообладателям.
-    </p>
+    <p><b>gos-navigator-project.ru</b> — интеллектуальный агрегатор социальных сервисов</p>
+    <p style="margin-top:10px;">Проект Кирилла Чернякова (25132БУ) | 2024</p>
 </footer>
 
 <script>
-// ПЕРВАЯ ЧАСТЬ БАЗЫ РЕГИОНОВ (01 - 45)
+// БАЗА ДАННЫХ ЧАСТЬ 1 (01 - 45)
 const regionsDB = [
     ["01", "Республика Адыгея"], ["02", "Республика Башкортостан"], ["03", "Республика Бурятия"], ["04", "Республика Алтай"],
     ["05", "Республика Дагестан"], ["06", "Республика Ингушетия"], ["07", "Кабардино-Балкария"], ["08", "Республика Калмыкия"],
@@ -150,7 +158,7 @@ const regionsDB = [
     ["34", "Волгоградская область"], ["35", "Вологодская область"], ["36", "Воронежская область"], ["37", "Ивановская область"],
     ["38", "Иркутская область"], ["39", "Калининградская область"], ["40", "Калужская область"], ["41", "Камчатский край"],
     ["42", "Кемеровская область"], ["43", "Кировская область"], ["44", "Костромская область"], ["45", "Курганская область"],
-    ["46", "Курская область"], ["47", "Ленинградская область"], ["48", "Липецкая область"], ["49", "Магаданская область"],
+        ["46", "Курская область"], ["47", "Ленинградская область"], ["48", "Липецкая область"], ["49", "Магаданская область"],
     ["50", "Московская область"], ["51", "Мурманская область"], ["52", "Нижегородская область"], ["53", "Новгородская область"],
     ["54", "Новосибирская область"], ["55", "Омская область"], ["56", "Оренбургская область"], ["57", "Орловская область"],
     ["58", "Пензенская область"], ["59", "Пермский край"], ["60", "Псковская область"], ["61", "Ростовская область"],
@@ -162,182 +170,200 @@ const regionsDB = [
     ["86", "Ханты-Мансийский АО — Югра"], ["87", "Чукотский автономный округ"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
 ];
 
-// УМНЫЙ ГЕНЕРАТОР СЕРВИСОВ
-function generateServices(code, name) {
-    const encodedName = encodeURIComponent(name);
-    return [
+// УМНЫЙ ГЕНЕРАТОР КОНТЕНТА
+function buildDashboard(code, name) {
+    const encoded = encodeURIComponent(name);
+    
+    // БАЗОВЫЕ КАТЕГОРИИ
+    let categories = [
         {
             title: "🏛️ Госуслуги и Власть",
             links: [
                 ["Региональный портал", `https://${code}.gosuslugi.ru`, "Личный кабинет"],
                 ["МФЦ «Мои Документы»", "https://mfc.rf", "Запись"],
-                ["Налоговая служба", "https://lkfl2.nalog.ru", "Налоги"],
-                ["Администрация", `https://yandex.ru/search/?text=администрация+${encodedName}`, "Официально"]
+                ["Администрация региона", `https://yandex.ru/search/?text=администрация+${encoded}`, "Официально"],
+                ["Законодательное собрание", `https://yandex.ru/search/?text=заксобрание+${encoded}`, "Законы"]
             ]
         },
         {
-            title: "🏥 Медицина и Здоровье",
+            title: "🏥 Здравоохранение",
             links: [
-                ["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form", "Госуслуги"],
-                ["Электронная регистратура", `https://yandex.ru/search/?text=запись+к+врачу+${encodedName}`, "Регион"],
-                ["Поиск лекарств", "https://aptekamos.ru", "Аптеки"],
-                ["Вызов врача 122", "tel:122", "Звонок"]
+                ["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form", "Рецепты"],
+                ["Электронная регистратура", `https://yandex.ru/search/?text=запись+к+врачу+${encoded}`, "Регион"],
+                ["Поиск лекарств", "https://aptekamos.ru", "Цены"],
+                ["Телефон доверия / 122", "tel:122", "Помощь"]
             ]
         },
         {
-            title: "🚆 Транспорт и Карты",
+            title: "🚂 РЖД и Путешествия",
             links: [
-                ["Яндекс Карты (Транспорт)", "https://yandex.ru/maps", "Live"],
-                ["РЖД Пассажирам", "https://www.rzd.ru", "Билеты"],
-                ["Междугородние автобусы", "https://www.tutu.ru/bus/", "Расписание"],
-                ["Штрафы ГИБДД", "https://www.gosuslugi.ru/600101/1/form", "Проверка"]
+                ["Билеты на поезда", "https://www.rzd.ru", "Купить"],
+                ["РЖД Бонус", "https://rzd-bonus.ru", "Баллы"],
+                ["Пригородные электрички", "https://www.tutu.ru/prigorod/", "Расписание"],
+                ["Грузовые перевозки", "https://www.rzd.ru/ru/9269", "Бизнесу"]
             ]
         },
         {
             title: "💡 ЖКХ и Жилье",
             links: [
-                ["ГИС ЖКХ (Оплата)", "https://dom.gosuslugi.ru", "Счета"],
-                ["Росреестр", "https://rosreestr.gov.ru", "Выписки"],
-                ["Система «Город»", "https://kvartplata.ru", "Чеки"],
-                ["Энергосбыт", `https://yandex.ru/search/?text=энергосбыт+${encodedName}`, "Счетчики"]
+                ["ГИС ЖКХ", "https://dom.gosuslugi.ru", "Счета"],
+                ["Система «Город»", "https://kvartplata.ru", "Оплата"],
+                ["Энергосбыт", `https://yandex.ru/search/?text=энергосбыт+${encoded}`, "Счетчики"],
+                ["Росреестр", "https://rosreestr.gov.ru", "Выписки"]
             ]
         },
         {
-            title: "📚 Образование",
+            title: "💰 Финансы и Налоги",
             links: [
-                ["Электронный дневник", `https://yandex.ru/search/?text=электронный+дневник+${encodedName}`, "Школа"],
-                ["Stepik (Курсы)", "https://stepik.org", "Обучение"],
-                ["Работа в России", "https://trudvsem.ru", "Вакансии"]
+                ["Налоговая служба (ФНС)", "https://lkfl2.nalog.ru", "ЛК"],
+                ["Социальный фонд (Пенсии)", "https://sfr.gov.ru", "Выплаты"],
+                ["Мой Налог (Самозанятость)", "https://npd.nalog.ru", "Бизнес"],
+                ["Проверка задолженностей", "https://fssp.gov.ru", "ФССП"]
             ]
         },
         {
-            title: "🎭 Культура и Досуг",
+            title: "📚 Образование и Карьера",
             links: [
-                ["Афиша региона", `https://afisha.yandex.ru/search?text=${encodedName}`, "События"],
-                ["Пушкинская карта", "https://www.culture.ru", "Молодежи"],
-                ["Kassir.ru", "https://kassir.ru", "Билеты"]
+                ["Электронный дневник", `https://yandex.ru/search/?text=электронный+дневник+${encoded}`, "Школа"],
+                ["Работа в России", "https://trudvsem.ru", "Вакансии"],
+                ["Stepik (Бесплатные курсы)", "https://stepik.org", "Учеба"],
+                ["Навигатор бизнеса", "https://smbn.ru", "Стартап"]
+            ]
+        },
+        {
+            title: "🎭 Культура и Отдых",
+            links: [
+                ["Афиша Яндекса", `https://afisha.yandex.ru/search?text=${encoded}`, "Кино/Театр"],
+                ["Пушкинская карта", "https://www.culture.ru", "Бесплатно"],
+                ["Kassir.ru", "https://kassir.ru", "Билеты"],
+                ["Russia.Travel", "https://russia.travel", "Туризм"]
+            ]
+        },
+        {
+            title: "🔐 Безопасность",
+            links: [
+                ["Проверка утечек данных", "https://rt-solar.ru/security_check/", "Защита"],
+                ["Кибербезопасность (Госуслуги)", "https://www.gosuslugi.ru/cybersecurity", "Советы"],
+                ["МВД РФ", "https://66.mvd.ru", "Заявление"]
             ]
         }
     ];
-}
 
-// УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ
-const mainSearch = document.getElementById('mainSearch');
-const suggestList = document.getElementById('suggestList');
-const homeScreen = document.getElementById('home-screen');
-const regionScreen = document.getElementById('region-screen');
-const activeTag = document.getElementById('active-region-tag');
-
-// Функция поиска регионов
-mainSearch.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    suggestList.innerHTML = '';
-    
-    if (query.length < 1) {
-        suggestList.style.display = 'none';
-        return;
+    // УМНЫЙ ДЕТЕКТОР МЕТРО (Новосибирск, Москва, СПб, Казань, Самара, Екб, Нижний Новгород)
+    const metroCodes = ["54", "77", "78", "16", "63", "66", "52"];
+    if (metroCodes.includes(code)) {
+        categories.splice(3, 0, {
+            title: "🚇 Метрополитен",
+            links: [
+                ["Официальный сайт метро", `https://yandex.ru/search/?text=официальный+сайт+метро+${encoded}`, "Схема"],
+                ["Пополнение карты", `https://yandex.ru/search/?text=пополнить+транспортную+карту+${encoded}`, "Оплата"],
+                ["График работы", `https://yandex.ru/search/?text=режим+работы+метро+${encoded}`, "Время"]
+            ]
+        });
     }
 
+    return categories;
+}
+
+// ЛОГИКА ПРИЛОЖЕНИЯ
+const mainSearch = document.getElementById('mainSearch');
+const resultsList = document.getElementById('resultsList');
+const homeScreen = document.getElementById('home-screen');
+const regionScreen = document.getElementById('region-screen');
+
+// Поиск регионов
+mainSearch.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase().trim();
+    resultsList.innerHTML = '';
+    
+    if (val.length < 1) { resultsList.style.display = 'none'; return; }
+
     const filtered = regionsDB.filter(r => 
-        r[1].toLowerCase().includes(query) || r[0].includes(query)
+        r[1].toLowerCase().includes(val) || r[0].includes(val)
     );
 
     if (filtered.length > 0) {
-        suggestList.style.display = 'block';
+        resultsList.style.display = 'block';
         filtered.forEach(r => {
             const div = document.createElement('div');
-            div.className = 'suggest-item';
-            div.innerHTML = `<span>${r[1]}</span> <b>${r[0]}</b>`;
-            div.onclick = () => {
-                window.location.hash = 'reg' + r[0];
-                localStorage.setItem('savedRegion', r[0]); // Сохраняем выбор
-            };
-            suggestList.appendChild(div);
+            div.className = 'result-item';
+            div.innerHTML = `<span>${r[1]}</span> <b>${r[0]} РЕГИОН</b>`;
+            div.onclick = () => { window.location.hash = 'reg' + r[0]; };
+            resultsList.appendChild(div);
         });
     } else {
-        suggestList.style.display = 'none';
+        resultsList.style.display = 'none';
     }
 });
 
-// Отрисовка страницы региона
-function renderRegion(code) {
+// Рендеринг дашборда
+function renderDashboard(code) {
     const reg = regionsDB.find(r => r[0] === code);
     if (!reg) return goHome();
 
+    // Сохраняем выбор
+    localStorage.setItem('lastRegion', code);
+
     homeScreen.style.display = 'none';
     regionScreen.style.display = 'block';
-    setTimeout(() => regionScreen.classList.add('active'), 10);
     
     document.getElementById('regName').innerText = reg[1];
-    activeTag.innerText = reg[1];
-    activeTag.style.display = 'block';
+    document.getElementById('regCode').innerText = code + ' РЕГИОН';
 
-    const grid = document.getElementById('cardsGrid');
+    const grid = document.getElementById('dashboardGrid');
     grid.innerHTML = '';
 
-    const services = generateServices(reg[0], reg[1]);
-    
-    // Для Москвы и Питера добавляем спец-ссылки
-    if(code === '77' || code === '78') {
-        services[2].links.unshift(["Метрополитен", code === '77' ? "https://mosmetro.ru" : "https://www.metro.spb.ru", "Схема"]);
-    }
-
-    services.forEach(cat => {
+    const data = buildDashboard(reg[0], reg[1]);
+    data.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
             <h3 class="card-h3">${cat.title}</h3>
-            <div class="link-list">
+            <div class="service-links">
                 ${cat.links.map(l => `
-                    <a href="${l[1]}" target="_blank" class="link-item">
-                        ${l[0]} <span class="badge">${l[2]}</span>
+                    <a href="${l[1]}" target="_blank" class="service-link">
+                        ${l[0]} <span class="tag">${l[2]}</span>
                     </a>
                 `).join('')}
             </div>
         `;
         grid.appendChild(card);
     });
+    window.scrollTo(0,0);
 }
 
 function goHome() {
     window.location.hash = '';
-    regionScreen.classList.remove('active');
-    setTimeout(() => {
-        regionScreen.style.display = 'none';
-        homeScreen.style.display = 'flex';
-        activeTag.style.display = 'none';
-        mainSearch.value = '';
-        suggestList.style.display = 'none';
-    }, 300);
+    homeScreen.style.display = 'flex';
+    regionScreen.style.display = 'none';
+    mainSearch.value = '';
+    resultsList.style.display = 'none';
 }
 
-// Слушатель URL (Routing)
+// Роутинг
 function handleRoute() {
-    const hash = window.location.hash;
-    if (hash.startsWith('#reg')) {
-        renderRegion(hash.replace('#reg', ''));
+    const h = window.location.hash;
+    if (h.startsWith('#reg')) {
+        renderDashboard(h.replace('#reg', ''));
     } else {
         goHome();
     }
 }
 
-// Инициализация при загрузке
 window.addEventListener('hashchange', handleRoute);
 window.addEventListener('load', () => {
-    const saved = localStorage.getItem('savedRegion');
-    const hash = window.location.hash;
-    
-    if (hash) {
+    const saved = localStorage.getItem('lastRegion');
+    if (window.location.hash) {
         handleRoute();
     } else if (saved) {
-        // Если есть сохраненный регион, но мы на главной — предлагаем или переходим
+        // Если Кирилл уже заходил, открываем его регион сразу
         window.location.hash = 'reg' + saved;
     }
 });
 
-// Закрытие поиска при клике вне поля
+// Закрытие поиска
 document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-box')) suggestList.style.display = 'none';
+    if (!e.target.closest('.search-container')) resultsList.style.display = 'none';
 });
 </script>
 </body>
