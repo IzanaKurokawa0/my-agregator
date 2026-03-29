@@ -153,69 +153,49 @@ const regionsDB = [
     ["86", "ХМАО — Югра"], ["87", "Чукотский АО"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
 ];
 
-// УМНЫЙ ГЕНЕРАТОР РЕГИОНАЛЬНОЙ СПЕЦИФИКИ
 function getRegionalHubs(code, name) {
     const enc = encodeURIComponent(name);
     
-    // 1. ОПРЕДЕЛЯЕМ ТРАНСПОРТ
-    let transportLinks = [["РЖД Билеты", "https://www.rzd.ru"], ["Яндекс Карты", "https://yandex.ru/maps"]];
-    if (code === "77") transportLinks.push(["Карта Тройка", "https://transport.mos.ru/mostrans/troika/"], ["ЦППК (Электрички)", "https://central-ppk.ru/"]);
-    else if (code === "78") transportLinks.push(["Подорожник", "http://podorozhnik.spb.ru/"]);
-    else if (code === "54") transportLinks.push(["Золотая Корона", "https://t-karta.ru/nsk"], ["Экспресс-Пригород", "https://express-prigorod.ru/"]);
-    else transportLinks.push(["Автобусы (Туту)", "https://www.tutu.ru/bus/"]);
+    // Специфика Транспорта
+    let transport = [["РЖД Билеты", "https://www.rzd.ru"], ["Яндекс Карты", "https://yandex.ru/maps"]];
+    if (code === "77") transport.push(["Карта Тройка", "https://transport.mos.ru/"], ["Московский Паркинг", "https://parking.mos.ru/"]);
+    else if (code === "78") transport.push(["Подорожник", "http://podorozhnik.spb.ru/"]);
+    else if (code === "54") transport.push(["Золотая Корона", "https://t-karta.ru/nsk"], ["Экспресс-Пригород", "https://express-prigorod.ru/"]);
 
-    // 2. ОПРЕДЕЛЯЕМ МЕДИЦИНУ
-    let medLinks = [["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form"]];
-    if (code === "77") medLinks.push(["ЕМИАС.ИНФО", "https://emias.info/"]);
-    else if (code === "54") medLinks.push(["ЗдравНСО", "https://reg.nso.ru/"]);
-    else medLinks.push(["Регистратура", `https://yandex.ru/search/?text=регистратура+${enc}`]);
+    // Специфика Культуры и Гордости
+    let localPride = { id: "pride", title: "💎 Гордость региона", top: [], other: [] };
+    if (code === "54") {
+        localPride.top = [["НОВАТ (Оперный)", "https://novat.ru/"], ["Академгородок", "https://navigator.nsk.ru/"], ["Новосибирский Зоопарк", "https://zoonsk.ru/"]];
+    } else if (code === "77") {
+        localPride.top = [["Большой Театр", "https://www.bolshoi.ru/"], ["Парк Зарядье", "https://www.zaryadyepark.ru/"], ["ВДНХ", "https://vdnh.ru/"]];
+    } else if (code === "78") {
+        localPride.top = [["Эрмитаж", "https://www.hermitagemuseum.org/"], ["Мариинский театр", "https://www.mariinsky.ru/"], ["Петергоф", "https://peterhofmuseum.ru/"]];
+    } else if (code === "16") {
+        localPride.top = [["Казанский Кремль", "https://kazan-kremlin.ru/"], ["Иннополис", "https://innopolis.ru/"]];
+    }
 
-    // 3. ОПРЕДЕЛЯЕМ ВЛАСТЬ И ОБРАЗОВАНИЕ
-    let govLinks = [["Госуслуги РФ", "https://www.gosuslugi.ru"]];
-    let eduLinks = [["Stepik", "https://stepik.org"]];
-    
-    if (code === "77") { govLinks.push(["Портал mos.ru", "https://www.mos.ru"]); eduLinks.push(["МЭШ (Дневник)", "https://mes.mos.ru"]); }
-    else if (code === "16") { govLinks.push(["Услуги Татарстана", "https://uslugi.tatarstan.ru"]); }
-    else { eduLinks.push(["Эл. Дневник", `https://yandex.ru/search/?text=электронный+дневник+${enc}`]); }
-
-    return [
-        { id: "gov", title: "🏛️ Власть", top: govLinks, other: [["Налоговая (ЛК)", "https://lkfl2.nalog.ru"], ["ФССП (Долги)", "https://fssp.gov.ru"], ["Росреестр", "https://rosreestr.gov.ru"], ["Администрация", `https://yandex.ru/search/?text=администрация+${enc}`]] },
-        
-        { id: "comm", title: "💬 Связь", top: [["MAX Messenger", "https://yandex.ru/search/?text=MAX+messenger+скачать"], ["Telegram Web", "https://web.telegram.org"]], other: [["WhatsApp", "https://web.whatsapp.com"], ["VK Мессенджер", "https://vk.me"], ["Сферум", "https://sferum.ru"], ["Почта РФ", "https://www.pochta.ru"]] },
-        
-        { id: "fin", title: "💰 Банки", top: [["Сбербанк", "https://www.sberbank.ru"], ["Т-Банк", "https://www.tbank.ru"], ["ВТБ Онлайн", "https://www.vtb.ru"]], other: [["Альфа-Банк", "https://alfabank.ru"], ["Газпромбанк", "https://www.gazprombank.ru"], ["ПСБ", "https://www.psbank.ru"], ["МТС Банк", "https://www.mtsbank.ru"], ["Цифровой Рубль", "https://www.cbr.ru/fintech/dr/"], ["Сравни.ру", "https://www.sravni.ru"]] },
-        
-        { id: "shop", title: "🛍️ Покупки", top: [["Wildberries", "https://www.wildberries.ru"], ["Ozon", "https://www.ozon.ru"], ["Яндекс Маркет", "https://market.yandex.ru"]], other: [["Мегамаркет", "https://megamarket.ru"], ["Avito", "https://www.avito.ru"], ["Lamoda", "https://www.lamoda.ru"], ["AliExpress", "https://aliexpress.ru"]] },
-        
-        { id: "food", title: "🍔 Еда и Такси", top: [["Яндекс Go", "https://taxi.yandex.ru"], ["Яндекс Еда", "https://eda.yandex.ru"], ["Самокат", "https://samokat.ru"]], other: [["Купер", "https://kuper.ru"], ["ВкусВилл", "https://vkusvill.ru"], ["Додо Пицца", "https://dodopizza.ru"], ["Вкусно и точка", "https://vkusnoitochka.ru"]] },
-        
-        { id: "apps", title: "📲 RuStore", top: [["RuStore", "https://www.rustore.ru"], ["AppGallery", "https://appgallery.huawei.com"]], other: [["Сбербанк APK", "https://www.sberbank.ru/ru/person/dist_services/inner_apps"], ["Альфа APK", "https://alfabank.ru/apps/"], ["Т-Банк APK", "https://www.tbank.ru/apps/"]] },
-        
-        { id: "tour", title: "✈️ Туризм", top: [["Aviasales", "https://www.aviasales.ru"], ["РЖД Билеты", "https://www.rzd.ru"]], other: [["Яндекс Путешествия", "https://travel.yandex.ru"], ["Островок", "https://ostrovok.ru"], ["Суточно.ру", "https://sutochno.ru"], ["Tutu.ru", "https://www.tutu.ru"]] },
-        
-        { id: "med", title: "🏥 Здоровье", top: medLinks, other: [["Поиск лекарств", "https://aptekamos.ru"], ["СберЗдоровье", "https://sberhealth.ru"], ["Инвитро", "https://www.invitro.ru"], ["ОМС Полис", "https://www.ffoms.gov.ru/"]] },
-        
-        { id: "tran", title: "🚆 Транспорт", top: transportLinks, other: [["Штрафы ГИБДД", "https://www.gosuslugi.ru/600101/1/form"], ["Парковки", `https://yandex.ru/search/?text=парковки+${enc}`]] },
-        
-        { id: "hous", title: "💡 ЖКХ", top: [["ГИС ЖКХ", "https://dom.gosuslugi.ru"], ["Квартплата.ру", "https://kvartplata.ru"]], other: [["Энергосбыт", `https://yandex.ru/search/?text=энергосбыт+${enc}`], ["Петрович", "https://petrovich.ru"], ["Профи (Мастера)", "https://profi.ru"]] },
-        
-        { id: "work", title: "💼 Карьера", top: [["Работа в России", "https://trudvsem.ru"], ["HeadHunter", "https://hh.ru"]], other: [["Мой Бизнес", "https://мойбизнес.рф"], ["Самозанятость", "https://npd.nalog.ru"], ["Авито Работа", "https://www.avito.ru/rabota"]] },
-        
-        { id: "edu", title: "📚 Учеба", top: eduLinks, other: [["ВУЗы РФ", "https://postupi.online"], ["Учи.ру", "https://uchi.ru"], ["Нетология", "https://netology.ru"]] },
-        
-        { id: "fam", title: "👶 Семья", top: [["Выплаты", "https://www.gosuslugi.ru/10639/1"], ["Запись в садик", "https://www.gosuslugi.ru/10902/1"]], other: [["Детский Мир", "https://www.detmir.ru"], ["ЗАГС Онлайн", "https://zags.nalog.ru"], ["Маткапитал", "https://www.gosuslugi.ru/600232/1"]] },
-        
-        { id: "sec", title: "🛡️ Защита", top: [["Проверка авто", "https://гибдд.рф/check/auto"], ["Ваш участковый", "https://102.mvd.ru"]], other: [["Кибербезопасность", "https://www.gosuslugi.ru/cybersecurity"], ["МВД Заявления", "https://mvd.ru/request_main"]] },
-        
-        { id: "eco", title: "🌿 Экология", top: [["Пункты приема", "https://recyclemap.ru"], ["Карта воздуха", "https://yandex.ru/pogoda/maps/nowcast"]], other: [["Эко-надзор", "https://rpn.gov.ru"], ["Добро.ру", "https://dobro.ru"]] },
-        
-        { id: "sport", title: "⚽ Спорт", top: [["ГТО", "https://www.gto.ru"], ["Секции", "https://www.gosuslugi.ru/600363/1/form"]], other: [["Марафоны", "https://russiarunning.com"], ["Спортмастер", "https://www.sportmaster.ru"]] },
-        
-        { id: "cult", title: "🎭 Досуг", top: [["Афиша Яндекса", `https://afisha.yandex.ru/search?text=${enc}`], ["Кинопоиск", "https://www.kinopoisk.ru"]], other: [["Пушкинская карта", "https://www.culture.ru"], ["Kassir.ru", "https://kassir.ru"], ["Иви", "https://www.ivi.ru"]] }
+    let hubs = [
+        { id: "gov", title: "🏛️ Власть", top: [["Госуслуги РФ", "https://www.gosuslugi.ru"], ["Мои Документы", "https://mfc.rf"]], other: [["ФНС Налоги", "https://lkfl2.nalog.ru"], ["Росреестр", "https://rosreestr.gov.ru"], ["Администрация", `https://yandex.ru/search/?text=администрация+${enc}`]] },
+        { id: "fin", title: "💰 Банки", top: [["Сбербанк", "https://www.sberbank.ru"], ["Т-Банк", "https://www.tbank.ru"], ["ВТБ Онлайн", "https://www.vtb.ru"]], other: [["Альфа-Банк", "https://alfabank.ru"], ["ПСБ", "https://www.psbank.ru"], ["Цифровой Рубль", "https://www.cbr.ru/fintech/dr/"], ["Сравни.ру", "https://www.sravni.ru"]] },
+        { id: "comm", title: "💬 Связь", top: [["MAX Messenger", "https://yandex.ru/search/?text=MAX+messenger"], ["Telegram Web", "https://web.telegram.org"]], other: [["WhatsApp", "https://web.whatsapp.com"], ["VK Мессенджер", "https://vk.me"], ["Сферум", "https://sferum.ru"]] },
+        { id: "shop", title: "🛍️ Покупки", top: [["Wildberries", "https://www.wildberries.ru"], ["Ozon", "https://www.ozon.ru"], ["Яндекс Маркет", "https://market.yandex.ru"]], other: [["Мегамаркет", "https://megamarket.ru"], ["Avito", "https://www.avito.ru"], ["AliExpress", "https://aliexpress.ru"]] },
+        { id: "food", title: "🍔 Еда и Такси", top: [["Яндекс Go", "https://taxi.yandex.ru"], ["Яндекс Еда", "https://eda.yandex.ru"], ["Самокат", "https://samokat.ru"]], other: [["Купер", "https://kuper.ru"], ["ВкусВилл", "https://vkusvill.ru"], ["Додо Пицца", "https://dodopizza.ru"]] },
+        { id: "apps", title: "📲 RuStore", top: [["RuStore", "https://www.rustore.ru"], ["AppGallery", "https://appgallery.huawei.com"]], other: [["Сбербанк APK", "https://www.sberbank.ru/ru/person/dist_services/inner_apps"], ["Альфа APK", "https://alfabank.ru/apps/"]] },
+        { id: "tour", title: "✈️ Туризм", top: [["Aviasales", "https://www.aviasales.ru"], ["РЖД Билеты", "https://www.rzd.ru"]], other: [["Яндекс Путешествия", "https://travel.yandex.ru"], ["Островок", "https://ostrovok.ru"], ["Tutu.ru", "https://www.tutu.ru"]] },
+        { id: "med", title: "🏥 Здоровье", top: [["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form"]], other: [["Поиск лекарств", "https://aptekamos.ru"], ["СберЗдоровье", "https://sberhealth.ru"], ["Инвитро", "https://www.invitro.ru"]] },
+        { id: "tran", title: "🚆 Транспорт", top: transport, other: [["Штрафы ГИБДД", "https://www.gosuslugi.ru/600101/1/form"]] },
+        { id: "hous", title: "💡 ЖКХ", top: [["ГИС ЖКХ", "https://dom.gosuslugi.ru"], ["Квартплата.ру", "https://kvartplata.ru"]], other: [["Энергосбыт", `https://yandex.ru/search/?text=энергосбыт+${enc}`], ["Профи (Мастера)", "https://profi.ru"]] },
+        { id: "work", title: "💼 Карьера", top: [["Работа в России", "https://trudvsem.ru"], ["HeadHunter", "https://hh.ru"]], other: [["Мой Бизнес", "https://мойбизнес.рф"], ["Самозанятость", "https://npd.nalog.ru"]] },
+        { id: "edu", title: "📚 Учеба", top: [["Stepik", "https://stepik.org"]], other: [["Эл. Дневник", `https://yandex.ru/search/?text=дневник+${enc}`], ["ВУЗы РФ", "https://postupi.online"]] }
     ];
+
+    // Добавляем "Гордость" в начало, если она есть
+    if (localPride.top.length > 0) hubs.unshift(localPride);
+
+    return hubs;
 }
 
-// ЛОГИКА
+// ЛОГИКА ИНТЕРФЕЙСА
 const regInput = document.getElementById('regInput');
 const regSuggests = document.getElementById('regSuggests');
 const homeScreen = document.getElementById('home-screen');
@@ -253,10 +233,10 @@ function renderRegion(code) {
 
     const hubs = getRegionalHubs(reg[0], reg[1]);
     
-    // Метро
+    // Метро-детектор
     const metroCodes = ["54", "77", "78", "16", "63", "52", "66"];
     if (metroCodes.includes(code)) {
-        hubs.splice(8, 0, { id: "metro", title: "🚇 Метро", top: [["Схема и время", `https://yandex.ru/search/?text=схема+метро+${encodeURIComponent(reg[1])}`]], other: [["Пополнить карту", `https://yandex.ru/search/?text=пополнить+карту+метро+${encodeURIComponent(reg[1])}`]] });
+        hubs.push({ id: "metro", title: "🚇 Метро", top: [["Схема и время", `https://yandex.ru/search/?text=схема+метро+${encodeURIComponent(reg[1])}`]], other: [["Пополнить карту", `https://yandex.ru/search/?text=пополнить+карту+метро+${encodeURIComponent(reg[1])}`]] });
     }
 
     hubs.forEach(hub => {
@@ -269,11 +249,10 @@ function renderRegion(code) {
         const card = document.createElement('div');
         card.className = 'card';
         card.id = 'hub-' + hub.id;
-        
         let html = `<h3 class="card-h3">${hub.title}</h3>`;
         hub.top.forEach(l => { html += `<a href="${l[1]}" target="_blank" class="service-link">${l[0]} <span>➔</span></a>`; });
-        if (hub.other.length > 0) {
-            html += `<details><summary>ПОКАЗАТЬ ВСЁ (${hub.other.length})</summary><div style="margin-top:5px;">${hub.other.map(l => `<a href="${l[1]}" target="_blank" class="service-link" style="font-size:0.85rem; opacity:0.8;">${l[0]} <small>➔</small></a>`).join('')}</div></details>`;
+        if (hub.other && hub.other.length > 0) {
+            html += `<details><summary>ПОКАЗАТЬ ЕЩЁ (${hub.other.length})</summary><div style="margin-top:5px;">${hub.other.map(l => `<a href="${l[1]}" target="_blank" class="service-link" style="font-size:0.85rem; opacity:0.8;">${l[0]} <small>➔</small></a>`).join('')}</div></details>`;
         }
         card.innerHTML = html;
         grid.appendChild(card);
@@ -285,13 +264,12 @@ function goHome() {
     homeScreen.style.display = 'flex';
     regionScreen.style.display = 'none';
     regInput.value = '';
-    regSuggests.style.display = 'none';
 }
 
 function router() {
     const h = window.location.hash;
-    if (h.startsWith('#reg')) { renderRegion(h.replace('#reg', '')); }
-    else { goHome(); }
+    if (h.startsWith('#reg')) renderRegion(h.replace('#reg', ''));
+    else goHome();
 }
 
 window.addEventListener('hashchange', router);
