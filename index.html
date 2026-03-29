@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Агрегатор услуг — Новосибирская область | Полный каталог</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            background: #f4f6fa;
+            color: #1e2a3a;
+            padding: 16px;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #0b3b5f;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: #4a627a;
+            margin-bottom: 20px;
+        }
+        /* Панель навигации (якоря) */
+        .nav-links {
+            background: white;
+            border-radius: 40px;
+            padding: 10px 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 12px;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #1e6f9f;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 40px;
+            background: #eef2f8;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-links a:hover {
+            background: #d0dfec;
+            color: #0b3b5f;
+        }
+        /* Сетка карточек */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-margin-top: 80px; /* чтобы при прокрутке блок не уходил под меню */
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background: #eef2f8;
+            padding: 14px 16px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        .card-body {
+            padding: 16px;
+            flex: 1;
+        }
+        .service-list {
+            list-style: none;
+            margin: 0;
+        }
+        .service-list li {
+            margin-bottom: 10px;
+        }
+        .service-list a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1e6f9f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .service-list a:hover {
+            color: #0b3b5f;
+            text-decoration: underline;
+        }
+        .service-list a::before {
+            content: "➜";
+            font-size: 0.8rem;
+            color: #4a627a;
+        }
+        .badge {
+            background: #eef2f8;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-left: 8px;
+            color: #1e6f9f;
+            white-space: nowrap;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6c7e97;
+            border-top: 1px solid #dce5ef;
+            padding-top: 20px;
+        }
+        /* Мобильная адаптация */
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .card-header { padding: 12px 14px; font-size: 1.1rem; }
+            .card-body { padding: 14px; }
+            .service-list a { font-size: 0.85rem; }
+            h1 { font-size: 1.5rem; }
+            .grid { gap: 14px; }
+            .nav-links a { font-size: 0.8rem; padding: 5px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📱 Агрегатор услуг — Новосибирская область</h1>
+        <div class="subtitle">Единый каталог: госуслуги, транспорт, ЖКХ, медицина, образование, досуг</div>
+    </header>
+
+    <!-- Панель быстрой навигации (якоря) -->
+    <div class="nav-links">
+        <a href="#gosuslugi">🏛️ Госуслуги</a>
+        <a href="#transport">🚆 Транспорт</a>
+        <a href="#education">📚 Образование</a>
+        <a href="#medicine">🏥 Медицина</a>
+        <a href="#zhkh">💡 ЖКХ</a>
+        <a href="#finance">💰 Финансы</a>
+        <a href="#shopping">🛍️ Покупки</a>
+        <a href="#culture">🎭 Культура</a>
+        <a href="#social">💬 Связь</a>
+    </div>
+
+    <div class="grid">
+        <!-- 1. Госуслуги и налоги -->
+        <div class="card" id="gosuslugi">
+            <div class="card-header">🏛️ Госуслуги и налоги</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://www.gosuslugi.ru" target="_blank">Госуслуги РФ</a></li>
+                    <li><a href="https://54.gosuslugi.ru/" target="_blank">Госуслуги НСО (региональный портал)</a></li>
+                    <li><a href="https://www.nalog.gov.ru" target="_blank">Личный кабинет налогоплательщика</a></li>
+                    <li><a href="https://www.gosuslugi.ru/10060/1" target="_blank">Оплата налогов онлайн</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2. Транспорт НСО -->
+        <div class="card" id="transport">
+            <div class="card-header">🚆 Транспорт НСО</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://www.rzd.ru" target="_blank">РЖД Пассажирам (поезда дальнего следования)</a></li>
+                    <li><a href="https://apps.rustore.ru/app/ru.digitaltickets.nsk" target="_blank">Экспресс-Пригород (электрички НСО)</a> <span class="badge">RuStore</span></li>
+                    <li><a href="https://nsk-metro.ru" target="_blank">Новосибирское метро (схема, новости)</a></li>
+                    <li><a href="https://apps.rustore.ru/app/com.example.novosibirsk" target="_blank">Транспорт Новосибирска (расписание автобусов)</a> <span class="badge">RuStore</span></li>
+                    <li><a href="https://yandex.ru/maps" target="_blank">Яндекс Карты (навигация, пробки)</a></li>
+                    <li><a href="https://go.yandex" target="_blank">Яндекс Go (такси, самокаты)</a></li>
+                    <li><a href="https://2gis.ru/novosibirsk" target="_blank">2ГИС (транспортная карта города)</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. Образование НСО -->
+        <div class="card" id="education">
+            <div class="card-header">📚 Образование НСО</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://apps.rustore.ru/app/ru.nso.dnevnik" target="_blank">Дневник НСО (электронный дневник)</a> <span class="badge">RuStore</span></li>
+                    <li><a href="https://stepik.org" target="_blank">Stepik (онлайн-курсы)</a></li>
+                    <li><a href="https://ege.sdamgia.ru" target="_blank">Решу ЕГЭ / ОГЭ</a></li>
+                    <li><a href="https://uchi.ru" target="_blank">Учи.ру</a></li>
+                    <li><a href="https://edu.gov.ru" target="_blank">Минпросвещения РФ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. Медицина НСО -->
+        <div class="card" id="medicine">
+            <div class="card-header">🏥 Медицина НСО</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://max.ru" target="_blank">MAX (мессенджер, чат-бот «Моё здоровье НСО»)</a> <span class="badge">запись к врачу</span></li>
+                    <li><a href="https://www.gosuslugi.ru/600447/1/form" target="_blank">Запись к врачу через Госуслуги</a></li>
+                    <li><a href="https://reg.nso.ru" target="_blank">Региональный портал записи к врачу reg.nso.ru</a></li>
+                    <li><a href="tel:122" target="_blank">Телефон 122 (вызов врача на дом, запись)</a></li>
+                    <li><a href="https://sberhealth.ru" target="_blank">СберЗдоровье (телемедицина)</a></li>
+                    <li><a href="https://health.yandex.ru" target="_blank">Яндекс.Здоровье</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 5. ЖКХ НСО -->
+        <div class="card" id="zhkh">
+            <div class="card-header">💡 ЖКХ НСО</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://gosuslugi-dom.ru" target="_blank">Госуслуги.Дом (передача показаний, заявки в УК)</a> <span class="badge">офиц.</span></li>
+                    <li><a href="https://www.gorvodokanal.com" target="_blank">Горводоканал (показания воды, оплата)</a></li>
+                    <li><a href="https://dom.gosuslugi.ru" target="_blank">ГИС ЖКХ</a></li>
+                    <li><a href="https://мой-дом.рф" target="_blank">Мой дом.рф</a></li>
+                    <li><a href="https://www.sberbank.ru/ru/person/communals" target="_blank">Оплата ЖКХ (Сбер)</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 6. Финансы и банки -->
+        <div class="card" id="finance">
+            <div class="card-header">💰 Финансы и банки</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://www.sberbank.ru" target="_blank">Сбербанк Онлайн</a></li>
+                    <li><a href="https://www.tbank.ru" target="_blank">Т-Банк (Тинькофф)</a></li>
+                    <li><a href="https://www.vtb.ru" target="_blank">ВТБ Онлайн</a></li>
+                    <li><a href="https://www.alfabank.ru" target="_blank">Альфа-Банк</a></li>
+                    <li><a href="https://www.gazprombank.ru" target="_blank">Газпромбанк</a></li>
+                    <li><a href="https://www.open.ru" target="_blank">Банк Открытие</a></li>
+                    <li><a href="https://www.raiffeisen.ru" target="_blank">Райффайзенбанк</a></li>
+                    <li><a href="https://www.rsb.ru" target="_blank">Россельхозбанк</a></li>
+                    <li><a href="https://www.pochtabank.ru" target="_blank">Почта Банк</a></li>
+                    <li><a href="https://sovcombank.ru" target="_blank">Совкомбанк</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 7. Покупки и маркетплейсы -->
+        <div class="card" id="shopping">
+            <div class="card-header">🛍️ Покупки и доставка</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://www.wildberries.ru" target="_blank">Wildberries</a></li>
+                    <li><a href="https://www.ozon.ru" target="_blank">Ozon</a></li>
+                    <li><a href="https://www.avito.ru" target="_blank">Avito</a></li>
+                    <li><a href="https://market.yandex.ru" target="_blank">Яндекс Маркет</a></li>
+                    <li><a href="https://megamarket.ru" target="_blank">Мегамаркет</a></li>
+                    <li><a href="https://lavka.yandex.ru" target="_blank">Яндекс Лавка</a></li>
+                    <li><a href="https://samokat.ru" target="_blank">Самокат</a></li>
+                    <li><a href="https://5ka.ru/delivery/" target="_blank">Пятёрочка Доставка</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 8. Культура и досуг НСО -->
+        <div class="card" id="culture">
+            <div class="card-header">🎭 Культура и досуг НСО</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://apps.rustore.ru/app/com.sitiphox" target="_blank">СитиФокс (афиша Новосибирска)</a> <span class="badge">RuStore</span></li>
+                    <li><a href="https://www.culture.ru/pushkinskaya-karta/afisha/novosibirskaya-oblast" target="_blank">Пушкинская карта — афиша НСО</a> <span class="badge">билеты для молодёжи</span></li>
+                    <li><a href="https://afisha.yandex.ru/novosibirsk" target="_blank">Яндекс Афиша (Новосибирск)</a></li>
+                    <li><a href="https://www.kassir.ru/novosibirsk" target="_blank">Kassir.ru (Новосибирск)</a></li>
+                    <li><a href="https://www.kinopoisk.ru" target="_blank">Кинопоиск</a></li>
+                    <li><a href="https://okko.tv" target="_blank">Okko</a></li>
+                    <li><a href="https://www.ivi.ru" target="_blank">IVI</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 9. Связь и соцсети -->
+        <div class="card" id="social">
+            <div class="card-header">💬 Связь и соцсети</div>
+            <div class="card-body">
+                <ul class="service-list">
+                    <li><a href="https://web.telegram.org" target="_blank">Telegram</a></li>
+                    <li><a href="https://web.whatsapp.com" target="_blank">WhatsApp</a></li>
+                    <li><a href="https://vk.com" target="_blank">ВКонтакте (VK)</a></li>
+                    <li><a href="https://max.ru" target="_blank">MAX (мессенджер, чат-бот Минздрава НСО)</a></li>
+                    <li><a href="https://www.tiktok.com" target="_blank">TikTok</a></li>
+                    <li><a href="https://ok.ru" target="_blank">Одноклассники</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        🧭 Агрегатор социально значимых онлайн-сервисов | Проект Чернякова Кирилла, 25132БУ
+    </div>
+</div>
+
+<!-- Плавная прокрутка для якорей -->
+<script>
+    document.querySelectorAll('.nav-links a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
