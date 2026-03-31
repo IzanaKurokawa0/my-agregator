@@ -3,133 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>А | ГосНавигатор 2026 — Интеллектуальный Хаб</title>
+    <title>ГосНавигатор 2026 — Интеллектуальный Хаб РФ</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2294%22 height=%2294%22 x=%223%22 y=%223%22 rx=%2222%22 fill=%22white%22 stroke=%22%23ef4444%22 stroke-width=%226%22/><text y=%2275%22 x=%2222%22 font-size=%2275%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 fill=%22%23ef4444%22>А</text></svg>">
 
     <style>
         :root {
-            --bg: #f2f4f7;
+            --bg: #f1f5f9;
             --card-bg: #ffffff;
             --text: #0f172a;
             --accent: #ef4444;
             --border: #e2e8f0;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --muted: #64748b;
+            --header-bg: #f1f5f9; /* Совпадает с фоном, чтобы не было просветов */
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #020617;
                 --card-bg: #0f172a;
-                --text: #ffffff; 
+                --text: #f8fafc; 
                 --border: #1e293b;
-                --shadow: 0 10px 40px rgba(0,0,0,0.5);
+                --header-bg: #020617;
             }
-            .card-h3 { color: #ffffff !important; }
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; transition: 0.2s ease; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; font-size: 13px; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
 
-        /* HEADER */
+        /* HEADER - ПОЛНОСТЬЮ ЗАКРАШЕН, БЕЗ ПРОСВЕТОВ */
         header { 
-            background: var(--card-bg); padding: 8px 15px; border-bottom: 2px solid var(--accent);
-            position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow);
+            background: var(--header-bg); 
+            padding: 15px 20px; 
+            border-bottom: 3px solid var(--accent);
+            position: sticky; 
+            top: 0; 
+            z-index: 9999; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .nav-inner { max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-box { background: #fff; border: 2px solid var(--accent); color: var(--accent); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; font-size: 20px; }
+        .nav-inner { max-width: 1600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { background: var(--accent); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 900; font-size: 22px; }
 
-        /* ГЛАВНАЯ */
-        #home-screen { padding: 40px 15px; text-align: center; max-width: 800px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero-h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -2px; margin-bottom: 30px; line-height: 1; }
-        .main-input { width: 100%; padding: 25px 35px; border-radius: 50px; border: 3px solid var(--border); font-size: 1.3rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .main-input:focus { border-color: var(--accent); transform: translateY(-3px); }
+        /* ГЛАВНЫЙ ЭКРАН */
+        #home-screen { padding: 100px 20px; text-align: center; max-width: 900px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero-h1 { font-size: 3.5rem; font-weight: 950; letter-spacing: -3px; margin-bottom: 40px; line-height: 0.9; }
+        .main-input { width: 100%; padding: 30px; border-radius: 25px; border: 4px solid var(--border); font-size: 1.5rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
+        .main-input:focus { border-color: var(--accent); }
 
         /* ЭКРАН РЕГИОНА */
-        #region-screen { display: none; padding: 10px 10px 60px; max-width: 1850px; margin: 0 auto; }
+        #region-screen { display: none; padding: 20px; max-width: 1800px; margin: 0 auto; }
 
-        /* МЕНЮ-ЧИПСЫ В 3 РЯДА */
+        /* ЧИПСЫ КАТЕГОРИЙ */
         .cat-nav { 
-            background: var(--bg); padding: 10px 0; border-bottom: 1.5px solid var(--border); margin-bottom: 20px;
-            position: sticky; top: 50px; z-index: 950;
-            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+            display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; 
+            position: sticky; top: 70px; background: var(--header-bg); z-index: 9000;
+            scrollbar-width: none;
         }
-        .nav-chip { padding: 5px 12px; border-radius: 10px; background: var(--card-bg); border: 1.5px solid var(--border); font-weight: 800; font-size: 0.75rem; cursor: pointer; }
+        .nav-chip { white-space: nowrap; padding: 10px 20px; border-radius: 15px; background: var(--card-bg); border: 2px solid var(--border); font-weight: 900; cursor: pointer; font-size: 0.9rem; }
         .nav-chip:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ГРИД (5 В РЯД) */
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 15px; }
+        /* ГРИД КАРТОЧЕК */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { 
-            background: var(--card-bg); border-radius: 20px; padding: 15px; 
-            border: 1px solid var(--border); box-shadow: var(--shadow);
-            display: flex; flex-direction: column; scroll-margin-top: 180px;
+            background: var(--card-bg); border-radius: 30px; padding: 25px; 
+            border: 1px solid var(--border); display: flex; flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        .card:hover { border-color: var(--accent); }
-        .card-h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .card-h3 { font-size: 1.3rem; font-weight: 950; margin-bottom: 20px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
         
+        /* ССЫЛКИ СЕРВИСОВ */
         .service-link { 
             display: flex; justify-content: space-between; align-items: center; 
-            text-decoration: none; color: var(--text); padding: 6px 0; 
-            border-bottom: 1px solid rgba(0,0,0,0.03); font-weight: 700; font-size: 0.95rem;
+            text-decoration: none; color: var(--text); padding: 14px 18px; 
+            margin-bottom: 10px; border-radius: 15px; background: var(--bg);
+            font-weight: 800; font-size: 1rem; border: 2px solid transparent;
         }
-        .service-link:hover { color: var(--accent); padding-left: 5px; }
+        .service-link:hover { border-color: var(--accent); background: var(--card-bg); transform: translateX(5px); }
+        .service-link span { font-size: 0.7rem; background: var(--accent); color: #fff; padding: 3px 8px; border-radius: 6px; }
+        .service-link.web span { background: var(--muted); }
 
-        /* МАТРЁШКА (СПОЙЛЕР) */
-        details { margin-top: 5px; }
-        summary { cursor: pointer; font-weight: 900; color: var(--muted); list-style: none; font-size: 0.7rem; text-transform: uppercase; padding: 4px 0; }
-        summary:hover { color: var(--accent); }
-
-        footer { padding: 60px 20px; text-align: center; border-top: 1.5px solid var(--border); color: var(--muted); font-weight: 800; margin-top: 60px; }
+        /* СПОЙЛЕР ДЛЯ ОСТАЛЬНЫХ */
+        details { margin-top: 10px; }
+        summary { 
+            cursor: pointer; font-weight: 900; color: var(--muted); list-style: none; 
+            font-size: 0.8rem; text-align: center; padding: 12px; border-radius: 15px;
+            background: var(--border); transition: 0.3s;
+        }
+        summary:hover { background: var(--accent); color: #fff; }
 
         /* ПОДСКАЗКИ */
-        .suggest-list { position: absolute; top: 100px; left: 0; right: 0; background: var(--card-bg); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 100; display: none; padding: 15px; }
-        .suggest-item { padding: 15px 25px; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.1rem; }
+        .suggest-list { position: absolute; top: 120px; left: 0; right: 0; background: var(--card-bg); border-radius: 25px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); z-index: 10000; display: none; overflow: hidden; }
+        .suggest-item { padding: 20px 30px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 900; font-size: 1.2rem; border-bottom: 1px solid var(--border); }
         .suggest-item:hover { background: var(--accent); color: white; }
 
-        @media (max-width: 1600px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { 
-            .grid { grid-template-columns: 1fr; } 
-            .cat-nav { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; }
-            .hero-h1 { font-size: 1.8rem; }
-        }
+        footer { padding: 60px; text-align: center; font-weight: 900; opacity: 0.5; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="nav-inner">
-        <div class="logo" onclick="goHome()" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <div class="logo" onclick="goHome()" style="display:flex; align-items:center; gap:12px; cursor:pointer;">
             <div class="logo-box">А</div>
-            <div style="font-weight: 950; letter-spacing: -0.5px; font-size: 1.1rem;">ГосНавигатор</div>
+            <div style="font-weight: 950; font-size: 1.4rem; letter-spacing: -1px;">ГОСНАВИГАТОР 2026</div>
         </div>
-        <div id="badge-2026" style="background:var(--accent); color:#fff; padding:4px 12px; border-radius:8px; font-weight:950; font-size:0.75rem;">ULTIMATE 2026</div>
+        <div style="font-weight:900; background:#000; color:#fff; padding:5px 15px; border-radius:10px; font-size:0.8rem;">V. 3.0 FINAL</div>
     </div>
 </header>
 
 <main id="home-screen">
-    <h1 class="hero-h1">Цифровая экосистема <br>твоего региона.</h1>
+    <h1 class="hero-h1">Цифровая<br>Россия 2026.</h1>
     <div style="position: relative; width: 100%;">
-        <input type="text" id="regInput" class="main-input" placeholder="Введите название региона (напр. 54 или Москва)..." autocomplete="off">
+        <input type="text" id="regInput" class="main-input" placeholder="Введите регион или код (напр. 54)..." autocomplete="off">
         <div id="regSuggests" class="suggest-list"></div>
     </div>
 </main>
 
 <main id="region-screen">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2 id="regTitle" style="font-size: 1.8rem; font-weight: 950; letter-spacing: -1.5px;">Регион</h2>
-        <button onclick="goHome()" style="padding: 8px 18px; border-radius: 10px; border: 1.5px solid var(--border); font-weight: 900; background: var(--card-bg); color: var(--text); cursor: pointer;">СМЕНИТЬ РЕГИОН</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+        <h2 id="regTitle" style="font-size: 3rem; font-weight: 950; letter-spacing: -2px; line-height: 1;">Регион</h2>
+        <button onclick="goHome()" style="padding: 15px 30px; border-radius: 20px; border: none; font-weight: 900; background: var(--text); color: var(--card-bg); cursor: pointer;">СМЕНИТЬ СУБЪЕКТ</button>
     </div>
     <nav class="cat-nav" id="catNav"></nav>
     <div id="megaGrid" class="grid"></div>
 </main>
 
 <footer>
-    <p>© 2026 GOS-NAVIGATOR-PROJECT.RU — Кирилл Черняков, 25132БУ</p>
+    <p>© 2026 GOS-NAVIGATOR PROJECT — FUTURE IS NOW</p>
 </footer>
 
 <script>
+// ПОЛНАЯ БАЗА 89 РЕГИОНОВ
 const regionsDB = [
     ["01", "Адыгея"], ["02", "Башкортостан"], ["03", "Бурятия"], ["04", "Алтай"], ["05", "Дагестан"], ["06", "Ингушетия"],
     ["07", "Кабардино-Балкария"], ["08", "Калмыкия"], ["09", "Карачаево-Черкесия"], ["10", "Карелия"], ["11", "Коми"],
@@ -140,62 +144,49 @@ const regionsDB = [
     ["31", "Белгородская область"], ["32", "Брянская область"], ["33", "Владимирская область"], ["34", "Волгоградская область"],
     ["35", "Вологодская область"], ["36", "Воронежская область"], ["37", "Ивановская область"], ["38", "Иркутская область"],
     ["39", "Калининградская область"], ["40", "Калужская область"], ["41", "Камчатский край"], ["42", "Кемеровская область"],
-    ["43", "Кировская область"], ["44", "Костромская область"], ["45", "Курганская область"],
-    ["46", "Курская обл."], ["47", "Ленинградская обл."], ["48", "Липецкая обл."], ["49", "Магаданская обл."],
-    ["50", "Московская обл."], ["51", "Мурманская обл."], ["52", "Нижегородская обл."], ["53", "Новгородская обл."],
-    ["54", "Новосибирская обл."], ["55", "Омская обл."], ["56", "Оренбургская обл."], ["57", "Орловская обл."],
-    ["58", "Пензенская обл."], ["59", "Пермский край"], ["60", "Псковская обл."], ["61", "Ростовская обл."],
-    ["62", "Рязанская обл."], ["63", "Самарская обл."], ["64", "Саратовская обл."], ["65", "Сахалинская обл."],
-    ["66", "Свердловская обл."], ["67", "Смоленская обл."], ["68", "Тамбовская обл."], ["69", "Тверская обл."],
-    ["70", "Томская обл."], ["71", "Тульская обл."], ["72", "Тюменская обл."], ["73", "Ульяновская обл."],
-    ["74", "Челябинская обл."], ["75", "Забайкальский край"], ["76", "Ярославская обл."], ["77", "г. Москва"],
-    ["78", "г. Санкт-Петербург"], ["79", "Еврейская АО"], ["82", "Республика Крым"], ["83", "Ненецкий АО"],
-    ["86", "ХМАО — Югра"], ["87", "Чукотский АО"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
+    ["43", "Кировская область"], ["44", "Костромская область"], ["45", "Курганская область"], ["46", "Курская обл."], 
+    ["47", "Ленинградская обл."], ["48", "Липецкая обл."], ["49", "Магаданская обл."], ["50", "Московская обл."], 
+    ["51", "Мурманская обл."], ["52", "Нижегородская обл."], ["53", "Новгородская обл."], ["54", "Новосибирская обл."], 
+    ["55", "Омская обл."], ["56", "Оренбургская обл."], ["57", "Орловская обл."], ["58", "Пензенская обл."], 
+    ["59", "Пермский край"], ["60", "Псковская обл."], ["61", "Ростовская обл."], ["62", "Рязанская обл."], 
+    ["63", "Самарская обл."], ["64", "Саратовская обл."], ["65", "Сахалинская обл."], ["66", "Свердловская обл."], 
+    ["67", "Смоленская обл."], ["68", "Тамбовская обл."], ["69", "Тверская обл."], ["70", "Томская обл."], 
+    ["71", "Тульская обл."], ["72", "Тюменская обл."], ["73", "Ульяновская обл."], ["74", "Челябинская обл."], 
+    ["75", "Забайкальский край"], ["76", "Ярославская обл."], ["77", "г. Москва"], ["78", "г. Санкт-Петербург"], 
+    ["79", "Еврейская АО"], ["82", "Республика Крым"], ["83", "Ненецкий АО"], ["86", "ХМАО — Югра"], 
+    ["87", "Чукотский АО"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
 ];
 
-function getRegionalHubs(code, name) {
-    const enc = encodeURIComponent(name);
-    
-    // Специфика Транспорта
-    let transport = [["РЖД Билеты", "https://www.rzd.ru"], ["Яндекс Карты", "https://yandex.ru/maps"]];
-    if (code === "77") transport.push(["Карта Тройка", "https://transport.mos.ru/"], ["Московский Паркинг", "https://parking.mos.ru/"]);
-    else if (code === "78") transport.push(["Подорожник", "http://podorozhnik.spb.ru/"]);
-    else if (code === "54") transport.push(["Золотая Корона", "https://t-karta.ru/nsk"], ["Экспресс-Пригород", "https://express-prigorod.ru/"]);
-
-    // Специфика Культуры и Гордости
-    let localPride = { id: "pride", title: "💎 Гордость региона", top: [], other: [] };
-    if (code === "54") {
-        localPride.top = [["НОВАТ (Оперный)", "https://novat.ru/"], ["Академгородок", "https://navigator.nsk.ru/"], ["Новосибирский Зоопарк", "https://zoonsk.ru/"]];
-    } else if (code === "77") {
-        localPride.top = [["Большой Театр", "https://www.bolshoi.ru/"], ["Парк Зарядье", "https://www.zaryadyepark.ru/"], ["ВДНХ", "https://vdnh.ru/"]];
-    } else if (code === "78") {
-        localPride.top = [["Эрмитаж", "https://www.hermitagemuseum.org/"], ["Мариинский театр", "https://www.mariinsky.ru/"], ["Петергоф", "https://peterhofmuseum.ru/"]];
-    } else if (code === "16") {
-        localPride.top = [["Казанский Кремль", "https://kazan-kremlin.ru/"], ["Иннополис", "https://innopolis.ru/"]];
-    }
+function getHubs(code, name) {
+    // Стек 2026
+    const baseFin = [["СберOS", "app"], ["Т-Банк 3.0", "app"], ["Альфа-Мир", "app"], ["Цифровой Рубль", "web"], ["ВТБ Online", "web"]];
+    const baseShop = [["Ozon Сфера", "app"], ["WB Global", "app"], ["Яндекс Маркет", "app"], ["МегаМаркет", "web"], ["Avito Бартер", "web"]];
+    const baseMove = [["Яндекс Go (AI)", "app"], ["Fater (Убер 2.0)", "app"], ["2ГИС Спутник", "app"], ["Whoosh", "web"], ["Ситидрайв", "web"]];
+    const baseLife = [["MAX Messenger", "app"], ["ГосНейро (Услуги)", "app"], ["RuStore 2026", "app"], ["Яндекс Музыка", "web"], ["ВК Видео", "web"]];
 
     let hubs = [
-        { id: "gov", title: "🏛️ Власть", top: [["Госуслуги РФ", "https://www.gosuslugi.ru"], ["Мои Документы", "https://mfc.rf"]], other: [["ФНС Налоги", "https://lkfl2.nalog.ru"], ["Росреестр", "https://rosreestr.gov.ru"], ["Администрация", `https://yandex.ru/search/?text=администрация+${enc}`]] },
-        { id: "fin", title: "💰 Банки", top: [["Сбербанк", "https://www.sberbank.ru"], ["Т-Банк", "https://www.tbank.ru"], ["ВТБ Онлайн", "https://www.vtb.ru"]], other: [["Альфа-Банк", "https://alfabank.ru"], ["ПСБ", "https://www.psbank.ru"], ["Цифровой Рубль", "https://www.cbr.ru/fintech/dr/"], ["Сравни.ру", "https://www.sravni.ru"]] },
-        { id: "comm", title: "💬 Связь", top: [["MAX Messenger", "https://yandex.ru/search/?text=MAX+messenger"], ["Telegram Web", "https://web.telegram.org"]], other: [["WhatsApp", "https://web.whatsapp.com"], ["VK Мессенджер", "https://vk.me"], ["Сферум", "https://sferum.ru"]] },
-        { id: "shop", title: "🛍️ Покупки", top: [["Wildberries", "https://www.wildberries.ru"], ["Ozon", "https://www.ozon.ru"], ["Яндекс Маркет", "https://market.yandex.ru"]], other: [["Мегамаркет", "https://megamarket.ru"], ["Avito", "https://www.avito.ru"], ["AliExpress", "https://aliexpress.ru"]] },
-        { id: "food", title: "🍔 Еда и Такси", top: [["Яндекс Go", "https://taxi.yandex.ru"], ["Яндекс Еда", "https://eda.yandex.ru"], ["Самокат", "https://samokat.ru"]], other: [["Купер", "https://kuper.ru"], ["ВкусВилл", "https://vkusvill.ru"], ["Додо Пицца", "https://dodopizza.ru"]] },
-        { id: "apps", title: "📲 RuStore", top: [["RuStore", "https://www.rustore.ru"], ["AppGallery", "https://appgallery.huawei.com"]], other: [["Сбербанк APK", "https://www.sberbank.ru/ru/person/dist_services/inner_apps"], ["Альфа APK", "https://alfabank.ru/apps/"]] },
-        { id: "tour", title: "✈️ Туризм", top: [["Aviasales", "https://www.aviasales.ru"], ["РЖД Билеты", "https://www.rzd.ru"]], other: [["Яндекс Путешествия", "https://travel.yandex.ru"], ["Островок", "https://ostrovok.ru"], ["Tutu.ru", "https://www.tutu.ru"]] },
-        { id: "med", title: "🏥 Здоровье", top: [["Запись к врачу", "https://www.gosuslugi.ru/600447/1/form"]], other: [["Поиск лекарств", "https://aptekamos.ru"], ["СберЗдоровье", "https://sberhealth.ru"], ["Инвитро", "https://www.invitro.ru"]] },
-        { id: "tran", title: "🚆 Транспорт", top: transport, other: [["Штрафы ГИБДД", "https://www.gosuslugi.ru/600101/1/form"]] },
-        { id: "hous", title: "💡 ЖКХ", top: [["ГИС ЖКХ", "https://dom.gosuslugi.ru"], ["Квартплата.ру", "https://kvartplata.ru"]], other: [["Энергосбыт", `https://yandex.ru/search/?text=энергосбыт+${enc}`], ["Профи (Мастера)", "https://profi.ru"]] },
-        { id: "work", title: "💼 Карьера", top: [["Работа в России", "https://trudvsem.ru"], ["HeadHunter", "https://hh.ru"]], other: [["Мой Бизнес", "https://мойбизнес.рф"], ["Самозанятость", "https://npd.nalog.ru"]] },
-        { id: "edu", title: "📚 Учеба", top: [["Stepik", "https://stepik.org"]], other: [["Эл. Дневник", `https://yandex.ru/search/?text=дневник+${enc}`], ["ВУЗы РФ", "https://postupi.online"]] }
+        { id: "fin", title: "💰 Финансы", items: baseFin },
+        { id: "shop", title: "🛍️ Покупки", items: baseShop },
+        { id: "move", title: "🚕 Транспорт", items: baseMove },
+        { id: "life", title: "📱 Жизнь", items: baseLife }
     ];
 
-    // Добавляем "Гордость" в начало, если она есть
-    if (localPride.top.length > 0) hubs.unshift(localPride);
+    // ИНДИВИДУАЛЬНОСТЬ
+    if (code === "54") {
+        hubs.unshift({ id: "nsk", title: "🔬 Сибирский Наукоград", items: [["Академгородок ID", "app"], ["Золотая Корона", "app"], ["Зоопарк AR", "app"], ["НОВАТ Билеты", "web"], ["Электронный Город", "web"]] });
+    } else if (code === "77") {
+        hubs.unshift({ id: "msk", title: "🏙️ Московская Экосистема", items: [["Mos.ru Портал", "app"], ["Тройка Bio-Pay", "app"], ["Московский Транспорт", "app"], ["Активный Гражданин", "web"], ["МЭШ Школа", "web"]] });
+    } else if (code === "16") {
+        hubs.unshift({ id: "tat", title: "🌙 Татарстан Digital", items: [["Услуги РТ", "app"], ["Иннополис ID", "app"], ["Карта Алга", "app"], ["Народный Контроль", "web"]] });
+    } else if (code === "14") {
+        hubs.unshift({ id: "yak", title: "💎 Якутский Арктик", items: [["Актировка Alert", "app"], ["Паромы Якутии", "app"], ["InDrive Original", "app"], ["Саха-ID", "web"]] });
+    } else if (code === "82" || code === "92") {
+        hubs.unshift({ id: "crimea", title: "🌊 Крымская Сеть", items: [["РНКБ Банк", "app"], ["Волна Мобайл", "app"], ["Цифровой Крым", "web"], ["ЕГКС Билет", "web"]] });
+    }
 
     return hubs;
 }
 
-// ЛОГИКА ИНТЕРФЕЙСА
 const regInput = document.getElementById('regInput');
 const regSuggests = document.getElementById('regSuggests');
 const homeScreen = document.getElementById('home-screen');
@@ -228,52 +219,46 @@ function renderRegion(code) {
 
     const grid = document.getElementById('megaGrid');
     const nav = document.getElementById('catNav');
-    grid.innerHTML = '';
-    nav.innerHTML = '';
+    grid.innerHTML = ''; nav.innerHTML = '';
 
-    const hubs = getRegionalHubs(reg[0], reg[1]);
+    const hubs = getHubs(reg[0], reg[1]);
     
-    // Метро-детектор
-    const metroCodes = ["54", "77", "78", "16", "63", "52", "66"];
-    if (metroCodes.includes(code)) {
-        hubs.push({ id: "metro", title: "🚇 Метро", top: [["Схема и время", `https://yandex.ru/search/?text=схема+метро+${encodeURIComponent(reg[1])}`]], other: [["Пополнить карту", `https://yandex.ru/search/?text=пополнить+карту+метро+${encodeURIComponent(reg[1])}`]] });
-    }
-
     hubs.forEach(hub => {
         const chip = document.createElement('div');
         chip.className = 'nav-chip';
-        chip.innerText = hub.title.split(' ')[1] || hub.title;
-        chip.onclick = () => document.getElementById('hub-' + hub.id).scrollIntoView({ behavior: 'smooth' });
+        chip.innerText = hub.title.split(' ')[1];
+        chip.onclick = () => document.getElementById('hub-' + hub.id).scrollIntoView({ behavior: 'smooth', block: 'center' });
         nav.appendChild(chip);
 
         const card = document.createElement('div');
-        card.className = 'card';
-        card.id = 'hub-' + hub.id;
+        card.className = 'card'; card.id = 'hub-' + hub.id;
+        
+        const top3 = hub.items.slice(0, 3);
+        const others = hub.items.slice(3);
+
         let html = `<h3 class="card-h3">${hub.title}</h3>`;
-        hub.top.forEach(l => { html += `<a href="${l[1]}" target="_blank" class="service-link">${l[0]} <span>➔</span></a>`; });
-        if (hub.other && hub.other.length > 0) {
-            html += `<details><summary>ПОКАЗАТЬ ЕЩЁ (${hub.other.length})</summary><div style="margin-top:5px;">${hub.other.map(l => `<a href="${l[1]}" target="_blank" class="service-link" style="font-size:0.85rem; opacity:0.8;">${l[0]} <small>➔</small></a>`).join('')}</div></details>`;
+        top3.forEach(l => {
+            html += `<a href="#" class="service-link">${l[0]} <span>${l[1].toUpperCase()}</span></a>`;
+        });
+
+        if (others.length > 0) {
+            html += `<details>
+                <summary>ЕЩЁ ${others.length} СЕРВИСОВ</summary>
+                <div style="margin-top:15px;">
+                    ${others.map(l => `<a href="#" class="service-link web" style="font-size:0.9rem; opacity:0.8;">${l[0]} <span>${l[1].toUpperCase()}</span></a>`).join('')}
+                </div>
+            </details>`;
         }
         card.innerHTML = html;
         grid.appendChild(card);
     });
 }
 
-function goHome() {
-    window.location.hash = '';
-    homeScreen.style.display = 'flex';
-    regionScreen.style.display = 'none';
-    regInput.value = '';
-}
+function goHome() { window.location.hash = ''; homeScreen.style.display = 'flex'; regionScreen.style.display = 'none'; regInput.value = ''; }
+function router() { const h = window.location.hash; if (h.startsWith('#reg')) renderRegion(h.replace('#reg', '')); else goHome(); }
 
-function router() {
-    const h = window.location.hash;
-    if (h.startsWith('#reg')) renderRegion(h.replace('#reg', ''));
-    else goHome();
-}
-
-window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
+window.onhashchange = router;
+window.onload = router;
 document.addEventListener('click', (e) => { if (!e.target.closest('#regInput')) regSuggests.style.display = 'none'; });
 </script>
 </body>
