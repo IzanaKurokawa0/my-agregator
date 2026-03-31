@@ -3,63 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>А | ГосНавигатор 2026 — Глобальное Обновление</title>
+    <title>А | ГосНавигатор 2026 — Ultimate Хаб</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2294%22 height=%2294%22 x=%223%22 y=%223%22 rx=%2222%22 fill=%22white%22 stroke=%22%23ef4444%22 stroke-width=%226%22/><text y=%2275%22 x=%2222%22 font-size=%2275%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 fill=%22%23ef4444%22>А</text></svg>">
+
     <style>
         :root {
-            --bg: #f2f4f7; --card-bg: #ffffff; --text: #0f172a;
-            --accent: #ef4444; --border: #e2e8f0; --muted: #64748b;
+            --bg: #f2f4f7;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --accent: #ef4444;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        @media (prefers-color-scheme: dark) {
-            :root { --bg: #020617; --card-bg: #0f172a; --text: #ffffff; --border: #1e293b; }
-        }
-        * { margin:0; padding:0; box-sizing:border-box; transition: 0.2s ease; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
 
-        /* HEADER - МОНОЛИТ */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #020617;
+                --card-bg: #0f172a;
+                --text: #ffffff; 
+                --border: #1e293b;
+                --shadow: 0 10px 40px rgba(0,0,0,0.5);
+            }
+            .card-h3 { color: #ffffff !important; }
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; transition: 0.2s ease; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; font-size: 13px; }
+
+        /* HEADER - ФИКС ПРОСВЕЧИВАНИЯ */
         header { 
-            background: var(--bg); padding: 12px 15px; border-bottom: 3px solid var(--accent);
-            position: sticky; top: 0; z-index: 10000; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: var(--bg); /* Плотный закрас цветом фона */
+            padding: 8px 15px; 
+            border-bottom: 2px solid var(--accent);
+            position: sticky; 
+            top: 0; 
+            z-index: 10000; 
+            box-shadow: var(--shadow);
         }
         .nav-inner { max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-box { background: var(--accent); color: #fff; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; font-size: 20px; }
+        .logo-box { background: #fff; border: 2px solid var(--accent); color: var(--accent); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; font-size: 20px; }
 
-        /* ЭКРАНЫ */
-        #home-screen { padding: 80px 15px; text-align: center; max-width: 800px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero-h1 { font-size: 3rem; font-weight: 950; letter-spacing: -2px; margin-bottom: 30px; line-height: 1; color: var(--text); }
-        .main-input { width: 100%; padding: 25px 35px; border-radius: 20px; border: 3px solid var(--border); font-size: 1.4rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+        /* ГЛАВНАЯ */
+        #home-screen { padding: 40px 15px; text-align: center; max-width: 800px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero-h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -2px; margin-bottom: 30px; line-height: 1; }
+        .main-input { width: 100%; padding: 25px 35px; border-radius: 50px; border: 3px solid var(--border); font-size: 1.3rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
-        #region-screen { display: none; padding: 20px; max-width: 1850px; margin: 0 auto; }
+        /* ЭКРАН РЕГИОНА */
+        #region-screen { display: none; padding: 10px 10px 60px; max-width: 1850px; margin: 0 auto; }
 
-        /* КАТЕГОРИИ */
+        /* КАТЕГОРИИ (ЧИПСЫ) */
         .cat-nav { 
-            background: var(--bg); padding: 15px 0; position: sticky; top: 60px; z-index: 9999;
-            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border);
+            background: var(--bg); padding: 10px 0; border-bottom: 1.5px solid var(--border); margin-bottom: 20px;
+            position: sticky; top: 50px; z-index: 9500;
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
         }
-        .nav-chip { padding: 10px 18px; border-radius: 12px; background: var(--card-bg); border: 1.5px solid var(--border); font-weight: 800; cursor: pointer; white-space: nowrap; }
+        .nav-chip { padding: 5px 12px; border-radius: 10px; background: var(--card-bg); border: 1.5px solid var(--border); font-weight: 800; font-size: 0.75rem; cursor: pointer; }
         .nav-chip:hover { border-color: var(--accent); color: var(--accent); }
 
         /* ГРИД И КАРТОЧКИ */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: var(--card-bg); border-radius: 25px; padding: 20px; border: 1.5px solid var(--border); display: flex; flex-direction: column; }
-        .card-h3 { font-size: 1.2rem; font-weight: 950; margin-bottom: 15px; color: var(--accent); display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 15px; }
+        .card { 
+            background: var(--card-bg); border-radius: 20px; padding: 15px; 
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+            display: flex; flex-direction: column;
+        }
+        .card-h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; color: var(--accent); }
         
         .service-link { 
             display: flex; justify-content: space-between; align-items: center; 
-            text-decoration: none; color: var(--text); padding: 12px; border-radius: 12px;
-            margin-bottom: 8px; font-weight: 700; font-size: 1rem; background: rgba(0,0,0,0.03);
+            text-decoration: none; color: var(--text); padding: 8px 0; 
+            border-bottom: 1px solid rgba(0,0,0,0.03); font-weight: 700; font-size: 0.95rem;
         }
-        .service-link:hover { background: var(--accent); color: white; }
-        .service-link span { font-size: 0.7rem; padding: 3px 7px; border-radius: 6px; background: rgba(0,0,0,0.1); font-weight: 900; }
+        .service-link:hover { color: var(--accent); padding-left: 5px; }
 
         /* СПОЙЛЕР */
         details { margin-top: 5px; }
-        summary { cursor: pointer; font-weight: 900; color: var(--muted); list-style: none; font-size: 0.8rem; text-transform: uppercase; padding: 12px; text-align: center; background: var(--bg); border-radius: 12px; }
+        summary { cursor: pointer; font-weight: 900; color: var(--muted); list-style: none; font-size: 0.7rem; text-transform: uppercase; padding: 8px; text-align: center; background: var(--bg); border-radius: 10px; }
 
-        .suggest-list { position: absolute; top: 110px; left: 0; right: 0; background: var(--card-bg); border-radius: 25px; box-shadow: 0 30px 60px rgba(0,0,0,0.2); z-index: 11000; display: none; overflow: hidden; }
-        .suggest-item { padding: 20px 30px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 900; font-size: 1.2rem; border-bottom: 1px solid var(--border); }
+        /* ПОДСКАЗКИ */
+        .suggest-list { position: absolute; top: 100px; left: 0; right: 0; background: var(--card-bg); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 10001; display: none; padding: 15px; }
+        .suggest-item { padding: 15px 25px; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.1rem; }
         .suggest-item:hover { background: var(--accent); color: white; }
 
-        footer { padding: 60px; text-align: center; font-weight: 900; opacity: 0.5; }
+        footer { padding: 60px 20px; text-align: center; border-top: 1.5px solid var(--border); color: var(--muted); font-weight: 800; margin-top: 60px; }
     </style>
 </head>
 <body>
@@ -68,30 +95,31 @@
     <div class="nav-inner">
         <div class="logo" onclick="goHome()" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
             <div class="logo-box">А</div>
-            <div style="font-weight: 950; font-size: 1.2rem;">ГОСНАВИГАТОР 2026</div>
+            <div style="font-weight: 950; letter-spacing: -0.5px; font-size: 1.1rem;">ГосНавигатор</div>
         </div>
-        <div style="background:#000; color:#fff; padding:5px 12px; border-radius:8px; font-weight:900; font-size:0.8rem;">COMBO PRO</div>
+        <div style="background:var(--accent); color:#fff; padding:4px 12px; border-radius:8px; font-weight:950; font-size:0.75rem;">ULTIMATE 2026</div>
     </div>
 </header>
 
 <main id="home-screen">
-    <h1 class="hero-h1">Цифровая матрица <br>твоего региона.</h1>
+    <h1 class="hero-h1">Цифровая экосистема <br>твоего региона.</h1>
     <div style="position: relative; width: 100%;">
-        <input type="text" id="regInput" class="main-input" placeholder="Поиск (54, Якутия, Москва)..." autocomplete="off">
+        <input type="text" id="regInput" class="main-input" placeholder="Поиск региона (напр. 54 или Дагестан)..." autocomplete="off">
         <div id="regSuggests" class="suggest-list"></div>
     </div>
 </main>
 
 <main id="region-screen">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 id="regTitle" style="font-size: 2.5rem; font-weight: 950;">Регион</h2>
-        <button onclick="goHome()" style="padding: 12px 25px; border-radius: 15px; border: none; font-weight: 900; background: var(--text); color: #fff; cursor: pointer;">СМЕНИТЬ</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h2 id="regTitle" style="font-size: 1.8rem; font-weight: 950; letter-spacing: -1.5px;">Регион</h2>
+        <button onclick="goHome()" style="padding: 8px 18px; border-radius: 10px; border: 1.5px solid var(--border); font-weight: 900; background: var(--card-bg); color: var(--text); cursor: pointer;">СМЕНИТЬ РЕГИОН</button>
     </div>
     <nav class="cat-nav" id="catNav"></nav>
     <div id="megaGrid" class="grid"></div>
 </main>
 
 <script>
+// ПОЛНАЯ БАЗА РЕГИОНОВ (1-89)
 const regionsDB = [
     ["01", "Адыгея"], ["02", "Башкортостан"], ["03", "Бурятия"], ["04", "Алтай"], ["05", "Дагестан"], ["06", "Ингушетия"],
     ["07", "Кабардино-Балкария"], ["08", "Калмыкия"], ["09", "Карачаево-Черкесия"], ["10", "Карелия"], ["11", "Коми"],
@@ -102,67 +130,63 @@ const regionsDB = [
     ["31", "Белгородская область"], ["32", "Брянская область"], ["33", "Владимирская область"], ["34", "Волгоградская область"],
     ["35", "Вологодская область"], ["36", "Воронежская область"], ["37", "Ивановская область"], ["38", "Иркутская область"],
     ["39", "Калининградская область"], ["40", "Калужская область"], ["41", "Камчатский край"], ["42", "Кемеровская область"],
-    ["43", "Кировская область"], ["44", "Костромская область"], ["45", "Курганская область"]
+    ["43", "Кировская область"], ["44", "Костромская область"], ["45", "Курганская область"], ["46", "Курская обл."],
+    ["47", "Ленинградская обл."], ["48", "Липецкая обл."], ["49", "Магаданская обл."], ["50", "Московская обл."],
+    ["51", "Мурманская обл."], ["52", "Нижегородская обл."], ["53", "Новгородская обл."], ["54", "Новосибирская обл."],
+    ["55", "Омская обл."], ["56", "Оренбургская обл."], ["57", "Орловская обл."], ["58", "Пензенская обл."],
+    ["59", "Пермский край"], ["60", "Псковская обл."], ["61", "Ростовская обл."], ["62", "Рязанская обл."],
+    ["63", "Самарская обл."], ["64", "Саратовская обл."], ["65", "Сахалинская обл."], ["66", "Свердловская обл."],
+    ["67", "Смоленская обл."], ["68", "Тамбовская обл."], ["69", "Тверская обл."], ["70", "Томская обл."],
+    ["71", "Тульская обл."], ["72", "Тюменская обл."], ["73", "Ульяновская обл."], ["74", "Челябинская обл."],
+    ["75", "Забайкальский край"], ["76", "Ярославская обл."], ["77", "г. Москва"], ["78", "г. Санкт-Петербург"],
+    ["79", "Еврейская АО"], ["82", "Республика Крым"], ["83", "Ненецкий АО"], ["86", "ХМАО — Югра"],
+    ["87", "Чукотский АО"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
 ];
-
-function getHubs(code, name) {
-    const baseFin = [["СберOS (Bio)", "app"], ["Т-Банк 3.0", "app"], ["Альфа-Мир", "app"], ["Цифровой Рубль", "web"], ["ВТБ Онлайн", "web"]];
-    const baseShop = [["Ozon Сфера", "app"], ["WB Global", "app"], ["Яндекс Маркет", "app"], ["МегаМаркет", "web"], ["Avito Бартер", "web"]];
-    const baseMove = [["Яндекс Go (AI)", "app"], ["Fater (Uber 2.0)", "app"], ["2ГИС Спутник", "app"], ["Whoosh", "web"], ["Ситидрайв", "web"]];
-    const baseLife = [["MAX Messenger", "app"], ["ГосНейро РФ", "app"], ["RuStore 2026", "app"], ["Яндекс Музыка", "web"], ["ВК Видео", "web"], ["Самокат (7 мин)", "app"]];
+function getRegionalHubs(code, name) {
+    const enc = encodeURIComponent(name);
+    // Стек 2026 (Web/App)
+    const baseFin = [["СберOS (Bio)", "https://sberbank.ru"], ["Т-Банк 3.0", "https://tbank.ru"], ["Альфа-Мир", "https://alfabank.ru"], ["Цифровой Рубль", "https://cbr.ru"], ["ВТБ Онлайн", "https://vtb.ru"]];
+    const baseGov = [["ГосНейро РФ", "https://gosuslugi.ru"], ["Мои Документы", "https://mfc.rf"], ["ФНС Налоги", "https://lkfl2.nalog.ru"], ["Росреестр", "https://rosreestr.gov.ru"]];
+    const baseComm = [["MAX Messenger", "https://yandex.ru"], ["Telegram Web", "https://web.telegram.org"], ["VK Мессенджер", "https://vk.me"], ["Сферум", "https://sferum.ru"]];
+    const baseShop = [["Ozon Сфера", "https://ozon.ru"], ["WB Global", "https://wildberries.ru"], ["Яндекс Маркет", "https://market.yandex.ru"], ["МегаМаркет", "https://megamarket.ru"], ["Avito Бартер", "https://avito.ru"]];
+    const baseFood = [["Яндекс Go (Еда)", "https://eda.yandex.ru"], ["Самокат (7 мин)", "https://samokat.ru"], ["Купер (App)", "https://kuper.ru"], ["ВкусВилл", "https://vkusvill.ru"]];
+    const baseApps = [["RuStore 2026", "https://rustore.ru"], ["AppGallery", "https://appgallery.huawei.com"], ["Сбер APK", "https://sberbank.ru"], ["Альфа APK", "https://alfabank.ru"]];
+    const baseMed = [["Запись к врачу", "https://gosuslugi.ru"], ["СберЗдоровье", "https://sberhealth.ru"], ["Поиск лекарств", "https://aptekamos.ru"]];
+    const baseTran = [["Fater (Uber 2.0)", "https://yandex.ru"], ["2ГИС Спутник", "https://2gis.ru"], ["Яндекс Карты", "https://yandex.ru/maps"], ["РЖД Билеты", "https://rzd.ru"]];
+    const baseWork = [["Работа в России", "https://trudvsem.ru"], ["HeadHunter", "https://hh.ru"], ["Мой Бизнес", "https://мойбизнес.рф"]];
+    const baseEdu = [["Stepik", "https://stepik.org"], ["Поступи Онлайн", "https://postupi.online"], ["Эл. Дневник", "https://yandex.ru"]];
 
     let hubs = [
-        { id: "fin", title: "💰 Финансы 2026", items: baseFin },
-        { id: "shop", title: "🛍️ Маркеты", items: baseShop },
-        { id: "move", title: "🚕 Транспорт", items: baseMove },
-        { id: "life", title: "📱 Жизнь и App", items: baseLife }
+        { id: "pride", title: "💎 Гордость региона", items: [] },
+        { id: "gov", title: "🏛️ Власть", items: baseGov },
+        { id: "fin", title: "💰 Банки 2026", items: baseFin },
+        { id: "comm", title: "💬 Связь", items: baseComm },
+        { id: "shop", title: "🛍️ Покупки", items: baseShop },
+        { id: "food", title: "🍔 Еда и Такси", items: baseFood },
+        { id: "apps", title: "📲 RuStore", items: baseApps },
+        { id: "med", title: "🏥 Здоровье", items: baseMed },
+        { id: "tran", title: "🚆 Транспорт", items: baseTran },
+        { id: "hous", title: "💡 ЖКХ", items: [["ГИС ЖКХ", "https://dom.gosuslugi.ru"], ["Квартплата.ру", "https://kvartplata.ru"], ["Профи (Мастера)", "https://profi.ru"]] },
+        { id: "work", title: "💼 Карьера", items: baseWork },
+        { id: "edu", title: "📚 Учеба", items: baseEdu }
     ];
 
-    // ИНДИВИДУАЛЬНОСТЬ (1-45)
-    if (code === "14") hubs.unshift({ id: "yak", title: "💎 Якутия-Digital", items: [["Актировка Alert", "app"], ["Паромы Лены", "app"], ["InDrive Original", "app"], ["Саха-ID", "web"], ["Алмазный Край", "web"]] });
-    if (code === "16") hubs.unshift({ id: "tat", title: "🌙 Татарстан Hub", items: [["Услуги РТ (App)", "app"], ["Иннополис ID", "app"], ["Карта Алга", "app"], ["Народный Контроль", "web"], ["Татнефть Pay", "web"]] });
-    if (code === "23") hubs.unshift({ id: "krd", title: "☀️ Южный Хаб", items: [["Курортный Сбор", "web"], ["Вина Кубани (Gid)", "app"], ["АгроМаркет", "web"], ["Мой Сочи", "app"]] });
-    if (code === "39") hubs.unshift({ id: "kgd", title: "🏰 Янтарный Край", items: [["Граница-Online", "app"], ["Паромы в РФ", "web"], ["Янтарный ID", "web"]] });
+    // ИНДИВИДУАЛЬНОСТЬ (Гордость)
+    if (code === "54") hubs[0].items = [["Академгородок ID", "https://navigator.nsk.ru"], ["НОВАТ (Опера)", "https://novat.ru"], ["Зоопарк AR", "https://zoonsk.ru"], ["Система Город", "https://kvartplata.ru"], ["Золотая Корона", "https://t-karta.ru/nsk"]];
+    else if (code === "77") hubs[0].items = [["Mos.ru", "https://mos.ru"], ["Тройка Bio-Pay", "https://transport.mos.ru"], ["Парковки Москвы", "https://parking.mos.ru"], ["МЭШ", "https://school.mos.ru"]];
+    else if (code === "78") hubs[0].items = [["ЕКП (Карта)", "https://ekp.spb.ru"], ["Подорожник Online", "https://yandex.ru"], ["Эрмитаж AI", "https://hermitagemuseum.org"]];
+    else if (code === "14") hubs[0].items = [["Актировка Alert", "https://yandex.ru"], ["Паромы Лены", "https://yandex.ru"], ["InDrive Original", "https://indrive.com"]];
+    else if (code === "16") hubs[0].items = [["Услуги РТ", "https://uslugi.tatarstan.ru"], ["Иннополис ID", "https://innopolis.ru"], ["Алга Карта", "https://yandex.ru"]];
+    else if (code === "89") hubs[0].items = [["Карта Морошка", "https://ekj.yanao.ru"], ["Авиа-Ямал", "https://yandex.ru"], ["Помощь Тундры", "https://yandex.ru"]];
     
+    if (hubs[0].items.length === 0) hubs.shift();
     return hubs;
 }
-const regionsDB2 = [
-    ["46", "Курская обл."], ["47", "Ленинградская обл."], ["48", "Липецкая обл."], ["49", "Магаданская обл."], ["50", "Московская обл."], 
-    ["51", "Мурманская обл."], ["52", "Нижегородская обл."], ["53", "Новгородская обл."], ["54", "Новосибирская обл."], ["55", "Омская обл."], 
-    ["56", "Оренбургская обл."], ["57", "Орловская обл."], ["58", "Пензенская обл."], ["59", "Пермский край"], ["60", "Псковская обл."], 
-    ["61", "Ростовская обл."], ["62", "Рязанская обл."], ["63", "Самарская обл."], ["64", "Саратовская обл."], ["65", "Сахалинская обл."], 
-    ["66", "Свердловская обл."], ["67", "Смоленская обл."], ["68", "Тамбовская обл."], ["69", "Тверская обл."], ["70", "Томская обл."], 
-    ["71", "Тульская обл."], ["72", "Тюменская обл."], ["73", "Ульяновская обл."], ["74", "Челябинская обл."], ["75", "Забайкальский край"], 
-    ["76", "Ярославская обл."], ["77", "г. Москва"], ["78", "г. Санкт-Петербург"], ["79", "Еврейская АО"], ["82", "Республика Крым"], 
-    ["83", "Ненецкий АО"], ["86", "ХМАО — Югра"], ["87", "Чукотский АО"], ["89", "Ямало-Ненецкий АО"], ["92", "г. Севастополь"]
-];
-regionsDB.push(...regionsDB2);
 
-// ДОРЕБОТКА ХАБОВ ДЛЯ 46-92
-const oldGetHubs = getHubs;
-getHubs = function(code, name) {
-    let hubs = oldGetHubs(code, name);
-    if (code === "54") {
-        hubs.unshift({ id: "nsk", title: "🔬 Новосибирский Хаб", items: [["Академгородок ID", "app"], ["Золотая Корона (Bio)", "app"], ["Зоопарк AR", "app"], ["НОВАТ Билеты", "web"], ["Система Город", "web"], ["Электронный Город", "app"]] });
-    }
-    if (code === "77") {
-        hubs.unshift({ id: "msk", title: "🏙️ Москва Экосистема", items: [["Mos.ru (Портал)", "app"], ["Тройка Bio-Pay", "app"], ["Парковки Москвы", "app"], ["МЭШ Школа", "web"], ["Активный Гражданин", "web"], ["Велобайк 2026", "app"]] });
-    }
-    if (code === "78") {
-        hubs.unshift({ id: "spb", title: "⚓ Питер-ID", items: [["ЕКП (Карта)", "app"], ["Подорожник Online", "app"], ["Эрмитаж AI", "app"], ["Фонтанка News", "web"], ["Горэлектротранс", "web"]] });
-    }
-    if (code === "66") {
-        hubs.unshift({ id: "ekb", title: "⚒️ Уральский Стек", items: [["ЕСК Уралочка", "app"], ["E1.RU Город", "app"], ["Промобот Help", "web"]] });
-    }
-    if (code === "89") {
-        hubs.unshift({ id: "yam", title: "❄️ Морошка Ямала", items: [["Карта Морошка", "app"], ["Авиа-Ямал", "web"], ["Помощь Тундры", "web"]] });
-    }
-    return hubs;
-};
-
-// ЛОГИКА РЕНДЕРА
 const regInput = document.getElementById('regInput');
 const regSuggests = document.getElementById('regSuggests');
+const homeScreen = document.getElementById('home-screen');
+const regionScreen = document.getElementById('region-screen');
 
 regInput.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase().trim();
@@ -184,16 +208,14 @@ regInput.addEventListener('input', (e) => {
 function renderRegion(code) {
     const reg = regionsDB.find(r => r[0] === code);
     if (!reg) return goHome();
-    document.getElementById('home-screen').style.display = 'none';
-    const rs = document.getElementById('region-screen');
-    rs.style.display = 'block';
+    homeScreen.style.display = 'none';
+    regionScreen.style.display = 'block';
     document.getElementById('regTitle').innerText = reg[1];
-    
     const grid = document.getElementById('megaGrid');
     const nav = document.getElementById('catNav');
     grid.innerHTML = ''; nav.innerHTML = '';
 
-    const hubs = getHubs(reg[0], reg[1]);
+    const hubs = getRegionalHubs(reg[0], reg[1]);
     hubs.forEach(hub => {
         const chip = document.createElement('div');
         chip.className = 'nav-chip';
@@ -204,22 +226,22 @@ function renderRegion(code) {
         const card = document.createElement('div');
         card.className = 'card'; card.id = 'hub-' + hub.id;
         
+        // 3 ГИГАНТА
         const top3 = hub.items.slice(0, 3);
         const others = hub.items.slice(3);
 
         let html = `<h3 class="card-h3">${hub.title}</h3>`;
-        top3.forEach(l => { html += `<a href="#" class="service-link">${l[0]} <span>${l[1].toUpperCase()}</span></a>`; });
+        top3.forEach(l => { html += `<a href="${l[1]}" target="_blank" class="service-link">${l[0]} <span>➔</span></a>`; });
         if (others.length > 0) {
-            html += `<details><summary>ЕЩЁ ${others.length} СЕРВИСОВ</summary><div style="margin-top:10px;">${others.map(l => `<a href="#" class="service-link" style="opacity:0.8; font-size:0.85rem;">${l[0]} <span>${l[1].toUpperCase()}</span></a>`).join('')}</div></details>`;
+            html += `<details><summary>ДРУГИЕ (${others.length})</summary><div style="margin-top:5px;">${others.map(l => `<a href="${l[1]}" target="_blank" class="service-link" style="font-size:0.85rem; opacity:0.8;">${l[0]} <span>➔</span></a>`).join('')}</div></details>`;
         }
         card.innerHTML = html;
         grid.appendChild(card);
     });
 }
 
-function goHome() { window.location.hash = ''; document.getElementById('home-screen').style.display = 'flex'; document.getElementById('region-screen').style.display = 'none'; regInput.value = ''; }
+function goHome() { window.location.hash = ''; homeScreen.style.display = 'flex'; regionScreen.style.display = 'none'; regInput.value = ''; }
 function router() { const h = window.location.hash; if (h.startsWith('#reg')) renderRegion(h.replace('#reg', '')); else goHome(); }
-
 window.onhashchange = router;
 window.onload = router;
 document.addEventListener('click', (e) => { if (!e.target.closest('#regInput')) regSuggests.style.display = 'none'; });
