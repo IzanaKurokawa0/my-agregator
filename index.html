@@ -36,11 +36,9 @@
         * { margin:0; padding:0; box-sizing:border-box; transition: 0.2s ease; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; font-size: 13px; }
 
-        /* HEADER - ФИКС ПРОСВЕЧИВАНИЯ И ПРОФЕССИОНАЛИЗМ */
+        /* HEADER - ФИКС НЕПРОЗРАЧНОСТИ */
         header { 
-            background: rgba(var(--bg-rgb), 0.9); /* Полупрозрачный фон */
-            backdrop-filter: blur(10px); /* Эффект матового стекла */
-            -webkit-backdrop-filter: blur(10px); /* Для Safari */
+            background: var(--bg); /* Полностью непрозрачный фон */
             padding: 8px 15px; 
             border-bottom: 2px solid var(--accent);
             position: sticky; 
@@ -55,16 +53,13 @@
         #home-screen { padding: 40px 15px; text-align: center; max-width: 800px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
         .hero-h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -2px; margin-bottom: 30px; line-height: 1; }
         .main-input { width: 100%; padding: 25px 35px; border-radius: 50px; border: 3px solid var(--border); font-size: 1.3rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .main-input::placeholder { color: var(--muted); }
 
         /* ЭКРАН РЕГИОНА */
         #region-screen { display: none; padding: 10px 10px 60px; max-width: 1850px; margin: 0 auto; }
 
-        /* КАТЕГОРИИ (ЧИПСЫ) - ФИКС ПРОСВЕЧИВАНИЯ */
+        /* КАТЕГОРИИ (ЧИПСЫ) - ФИКС НЕПРОЗРАЧНОСТИ */
         .cat-nav { 
-            background: rgba(var(--bg-rgb), 0.9); /* Полупрозрачный фон */
-            backdrop-filter: blur(10px); /* Эффект матового стекла */
-            -webkit-backdrop-filter: blur(10px); /* Для Safari */
+            background: var(--bg); /* Полностью непрозрачный фон */
             padding: 10px 0; border-bottom: 1.5px solid var(--border); margin-bottom: 20px;
             position: sticky; top: 50px; z-index: 9500;
             display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
@@ -106,53 +101,26 @@
             background: var(--bg); border-radius: 10px; 
             border: 1px solid var(--border); /* Добавлен бордер */
         }
-        summary:hover { color: var(--accent); border-color: var(--accent); }
-        summary::marker { display: none; } /* Убираем стандартный маркер */
-        summary::-webkit-details-marker { display: none; } /* Для Webkit */
-
+        summary:hover { color: var(--accent); border-color: var(--accent); } /* Ховер для спойлера */
 
         /* ПОДСКАЗКИ */
         .suggest-list { 
-            position: absolute; top: 100%; left: 0; right: 0; /* Изменено top на 100% для правильного позиционирования */
+            position: absolute; top: 100%; left: 0; right: 0; 
             background: var(--card-bg); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
             z-index: 10001; display: none; padding: 15px; 
-            max-height: 400px; overflow-y: auto; /* Добавлен скролл для длинных списков */
-            text-align: left; /* Выравнивание текста */
+            max-height: 400px; overflow-y: auto; 
+            text-align: left; 
         }
         .suggest-item { 
             padding: 15px 25px; border-radius: 15px; cursor: pointer; display: flex; 
             justify-content: space-between; font-weight: 800; font-size: 1.1rem; 
-            margin-bottom: 5px; /* Отступ между элементами */
+            margin-bottom: 5px; 
         }
         .suggest-item:last-of-type { margin-bottom: 0; }
         .suggest-item:hover { background: var(--accent); color: white; }
 
         footer { padding: 60px 20px; text-align: center; border-top: 1.5px solid var(--border); color: var(--muted); font-weight: 800; margin-top: 60px; }
     </style>
-    <!-- JS для RGB цвета фона -->
-    <script>
-        // Функция для получения RGB значений из CSS переменной
-        function getCssVarRgb(varName) {
-            const rgb = getComputedStyle(document.documentElement).getPropertyValue(varName);
-            if (rgb.startsWith('#')) { // Если цвет в HEX
-                const r = parseInt(rgb.slice(1, 3), 16);
-                const g = parseInt(rgb.slice(3, 5), 16);
-                const b = parseInt(rgb.slice(5, 7), 16);
-                return `${r},${g},${b}`;
-            } else if (rgb.startsWith('rgb')) { // Если цвет уже в RGB
-                return rgb.match(/\d+/g).join(',');
-            }
-            return '242,244,247'; // Дефолтное значение для light theme --bg
-        }
-
-        // Устанавливаем переменную --bg-rgb при загрузке и при изменении темы
-        function setBgRgb() {
-            document.documentElement.style.setProperty('--bg-rgb', getCssVarRgb('--bg'));
-        }
-
-        window.addEventListener('DOMContentLoaded', setBgRgb);
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setBgRgb);
-    </script>
 </head>
 <body>
 
@@ -210,212 +178,683 @@ const regionsDB = [
     ["75", "Забайкальский край"], ["76", "Ярославская область"], ["77", "г. Москва"], ["78", "г. Санкт-Петербург"],
     ["79", "Еврейская автономная область"], ["82", "Республика Крым"], ["83", "Ненецкий автономный округ"], ["86", "Ханты-Мансийский автономный округ — Югра"],
     ["87", "Чукотский автономный округ"], ["89", "Ямало-Ненецкий автономный округ"], 
-    ["91", "Федеральная территория \"Сириус\""], // Добавлен, т.к. не было в исходном regionsDB
+    ["91", "Федеральная территория \"Сириус\""], 
     ["92", "г. Севастополь"],
-    ["93", "г. Байконур"] // Добавлен, т.к. не было в исходном regionsDB
+    ["93", "г. Байконур"]
 ];
 
-function getRegionalHubs(code, name) {
-    const enc = encodeURIComponent(name);
+// ФЕДЕРАЛЬНЫЕ БЛОКИ (вынесены для повторного использования)
+const federalGovServices = [
+    ["Единый портал Госуслуг", "https://www.gosuslugi.ru/"],
+    ["Мои Документы (МФЦ)", "https://mfc.rf/"],
+    ["ФНС Налоги (Личный кабинет)", "https://lkfl2.nalog.ru/"],
+    ["Росреестр", "https://rosreestr.gov.ru/"]
+];
+const federalTransportServices = [
+    ["Яндекс.Карты", "https://yandex.ru/maps/"],
+    ["Яндекс.Навигатор", "https://navigator.yandex.ru/"],
+    ["2GIS", "https://2gis.ru/"],
+    ["РЖД Пассажирам", "https://www.rzd.ru/"],
+    ["Туту.ру (агрегатор билетов)", "https://www.tutu.ru/"],
+    ["Aviasales (авиабилеты)", "https://www.aviasales.ru/"]
+];
+const federalJKHServices = [
+    ["ГИС ЖКХ", "https://dom.gosuslugi.ru/"],
+    ["Госуслуги (раздел ЖКХ)", "https://www.gosuslugi.ru/category/housing"],
+    ["Квартплата.ру (оплата ЖКУ)", "https://kvartplata.ru"], // Общий сервис
+    ["Профи.ру (Мастера)", "https://profi.ru"] // Общий сервис для услуг
+];
+const federalEducationServices = [
+    ["ГИС \"Моя Школа\"", "https://myschool.edu.ru/"],
+    ["Российская электронная школа (РЭШ)", "https://resh.edu.ru/"],
+    ["Сферум", "https://sferum.ru/"],
+    ["Национальная электронная библиотека (НЭБ)", "https://нэб.рф/"],
+    ["Открытое образование", "https://openedu.ru/"],
+    ["Учи.ру", "https://uchi.ru/"],
+    ["ЯКласс", "https://www.yaklass.ru/"],
+    ["Stepik", "https://stepik.org/"]
+];
+const federalBanksServices = [
+    ["СберБанк", "https://www.sberbank.ru/"],
+    ["Тинькофф (Т-Банк)", "https://www.tinkoff.ru/"],
+    ["Альфа-Банк", "https://alfabank.ru/"],
+    ["Система Быстрых Платежей (СБП)", "https://sbp.nspk.ru/"],
+    ["Mir Pay (для карт \"Мир\" на Android)", "https://www.mir.ru/mirpay/"]
+];
+const federalSocialMessengers = [
+    ["ВКонтакте (VK)", "https://vk.com/"],
+    ["Telegram", "https://telegram.org/"],
+    ["WhatsApp", "https://www.whatsapp.com/"],
+    ["Viber", "https://www.viber.com/ru/"],
+    ["Одноклассники (ОК)", "https://ok.ru/"],
+    ["X (бывший Twitter) (VPN)", "https://twitter.com/"],
+    ["Instagram (VPN)", "https://www.instagram.com/"],
+    ["Facebook (VPN)", "https://www.facebook.com/"],
+    ["TikTok", "https://www.tiktok.com/"]
+];
+const federalShoppingServices = [
+    ["Ozon", "https://www.ozon.ru/"],
+    ["Wildberries (WB)", "https://www.wildberries.ru/"],
+    ["Яндекс Маркет", "https://market.yandex.ru/"],
+    ["МегаМаркет", "https://megamarket.ru/"],
+    ["AliExpress Россия", "https://aliexpress.ru/"],
+    ["Lamoda", "https://www.lamoda.ru/"],
+    ["М.Видео", "https://www.mvideo.ru/"],
+    ["DNS", "https://www.dns-shop.ru/"],
+    ["Avito", "https://www.avito.ru/"],
+    ["Юла", "https://youla.ru/"]
+];
+const federalFoodTaxiServices = [
+    ["Яндекс.Еда", "https://eda.yandex.ru/"],
+    ["Delivery Club", "https://www.delivery-club.ru/"],
+    ["Самокат", "https://samokat.ru/"],
+    ["СберМаркет", "https://sbermarket.ru/"],
+    ["Додо Пицца", "https://dodopizza.ru/"],
+    ["Вкусно — и точка", "https://vkusnoitochka.ru/"],
+    ["Яндекс Go (такси)", "https://go.yandex/"],
+    ["Максим (такси)", "https://taximaxim.ru/"],
+    ["Делимобиль (каршеринг)", "https://delimobil.ru/"]
+];
+const federalOfficeEditors = [
+    ["Microsoft 365 (Office Online)", "https://www.office.com/"],
+    ["Google Workspace (Документы, Таблицы, Презентации)", "https://drive.google.com/"],
+    ["Zoho Office Suite", "https://www.zoho.com/ru/office/"],
+    ["LibreOffice", "https://ru.libreoffice.org/"],
+    ["Apache OpenOffice", "https://www.openoffice.org/"],
+    ["WPS Office", "https://www.wps.com/ru/"],
+    ["МойОфис", "https://www.moyoffice.ru/"],
+    ["Р7-Офис", "https://www.r7-office.ru/"],
+    ["Adobe Acrobat Reader", "https://www.adobe.com/ru/acrobat/pdf-reader.html"],
+    ["Foxit Reader", "https://www.foxit.com/pdf-reader/"],
+    ["iLovePDF (онлайн-сервис)", "https://www.ilovepdf.com/ru"]
+];
+const federalGamesPlatforms = [
+    ["Counter-Strike 2", "https://store.steampowered.com/app/730/CounterStrike_2/"],
+    ["Dota 2", "https://store.steampowered.com/app/570/Dota_2/"],
+    ["Fortnite", "https://store.epicgames.com/ru/p/fortnite"],
+    ["PUBG Mobile", "https://play.google.com/store/apps/details?id=com.tencent.ig"],
+    ["Genshin Impact", "https://genshin.hoyoverse.com/ru/"],
+    ["Mobile Legends: Bang Bang", "https://play.google.com/store/apps/details?id=com.mobile.legends"],
+    ["Steam", "https://store.steampowered.com/"],
+    ["Epic Games Store", "https://store.epicgames.com/ru/"],
+    ["VK Play", "https://vkplay.ru/"],
+    ["GOG GALAXY", "https://www.gog.com/"],
+    ["Google Play Store (игры)", "https://play.google.com/store/games"],
+    ["Apple App Store (игры)", "https://apps.apple.com/ru/genre/игры/id6014"],
+    ["VK Play Cloud (облачный гейминг)", "https://cloud.vkplay.ru/"],
+    ["GeForce NOW (через GFN.ru)", "https://gfn.ru/"]
+];
+const federalMultimediaEntertainment = [
+    ["YouTube", "https://www.youtube.com/"],
+    ["VK Видео", "https://vk.com/video"],
+    ["Rutube", "https://rutube.ru/"],
+    ["KinoPoisk", "https://www.kinopoisk.ru/"],
+    ["Яндекс Музыка", "https://music.yandex.ru/"],
+    ["VK Музыка", "https://music.vk.com/"],
+    ["Звук (от СберЗвук)", "https://zvuk.com/"],
+    ["YouTube Music", "https://music.youtube.com/"],
+    ["SoundCloud", "https://soundcloud.com/"],
+    ["Google Podcasts", "https://podcasts.google.com/"]
+];
+const federalVPNTraffic = [
+    ["Proton VPN Free", "https://protonvpn.com/free-vpn/"],
+    ["Windscribe Free", "https://windscribe.com/"],
+    ["TunnelBear Free", "https://www.tunnelbear.com/"],
+    ["Opera Browser (встроенный VPN)", "https://www.opera.com/ru"],
+    ["WeTransfer", "https://wetransfer.com/"],
+    ["Send Anywhere", "https://send-anywhere.com/"],
+    ["Snapdrop (передача по локальной сети)", "https://snapdrop.net/"]
+];
+const federalAINeuralNetworks = [
+    ["ChatGPT", "https://chat.openai.com/"],
+    ["Google Bard / Gemini", "https://gemini.google.com/"],
+    ["Microsoft Copilot", "https://copilot.microsoft.com/"],
+    ["Perplexity AI", "https://www.perplexity.ai/"],
+    ["Stable Diffusion (на Hugging Face Spaces)", "https://huggingface.co/spaces"],
+    ["Kandinsky (от Сбер AI)", "https://www.sberbank.ru/promo/kandinsky/"],
+    ["Leonardo.AI", "https://leonardo.ai/"],
+    ["Whisper (OpenAI, GitHub)", "https://github.com/openai/whisper"],
+    ["Hugging Face (модели ИИ)", "https://huggingface.co/"],
+    ["Google Colaboratory (Colab)", "https://colab.research.google.com/"]
+];
+const federalSmartHomeSecurity = [
+    ["Яндекс.Умный Дом (с Алисой)", "https://ya.ru/smart-home"],
+    ["Google Home", "https://store.google.com/category/connected_home"],
+    ["Apple Home (HomeKit)", "https://www.apple.com/ru/ios/home/"],
+    ["Tuya Smart", "https://www.tuya.com/"],
+    ["Xiaomi Home (Mi Home)", "https://www.mi.com/ru/mihome/"],
+    ["Aqara Home", "https://www.aqara.com/ru/"],
+    ["Ezviz (камеры)", "https://www.ezviz.com/ru"],
+    ["TP-Link Tapo", "https://www.tp-link.com/ru/tapo/"],
+    ["Reolink", "https://reolink.com/"],
+    ["Ajax Systems (охранные системы)", "https://ajax.systems/ru/"],
+    ["Home Assistant", "https://www.home-assistant.io/"]
+];
+const federalCareerServices = [
+    ["HeadHunter (HH.ru)", "https://hh.ru/"],
+    ["SuperJob", "https://www.superjob.ru/"],
+    ["Rabota.ru", "https://www.rabota.ru/"],
+    ["Avito (раздел \"Работа\")", "https://www.avito.ru/rabota"],
+    ["Госуслуги (раздел \"Работа и занятость\")", "https://www.gosuslugi.ru/employment"],
+    ["LinkedIn (через VPN)", "https://www.linkedin.com/"],
+    ["Indeed", "https://www.indeed.com/"],
+    ["Glassdoor", "https://www.glassdoor.com/"]
+];
+const federalAppStores = [
+    ["RuStore", "https://www.rustore.ru/"],
+    ["AppGallery (Huawei)", "https://appgallery.huawei.com/"],
+    ["GetApps (Xiaomi)", "https://global.developer.xiaomi.com/getapps"],
+    ["Google Play Store", "https://play.google.com/store"],
+    ["Apple App Store", "https://apps.apple.com/"],
+    ["APKMirror (сторонние APK)", "https://www.apkmirror.com/"],
+    ["Aptoide", "https://www.aptoide.com/"],
+    ["F-Droid", "https://f-droid.org/"]
+];
 
-    // ФЕДЕРАЛЬНЫЕ БЛОКИ
-    const federalGov = [
-        ["Единый портал Госуслуг", "https://www.gosuslugi.ru/"],
-        ["Мои Документы (МФЦ)", "https://mfc.rf/"],
-        ["ФНС Налоги (Личный кабинет)", "https://lkfl2.nalog.ru/"],
-        ["Росреестр", "https://rosreestr.gov.ru/"]
-    ];
-    const federalTransport = [
-        ["Яндекс.Карты", "https://yandex.ru/maps/"],
-        ["Яндекс.Навигатор", "https://navigator.yandex.ru/"],
-        ["2GIS", "https://2gis.ru/"],
-        ["РЖД Пассажирам", "https://www.rzd.ru/"],
-        ["Туту.ру (агрегатор билетов)", "https://www.tutu.ru/"],
-        ["Aviasales (авиабилеты)", "https://www.aviasales.ru/"]
-    ];
-    const federalJKH = [
-        ["ГИС ЖКХ", "https://dom.gosuslugi.ru/"],
-        ["Госуслуги (раздел ЖКХ)", "https://www.gosuslugi.ru/category/housing"]
-    ];
-    const federalEducation = [
-        ["ГИС \"Моя Школа\"", "https://myschool.edu.ru/"],
-        ["Российская электронная школа (РЭШ)", "https://resh.edu.ru/"],
-        ["Сферум", "https://sferum.ru/"],
-        ["Национальная электронная библиотека (НЭБ)", "https://нэб.рф/"],
-        ["Открытое образование", "https://openedu.ru/"],
-        ["Учи.ру", "https://uchi.ru/"],
-        ["ЯКласс", "https://www.yaklass.ru/"],
-        ["Stepik", "https://stepik.org/"]
-    ];
-    const federalBanks = [
-        ["СберБанк", "https://www.sberbank.ru/"],
-        ["Тинькофф (Т-Банк)", "https://www.tinkoff.ru/"],
-        ["Альфа-Банк", "https://alfabank.ru/"],
-        ["Система Быстрых Платежей (СБП)", "https://sbp.nspk.ru/"],
-        ["Mir Pay (для карт \"Мир\" на Android)", "https://www.mir.ru/mirpay/"]
-    ];
-    const federalSocial = [
-        ["ВКонтакте (VK)", "https://vk.com/"],
-        ["Telegram", "https://telegram.org/"],
-        ["WhatsApp", "https://www.whatsapp.com/"],
-        ["Viber", "https://www.viber.com/ru/"],
-        ["Одноклассники (ОК)", "https://ok.ru/"],
-        ["X (бывший Twitter) (VPN)", "https://twitter.com/"],
-        ["Instagram (VPN)", "https://www.instagram.com/"],
-        ["Facebook (VPN)", "https://www.facebook.com/"],
-        ["TikTok (Ограничен в РФ)", "https://www.tiktok.com/"]
-    ];
-    const federalShopping = [
-        ["Ozon", "https://www.ozon.ru/"],
-        ["Wildberries (WB)", "https://www.wildberries.ru/"],
-        ["Яндекс Маркет", "https://market.yandex.ru/"],
-        ["МегаМаркет", "https://megamarket.ru/"],
-        ["AliExpress Россия", "https://aliexpress.ru/"],
-        ["Lamoda", "https://www.lamoda.ru/"],
-        ["М.Видео", "https://www.mvideo.ru/"],
-        ["DNS", "https://www.dns-shop.ru/"],
-        ["Avito", "https://www.avito.ru/"],
-        ["Юла", "https://youla.ru/"]
-    ];
-    const federalFoodTaxi = [
-        ["Яндекс Go (Еда)", "https://eda.yandex.ru/"],
-        ["Delivery Club", "https://www.delivery-club.ru/"],
-        ["Самокат", "https://samokat.ru/"],
-        ["СберМаркет", "https://sbermarket.ru/"],
-        ["Додо Пицца", "https://dodopizza.ru/"],
-        ["Вкусно — и точка", "https://vkusnoitochka.ru/"],
-        ["Яндекс Go (такси)", "https://go.yandex/"],
-        ["Максим (такси)", "https://taximaxim.ru/"],
-        ["Делимобиль (каршеринг)", "https://delimobil.ru/"]
-    ];
-    const federalOfficeEditors = [
-        ["Microsoft 365 (Office Online)", "https://www.office.com/"],
-        ["Google Workspace (Документы, Таблицы, Презентации)", "https://drive.google.com/"],
-        ["Zoho Office Suite", "https://www.zoho.com/ru/office/"],
-        ["LibreOffice", "https://ru.libreoffice.org/"],
-        ["Apache OpenOffice", "https://www.openoffice.org/"],
-        ["WPS Office", "https://www.wps.com/ru/"],
-        ["МойОфис", "https://www.moyoffice.ru/"],
-        ["Р7-Офис", "https://www.r7-office.ru/"],
-        ["Adobe Acrobat Reader", "https://www.adobe.com/ru/acrobat/pdf-reader.html"],
-        ["Foxit Reader", "https://www.foxit.com/pdf-reader/"],
-        ["iLovePDF (онлайн-сервис)", "https://www.ilovepdf.com/ru"]
-    ];
-    const federalGamesPlatforms = [
-        ["Counter-Strike 2", "https://store.steampowered.com/app/730/CounterStrike_2/"],
-        ["Dota 2", "https://store.steampowered.com/app/570/Dota_2/"],
-        ["Fortnite", "https://store.epicgames.com/ru/p/fortnite"],
-        ["PUBG Mobile", "https://play.google.com/store/apps/details?id=com.tencent.ig"],
-        ["Genshin Impact", "https://genshin.hoyoverse.com/ru/"],
-        ["Mobile Legends: Bang Bang", "https://play.google.com/store/apps/details?id=com.mobile.legends"],
-        ["Steam", "https://store.steampowered.com/"],
-        ["Epic Games Store", "https://store.epicgames.com/ru/"],
-        ["VK Play", "https://vkplay.ru/"],
-        ["GOG GALAXY", "https://www.gog.com/"],
-        ["Google Play Store (игры)", "https://play.google.com/store/games"],
-        ["Apple App Store (игры)", "https://apps.apple.com/ru/genre/игры/id6014"],
-        ["VK Play Cloud (облачный гейминг)", "https://cloud.vkplay.ru/"],
-        ["GeForce NOW (через GFN.ru)", "https://gfn.ru/"]
-    ];
-    const federalMultimediaEntertainment = [
-        ["YouTube", "https://www.youtube.com/"],
-        ["VK Видео", "https://vk.com/video"],
-        ["Rutube", "https://rutube.ru/"],
-        ["KinoPoisk", "https://www.kinopoisk.ru/"],
-        ["Яндекс Музыка", "https://music.yandex.ru/"],
-        ["VK Музыка", "https://music.vk.com/"],
-        ["Звук (от СберЗвук)", "https://zvuk.com/"],
-        ["YouTube Music", "https://music.youtube.com/"],
-        ["SoundCloud", "https://soundcloud.com/"],
-        ["Google Podcasts", "https://podcasts.google.com/"]
-    ];
-    const federalVPNTraffic = [
-        ["Proton VPN Free", "https://protonvpn.com/free-vpn/"],
-        ["Windscribe Free", "https://windscribe.com/"],
-        ["TunnelBear Free", "https://www.tunnelbear.com/"],
-        ["Opera Browser (встроенный VPN)", "https://www.opera.com/ru"],
-        ["WeTransfer", "https://wetransfer.com/"],
-        ["Send Anywhere", "https://send-anywhere.com/"],
-        ["Snapdrop (передача по локальной сети)", "https://snapdrop.net/"]
-    ];
-    const federalAINeuralNetworks = [
-        ["ChatGPT", "https://chat.openai.com/"],
-        ["Google Bard / Gemini", "https://gemini.google.com/"],
-        ["Microsoft Copilot", "https://copilot.microsoft.com/"],
-        ["Perplexity AI", "https://www.perplexity.ai/"],
-        ["Stable Diffusion (на Hugging Face Spaces)", "https://huggingface.co/spaces"],
-        ["Kandinsky (от Сбер AI)", "https://www.sberbank.ru/promo/kandinsky/"],
-        ["Leonardo.AI", "https://leonardo.ai/"],
-        ["Whisper (OpenAI, GitHub)", "https://github.com/openai/whisper"],
-        ["Hugging Face (модели ИИ)", "https://huggingface.co/"],
-        ["Google Colaboratory (Colab)", "https://colab.research.google.com/"]
-    ];
-    const federalSmartHomeSecurity = [
-        ["Яндекс.Умный Дом (с Алисой)", "https://ya.ru/smart-home"],
-        ["Google Home", "https://store.google.com/category/connected_home"],
-        ["Apple Home (HomeKit)", "https://www.apple.com/ru/ios/home/"],
-        ["Tuya Smart", "https://www.tuya.com/"],
-        ["Xiaomi Home (Mi Home)", "https://www.mi.com/ru/mihome/"],
-        ["Aqara Home", "https://www.aqara.com/ru/"],
-        ["Ezviz (камеры)", "https://www.ezviz.com/ru"],
-        ["TP-Link Tapo", "https://www.tp-link.com/ru/tapo/"],
-        ["Reolink", "https://reolink.com/"],
-        ["Ajax Systems (охранные системы)", "https://ajax.systems/ru/"],
-        ["Home Assistant", "https://www.home-assistant.io/"]
-    ];
-    const federalCareer = [
-        ["HeadHunter (HH.ru)", "https://hh.ru/"],
-        ["SuperJob", "https://www.superjob.ru/"],
-        ["Rabota.ru", "https://www.rabota.ru/"],
-        ["Avito (раздел \"Работа\")", "https://www.avito.ru/rabota"],
-        ["Госуслуги (раздел \"Работа и занятость\")", "https://www.gosuslugi.ru/employment"],
-        ["LinkedIn (через VPN)", "https://www.linkedin.com/"],
-        ["Indeed", "https://www.indeed.com/"],
-        ["Glassdoor", "https://www.glassdoor.com/"]
-    ];
-    const federalAppStores = [
-        ["RuStore", "https://www.rustore.ru/"],
-        ["AppGallery (Huawei)", "https://appgallery.huawei.com/"],
-        ["GetApps (Xiaomi)", "https://global.developer.xiaomi.com/getapps"],
-        ["Google Play Store", "https://play.google.com/store"],
-        ["Apple App Store", "https://apps.apple.com/"],
-        ["APKMirror (сторонние APK)", "https://www.apkmirror.com/"],
-        ["Aptoide", "https://www.aptoide.com/"],
-        ["F-Droid", "https://f-droid.org/"]
-    ];
+
+function getRegionalGovLink(code, name) {
+    const enc = encodeURIComponent(name);
+    const links = {
+        "01": ["Правительство Республики Адыгея", "https://adyghea.ru/"],
+        "02": ["Правительство Республики Башкортостан", "https://pravitelstvorb.ru/"],
+        "03": ["Правительство Республики Бурятия", "https://egov-buryatia.ru/"],
+        "04": ["Правительство Республики Алтай", "https://altay-republic.ru/"],
+        "05": ["Правительство Республики Дагестан", "https://e-dag.ru/"],
+        "06": ["Правительство Республики Ингушетия", "http://pravitelstvo.ingushetia.ru/"],
+        "07": ["Правительство Кабардино-Балкарской Республики", "https://glava.kbr.ru/"],
+        "08": ["Правительство Республики Калмыкия", "https://www.rk08.ru/"],
+        "09": ["Правительство Карачаево-Черкесской Республики", "https://kchr.ru/"],
+        "10": ["Правительство Республики Карелия", "https://gov.karelia.ru/"],
+        "11": ["Правительство Республики Коми", "https://rkomi.ru/"],
+        "12": ["Правительство Республики Марий Эл", "https://mari-el.gov.ru/"],
+        "13": ["Правительство Республики Мордовия", "https://e-mordovia.ru/"],
+        "14": ["Правительство Республики Саха (Якутия)", "https://sakha.gov.ru/"],
+        "15": ["Правительство Республики Северная Осетия — Алания", "https://alania.gov.ru/"],
+        "16": ["Правительство Республики Татарстан", "https://prav.tatarstan.ru/"],
+        "17": ["Правительство Республики Тыва", "https://rtyva.ru/"],
+        "18": ["Правительство Удмуртской Республики", "https://udmurt.ru/"],
+        "19": ["Правительство Республики Хакасия", "https://r-19.ru/"],
+        "20": ["Правительство Чеченской Республики", "http://chechnya.gov.ru/"],
+        "21": ["Кабинет Министров Чувашской Республики", "https://cap.ru/"],
+        "22": ["Правительство Алтайского края", "https://altairegion22.ru/"],
+        "23": ["Администрация Краснодарского края", "https://admkrai.krasnodar.ru/"],
+        "24": ["Правительство Красноярского края", "https://www.krskstate.ru/"],
+        "25": ["Правительство Приморского края", "https://primorsky.ru/"],
+        "26": ["Правительство Ставропольского края", "https://www.stavkray.ru/"],
+        "27": ["Правительство Хабаровского края", "https://khabkrai.ru/"],
+        "28": ["Правительство Амурской области", "https://www.amurobl.ru/"],
+        "29": ["Правительство Архангельской области", "https://dvinaland.ru/"],
+        "30": ["Правительство Астраханской области", "https://www.astrobl.ru/"],
+        "31": ["Правительство Белгородской области", "https://belregion.ru/"],
+        "32": ["Правительство Брянской области", "https://www.bryanskobl.ru/"],
+        "33": ["Правительство Владимирской области", "https://avo.ru/"],
+        "34": ["Администрация Волгоградской области", "https://www.volgograd.ru/"],
+        "35": ["Правительство Вологодской области", "https://vologda-oblast.ru/"],
+        "36": ["Правительство Воронежской области", "https://www.govvrn.ru/"],
+        "37": ["Правительство Ивановской области", "https://ivanovoobl.ru/"],
+        "38": ["Правительство Иркутской области", "https://irkobl.ru/"],
+        "39": ["Правительство Калининградской области", "https://gov39.ru/"],
+        "40": ["Правительство Калужской области", "https://admobl.kaluga.ru/"],
+        "41": ["Правительство Камчатского края", "https://www.kamgov.ru/"],
+        "42": ["Правительство Кузбасса", "https://ako.ru/"],
+        "43": ["Правительство Кировской области", "https://www.kirovreg.ru/"],
+        "44": ["Администрация Костромской области", "https://adm44.ru/"],
+        "45": ["Правительство Курганской области", "https://www.kurganobl.ru/"],
+        "46": ["Администрация Курской области", "https://kursk.ru/"],
+        "47": ["Правительство Ленинградской области", "https://lenobl.ru/"],
+        "48": ["Администрация Липецкой области", "https://admlr.lipetsk.ru/"],
+        "49": ["Правительство Магаданской области", "https://49gov.ru/"],
+        "50": ["Правительство Московской области", "https://mosreg.ru/"],
+        "51": ["Правительство Мурманской области", "https://gov-murman.ru/"],
+        "52": ["Правительство Нижегородской области", "https://government-nnov.ru/"],
+        "53": ["Правительство Новгородской области", "https://www.novreg.ru/"],
+        "54": ["Правительство Новосибирской области", "https://www.nso.ru/"],
+        "55": ["Правительство Омской области", "https://omskportal.ru/"],
+        "56": ["Правительство Оренбургской области", "https://www.orb.ru/"],
+        "57": ["Правительство Орловской области", "https://www.orel-region.ru/"],
+        "58": ["Правительство Пензенской области", "https://pnzreg.ru/"],
+        "59": ["Правительство Пермского края", "https://www.permkrai.ru/"],
+        "60": ["Администрация Псковской области", "https://pskov.ru/"],
+        "61": ["Правительство Ростовской области", "https://www.donland.ru/"],
+        "62": ["Правительство Рязанской области", "https://ryazangov.ru/"],
+        "63": ["Правительство Самарской области", "https://www.samregion.ru/"],
+        "64": ["Правительство Саратовской области", "https://saratov.gov.ru/"],
+        "65": ["Правительство Сахалинской области", "https://sakhalin.gov.ru/"],
+        "66": ["Правительство Свердловской области", "https://midural.ru/"],
+        "67": ["Администрация Смоленской области", "https://admin-smolensk.ru/"],
+        "68": ["Администрация Тамбовской области", "https://tambov.gov.ru/"],
+        "69": ["Правительство Тверской области", "https://www.tver.ru/"],
+        "70": ["Администрация Томской области", "https://tomsk.gov.ru/"],
+        "71": ["Правительство Тульской области", "https://tularegion.ru/"],
+        "72": ["Правительство Тюменской области", "https://admtyumen.ru/"],
+        "73": ["Правительство Ульяновской области", "https://ulgov.ru/"],
+        "74": ["Правительство Челябинской области", "https://www.gov74.ru/"],
+        "75": ["Правительство Забайкальского края", "https://75.ru/"],
+        "76": ["Правительство Ярославской области", "https://www.yarregion.ru/"],
+        "77": ["Официальный сайт Мэра Москвы", "https://www.mos.ru/"],
+        "78": ["Официальный сайт Администрации Санкт-Петербурга", "https://www.gov.spb.ru/"],
+        "79": ["Правительство Еврейской автономной области", "https://www.eao.ru/"],
+        "82": ["Совет министров Республики Крым", "https://rk.gov.ru/"],
+        "83": ["Администрация Ненецкого автономного округа", "https://adm-nao.ru/"],
+        "86": ["Правительство Ханты-Мансийского автономного округа – Югры", "https://admhmao.ru/"],
+        "87": ["Правительство Чукотского автономного округа", "https://www.chukotka.ru/"],
+        "89": ["Правительство Ямало-Ненецкого автономного округа", "https://www.yanao.ru/"],
+        "91": ["Администрация федеральной территории \"Сириус\"", "https://sirius-ft.ru/"],
+        "92": ["Правительство Севастополя", "https://sev.gov.ru/"],
+        "93": ["Администрация города Байконура", "http://www.baikonuradm.ru/"]
+    };
+    const link = links[code];
+    return link ? [link[0], link[1]] : [`Правительство ${name}`, `https://yandex.ru/search/?text=Правительство+${enc}`];
+}
+
+function getRegionalTransportLink(code, name) {
+    const enc = encodeURIComponent(name);
+    const links = {
+        "01": ["Министерство строительства, транспорта, ЖКХ и дорожного хозяйства Республики Адыгея", "https://www.minstroy01.ru/activity/transport/"],
+        "02": ["Министерство транспорта и дорожного хозяйства Республики Башкортостан", "https://transport.bashkortostan.ru/"],
+        "03": ["Министерство по развитию транспорта, энергетики и дорожного хозяйства Республики Бурятия", "https://minintrud.govrb.ru/"],
+        "04": ["Министерство регионального развития Республики Алтай (включает транспорт)", "https://mrd.altai-republic.ru/"],
+        "05": ["Министерство транспорта и дорожного хозяйства Республики Дагестан", "https://mtdx.e-dag.ru/"],
+        "06": ["Министерство строительства и жилищно-коммунального хозяйства Республики Ингушетия (включает транспорт)", "http://minstroyri.ru/"],
+        "07": ["Министерство транспорта и дорожного хозяйства Кабардино-Балкарской Республики", "https://mintrans-kbr.ru/"],
+        "08": ["Министерство по строительству, транспорту и дорожному хозяйству Республики Калмыкия", "https://minstroy.rk08.ru/"],
+        "09": ["Министерство строительства и жилищно-коммунального хозяйства Карачаево-Черкесской Республики (включает транспорт)", "https://minszhkh.ru/"],
+        "10": ["Министерство по дорожному хозяйству, транспорту и связи Республики Карелия", "https://gov.karelia.ru/ministers/dorog-transporta-svyazi/"],
+        "11": ["Министерство строительства и жилищно-коммунального хозяйства Республики Коми (включает транспорт)", "https://minstroy.rkomi.ru/"],
+        "12": ["Министерство транспорта и дорожного хозяйства Республики Марий Эл", "https://mari-el.gov.ru/ministries/mintrans/"],
+        "13": ["Министерство строительства, транспорта, дорожного хозяйства и связи Республики Мордовия", "https://minstroy.e-mordovia.ru/"],
+        "14": ["Министерство транспорта и дорожного хозяйства Республики Саха (Якутия)", "https://mintrans.sakha.gov.ru/"],
+        "15": ["Министерство строительства и архитектуры Республики Северная Осетия - Алания (включает транспорт)", "https://minstroy-osetia.ru/"],
+        "16": ["Министерство транспорта и дорожного хозяйства Республики Татарстан", "https://minzdrav.tatarstan.ru/"],
+        "17": ["Министерство дорожно-транспортного комплекса Республики Тыва", "https://mdtk.rtyva.ru/"],
+        "18": ["Министерство транспорта и дорожного хозяйства Удмуртской Республики", "https://mintrans.udmurt.ru/"],
+        "19": ["Министерство транспорта и дорожного хозяйства Республики Хакасия", "https://mintrans.r-19.ru/"],
+        "20": ["Министерство автомобильных дорог Чеченской Республики", "http://minavtodor-chr.ru/"],
+        "21": ["Министерство транспорта и дорожного хозяйства Чувашской Республики", "https://mintrans.cap.ru/"],
+        "22": ["Министерство транспорта Алтайского края", "https://altairegion22.ru/gov_authority/transport/"],
+        "23": ["Министерство транспорта и дорожного хозяйства Краснодарского края", "https://www.kubantrans.ru/"],
+        "24": ["Министерство транспорта Красноярского края", "https://www.krskstate.ru/transport/"],
+        "25": ["Министерство транспорта и дорожного хозяйства Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/transport/"],
+        "26": ["Министерство дорожного хозяйства и транспорта Ставропольского края", "https://dor.stavkray.ru/"],
+        "27": ["Министерство транспорта и дорожного хозяйства Хабаровского края", "https://mintrans.khabkrai.ru/"],
+        "28": ["Министерство транспорта и дорожного хозяйства Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_transporta_i_dorozhnogo_khozyaystva_amurskoy_oblasti/"],
+        "29": ["Министерство транспорта Архангельской области", "https://dvinaland.ru/gov/iogv/mintrans/"],
+        "30": ["Министерство промышленности и природных ресурсов Астраханской области (включает транспорт)", "https://minprom.astrobl.ru/"],
+        "31": ["Министерство автомобильных дорог и транспорта Белгородской области", "https://belgorodstroy.ru/"],
+        "32": ["Департамент промышленности, транспорта и связи Брянской области", "https://econ.bryanskobl.ru/industries/transport-and-communications/"],
+        "33": ["Министерство транспорта и дорожного хозяйства Владимирской области", "https://doroga.avo.ru/"],
+        "34": ["Комитет транспорта и дорожного хозяйства Волгоградской области", "https://ut.volgograd.ru/"],
+        "35": ["Департамент дорожного хозяйства и транспорта Вологодской области", "https://dor.gov35.ru/"],
+        "36": ["Департамент транспорта и автомобильных дорог Воронежской области", "https://doroga.govvrn.ru/"],
+        "37": ["Департамент дорожного хозяйства и транспорта Ивановской области", "https://dorogi.ivanovoobl.ru/"],
+        "38": ["Министерство транспорта и дорожного хозяйства Иркутской области", "https://irkobl.ru/sites/dor/"],
+        "39": ["Министерство развития инфраструктуры Калининградской области", "https://gov39.ru/vlast/government/ministers/miri/"],
+        "40": ["Министерство дорожного хозяйства Калужской области", "https://dorog.admobl.kaluga.ru/"],
+        "41": ["Министерство транспорта и дорожного строительства Камчатского края", "https://www.kamgov.ru/minstroy"],
+        "42": ["Министерство транспорта Кузбасса", "https://mintrans.kemv.ru/"],
+        "43": ["Министерство транспорта Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/transport/"],
+        "44": ["Департамент транспорта и дорожного хозяйства Костромской области", "https://dk.adm44.ru/"],
+        "45": ["Департамент строительства, госэкспертизы и ЖКХ Курганской области (включает транспорт)", "https://gzhkh.gov.kurgan.ru/"],
+        "46": ["Комитет транспорта и автомобильных дорог Курской области", "https://kursk.ru/power/executive/transport/"],
+        "47": ["Комитет по транспорту Ленинградской области", "https://transport.lenobl.ru/"],
+        "48": ["Управление дорог и транспорта Липецкой области", "https://dor.admlr.lipetsk.ru/"],
+        "49": ["Министерство дорожного хозяйства и транспорта Магаданской области", "https://www.magadan.ru/regions/government/departments/minisiterstvo-dorojnogo-hozyaistva-i-transporta-magadanskoi-oblasti/"],
+        "50": ["Министерство транспорта и дорожной инфраструктуры Московской области", "https://mtdi.mosreg.ru/"],
+        "51": ["Министерство транспорта и дорожного хозяйства Мурманской области", "https://mintrans.gov-murman.ru/"],
+        "52": ["Министерство транспорта и автомобильных дорог Нижегородской области", "https://mintrans.government-nnov.ru/"],
+        "53": ["Министерство транспорта и дорожного хозяйства Новгородской области", "https://www.novreg.ru/authorities/executive/mintransdor/"],
+        "54": ["Министерство транспорта и дорожного хозяйства Новосибирской области", "https://mintrans.nso.ru/"],
+        "55": ["Министерство транспорта и дорожного хозяйства Омской области", "https://mintrans.omskportal.ru/"],
+        "56": ["Министерство строительства, жилищно-коммунального, дорожного хозяйства и транспорта Оренбургской области", "https://www.minstroy.orb.ru/"],
+        "57": ["Департамент дорожного хозяйства, транспорта и реализации государственных строительных программ Орловской области", "https://dor.orel-region.ru/"],
+        "58": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Пензенской области (включает транспорт)", "https://gzh.pnzreg.ru/"],
+        "59": ["Министерство транспорта Пермского края", "https://mintrans.permkrai.ru/"],
+        "60": ["Комитет по транспорту и дорожному хозяйству Псковской области", "https://trans.pskov.ru/"],
+        "61": ["Министерство транспорта Ростовской области", "https://mintrans.donland.ru/"],
+        "62": ["Министерство транспорта и автомобильных дорог Рязанской области", "https://mintrans.ryazangov.ru/"],
+        "63": ["Министерство транспорта и автомобильных дорог Самарской области", "https://mintrans.samregion.ru/"],
+        "64": ["Министерство транспорта и дорожного хозяйства Саратовской области", "https://minstroy.saratov.gov.ru/"],
+        "65": ["Министерство транспорта и дорожного хозяйства Сахалинской области", "https://sakhalin.gov.ru/index.php?id=125"],
+        "66": ["Министерство транспорта и дорожного хозяйства Свердловской области", "https://mid.midural.ru/"],
+        "67": ["Департамент транспорта и дорожного хозяйства Смоленской области", "https://transport.admin-smolensk.ru/"],
+        "68": ["Министерство автомобильных дорог и транспорта Тамбовской области", "https://dor.tmbreg.ru/"],
+        "69": ["Министерство транспорта Тверской области", "https://mintrans.tver.ru/"],
+        "70": ["Департамент транспорта, дорожной деятельности и связи Томской области", "https://dtds.tomsk.gov.ru/"],
+        "71": ["Министерство транспорта и дорожного хозяйства Тульской области", "https://mintrans.tularegion.ru/"],
+        "72": ["Главное управление строительства Тюменской области (включает транспорт)", "https://gus.admtyumen.ru/"],
+        "73": ["Министерство транспорта Ульяновской области", "https://minstroy.ulgov.ru/"],
+        "74": ["Министерство дорожного хозяйства и транспорта Челябинской области", "https://mindortrans.gov74.ru/"],
+        "75": ["Министерство строительства, дорожного хозяйства и транспорта Забайкальского края", "https://minstroy.75.ru/"],
+        "76": ["Министерство транспорта Ярославской области", "https://www.yarregion.ru/depts/depdohd/"],
+        "77": ["Единый транспортный портал Москвы", "https://transport.mos.ru/"],
+        "78": ["Комитет по транспорту Санкт-Петербурга", "https://www.transport.gov.spb.ru/"],
+        "79": ["Управление автомобильных дорог и транспорта ЕАО", "https://www.eao.ru/authorities/organs/otdel-transporta/"],
+        "82": ["Министерство транспорта Республики Крым", "https://mt.rk.gov.ru/"],
+        "83": ["Департамент строительства, ЖКХ, энергетики и транспорта НАО", "https://dstzhkhet.adm-nao.ru/"],
+        "86": ["Департамент дорожного хозяйства и транспорта ХМАО-Югры", "https://depgkh.admhmao.ru/"],
+        "87": ["Департамент промышленной и сельскохозяйственной политики Чукотского автономного округа (включает транспорт)", "https://www.chukotka.ru/authorities/executive/departament_promyshlennoy_i_selskohozyaystvennoy_politiki/"],
+        "89": ["Департамент транспорта и дорожного хозяйства ЯНАО", "https://dtdh.yanao.ru/"],
+        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
+        "92": ["Департамент транспорта и развития дорожно-транспортной инфраструктуры города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-transporta/"],
+        "93": ["Администрация города Байконура (включает управление транспортом)", "http://www.baikonuradm.ru/"]
+    };
+    const link = links[code];
+    return link ? [link[0], link[1]] : [`Министерство/Департамент транспорта ${name}`, `https://yandex.ru/search/?text=Министерство+транспорта+${enc}`];
+}
+
+function getRegionalJKHLink(code, name) {
+    const enc = encodeURIComponent(name);
+    const links = {
+        "01": ["Министерство строительства, транспорта, ЖКХ и дорожного хозяйства Республики Адыгея", "https://www.minstroy01.ru/activity/zhkh/"],
+        "02": ["Министерство жилищно-коммунального хозяйства Республики Башкортостан", "https://house.bashkortostan.ru/"],
+        "03": ["Министерство строительства и модернизации жилищно-коммунального комплекса Республики Бурятия", "https://minstroy.govrb.ru/"],
+        "04": ["Министерство регионального развития Республики Алтай (включает ЖКХ)", "https://mrd.altai-republic.ru/"],
+        "05": ["Министерство строительства и жилищно-коммунального хозяйства Республики Дагестан", "https://minstroy.e-dag.ru/"],
+        "06": ["Министерство строительства и жилищно-коммунального хозяйства Республики Ингушетия", "http://minstroyri.ru/"],
+        "07": ["Министерство строительства, жилищно-коммунального хозяйства и дорожного хозяйства Кабардино-Балкарской Республики", "https://minstroykbr.ru/"],
+        "08": ["Министерство жилищно-коммунального хозяйства и энергетики Республики Калмыкия", "https://minzhkh.rk08.ru/"],
+        "09": ["Министерство строительства и жилищно-коммунального хозяйства Карачаево-Черкесской Республики", "https://minszhkh.ru/"],
+        "10": ["Министерство строительства и жилищно-коммунального хозяйства Республики Карелия", "https://gov.karelia.ru/ministers/minstroy/"],
+        "11": ["Министерство строительства и жилищно-коммунального хозяйства Республики Коми", "https://minstroy.rkomi.ru/"],
+        "12": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Марий Эл", "https://mari-el.gov.ru/ministries/minstroy/"],
+        "13": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Республики Мордовия", "https://minzhkh.e-mordovia.ru/"],
+        "14": ["Министерство жилищно-коммунального хозяйства и энергетики Республики Саха (Якутия)", "https://mzhke.sakha.gov.ru/"],
+        "15": ["Министерство жилищно-коммунального хозяйства, топлива и энергетики Республики Северная Осетия - Алания", "https://minzhkh.alania.gov.ru/"],
+        "16": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Татарстан", "https://minstroy.tatarstan.ru/zhkh/"],
+        "17": ["Министерство строительства Республики Тыва (включает ЖКХ)", "https://minstroy.rtyva.ru/"],
+        "18": ["Министерство строительства, жилищно-коммунального хозяйства и энергетики Удмуртской Республики", "https://minstroy.udmurt.ru/"],
+        "19": ["Министерство строительства и жилищно-коммунального хозяйства Республики Хакасия", "https://minstroy.r-19.ru/"],
+        "20": ["Министерство строительства и жилищно-коммунального хозяйства Чеченской Республики", "http://minstroychr.ru/"],
+        "21": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Чувашской Республики", "https://minstroy.cap.ru/"],
+        "22": ["Министерство строительства и жилищно-коммунального хозяйства Алтайского края", "https://altairegion22.ru/gov_authority/stroy/"],
+        "23": ["Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Краснодарского края", "https://tekk.krasnodar.ru/"],
+        "24": ["Министерство промышленности, энергетики и жилищно-коммунального хозяйства Красноярского края", "https://www.krskstate.ru/prom"],
+        "25": ["Министерство жилищно-коммунального хозяйства Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/zkh/"],
+        "26": ["Министерство жилищно-коммунального хозяйства Ставропольского края", "https://gkh.stavkray.ru/"],
+        "27": ["Министерство жилищно-коммунального хозяйства Хабаровского края", "https://gkh.khabkrai.ru/"],
+        "28": ["Министерство жилищно-коммунального хозяйства Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_zhilishchno_kommunalnogo_khozyaystva_amurskoy_oblasti/"],
+        "29": ["Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Архангельской области", "https://dvinaland.ru/gov/iogv/mtekzhkh/"],
+        "30": ["Министерство строительства и жилищно-коммунального хозяйства Астраханской области", "https://minstroy.astrobl.ru/"],
+        "31": ["Министерство жилищно-коммунального хозяйства Белгородской области", "https://gkh31.ru/"],
+        "32": ["Департамент ТЭК и ЖКХ Брянской области", "https://tek.bryanskobl.ru/"],
+        "33": ["Министерство жилищно-коммунального хозяйства Владимирской области", "https://minstroy.avo.ru/zhkh"],
+        "34": ["Комитет жилищно-коммунального хозяйства Волгоградской области", "https://gkh.volgograd.ru/"],
+        "35": ["Департамент топливно-энергетического комплекса и тарифного регулирования Вологодской области (включает ЖКХ)", "https://tek.gov35.ru/"],
+        "36": ["Департамент жилищно-коммунального хозяйства и энергетики Воронежской области", "https://gkh.govvrn.ru/"],
+        "37": ["Департамент жилищно-коммунального хозяйства Ивановской области", "https://gzhi.ivanovoobl.ru/"],
+        "38": ["Министерство жилищной политики и энергетики Иркутской области", "https://irkobl.ru/sites/gkhe/"],
+        "39": ["Министерство строительства и жилищно-коммунального хозяйства Калининградской области", "https://gov39.ru/vlast/government/ministers/minstroy/"],
+        "40": ["Министерство строительства и жилищно-коммунального хозяйства Калужской области", "https://minstroy.admobl.kaluga.ru/"],
+        "41": ["Министерство жилищно-коммунального хозяйства и энергетики Камчатского края", "https://www.kamgov.ru/mzhkie"],
+        "42": ["Министерство жилищно-коммунального и дорожного комплекса Кузбасса", "https://mzhkd.kemv.ru/"],
+        "43": ["Министерство строительства, энергетики и жилищно-коммунального хозяйства Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/stroy/"],
+        "44": ["Департамент строительства и жилищно-коммунального хозяйства Костромской области", "https://dsz.adm44.ru/"],
+        "45": ["Департамент строительства, госэкспертизы и ЖКХ Курганской области", "https://gzhkh.gov.kurgan.ru/"],
+        "46": ["Комитет жилищно-коммунального хозяйства и ТЭК Курской области", "https://kursk.ru/power/executive/zhkh/"],
+        "47": ["Комитет по жилищно-коммунальному хозяйству Ленинградской области", "https://kzkh.lenobl.ru/"],
+        "48": ["Управление жилищно-коммунального хозяйства Липецкой области", "https://uprgkh.admlr.lipetsk.ru/"],
+        "49": ["Министерство строительства, жилищно-коммунального хозяйства и энергетики Магаданской области", "https://minstroy.49gov.ru/"],
+        "50": ["Министерство жилищно-коммунального хозяйства Московской области", "https://mgkh.mosreg.ru/"],
+        "51": ["Министерство государственного жилищного и строительного надзора Мурманской области", "https://minstroi.gov-murman.ru/"],
+        "52": ["Министерство жилищно-коммунального хозяйства и топливно-энергетического комплекса Нижегородской области", "https://mintzhtek.government-nnov.ru/"],
+        "53": ["Министерство жилищно-коммунального хозяйства и топливно-энергетического комплекса Новгородской области", "https://www.novreg.ru/authorities/executive/mzhkt/"],
+        "54": ["Министерство жилищно-коммунального хозяйства и энергетики Новосибирской области", "https://minzhkh.nso.ru/"],
+        "55": ["Министерство энергетики и жилищно-коммунального комплекса Омской области", "https://mineco.omskportal.ru/"],
+        "56": ["Министерство строительства, жилищно-коммунального, дорожного хозяйства и транспорта Оренбургской области", "https://www.minstroy.orb.ru/"],
+        "57": ["Управление по тарифам и ценовой политике Орловской области (включает ЖКХ)", "https://utcp.orel-region.ru/"],
+        "58": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Пензенской области", "https://gzh.pnzreg.ru/"],
+        "59": ["Министерство жилищно-коммунального хозяйства и благоустройства Пермского края", "https://mzhkh.permkrai.ru/"],
+        "60": ["Комитет по тарифам и ценам Псковской области (регулирование ЖКХ)", "https://tarify.pskov.ru/"],
+        "61": ["Министерство жилищно-коммунального хозяйства Ростовской области", "https://minzhkh.donland.ru/"],
+        "62": ["Министерство жилищно-коммунального хозяйства и энергетики Рязанской области", "https://mgkh.ryazangov.ru/"],
+        "63": ["Министерство энергетики и жилищно-коммунального хозяйства Самарской области", "https://minenergo.samregion.ru/"],
+        "64": ["Министерство строительства и жилищно-коммунального хозяйства Саратовской области", "https://minstroy.saratov.gov.ru/"],
+        "65": ["Министерство жилищно-коммунального хозяйства Сахалинской области", "https://sakhalin.gov.ru/index.php?id=129"],
+        "66": ["Министерство жилищно-коммунального хозяйства Свердловской области", "https://mzhkh.midural.ru/"],
+        "67": ["Департамент Смоленской области по жилищно-коммунальному хозяйству и энергетике", "https://gkh.admin-smolensk.ru/"],
+        "68": ["Управление по регулированию тарифов Тамбовской области (включает ЖКХ)", "https://rtt.tmbreg.ru/"],
+        "69": ["Министерство энергетики и жилищно-коммунального хозяйства Тверской области", "https://minenergo.tver.ru/"],
+        "70": ["Департамент ЖКХ и государственного жилищного надзора Томской области", "https://www.tomsk.gov.ru/zhkh/"],
+        "71": ["Министерство строительства и жилищно-коммунального хозяйства Тульской области", "https://minstroy.tularegion.ru/"],
+        "72": ["Главное управление строительства Тюменской области (включает ЖКХ)", "https://gus.admtyumen.ru/"],
+        "73": ["Министерство жилищно-коммунального хозяйства и строительства Ульяновской области", "https://minstroy.ulgov.ru/"],
+        "74": ["Министерство строительства и инфраструктуры Челябинской области (включает ЖКХ)", "https://minstroy.gov74.ru/"],
+        "75": ["Министерство строительства, дорожного хозяйства и транспорта Забайкальского края (включает ЖКХ)", "https://minstroy.75.ru/"],
+        "76": ["Департамент жилищно-коммунального хозяйства, энергетики и регулирования тарифов Ярославской области", "https://www.yarregion.ru/depts/depgkh/"],
+        "77": ["Департамент жилищно-коммунального хозяйства города Москвы", "https://www.mos.ru/dgkh/"],
+        "78": ["Жилищный комитет Санкт-Петербурга", "https://jk.gov.spb.ru/"],
+        "79": ["Управление ЖКХ и строительства ЕАО", "https://www.eao.ru/authorities/organs/otdel-gkh/"],
+        "82": ["Министерство жилищно-коммунального хозяйства Республики Крым", "https://mzhkh.rk.gov.ru/"],
+        "83": ["Департамент строительства, ЖКХ, энергетики и транспорта НАО", "https://dstzhkhet.adm-nao.ru/"],
+        "86": ["Департамент жилищно-коммунального комплекса и энергетики ХМАО-Югры", "https://depgkh.admhmao.ru/"],
+        "87": ["Департамент промышленной и сельскохозяйственной политики Чукотского автономного округа (включает ЖКХ)", "https://www.chukotka.ru/authorities/executive/departament_promyshlennoy_i_selskohozyaystvennoy_politiki/"],
+        "89": ["Департамент тарифной политики, энергетики и жилищно-коммунального комплекса ЯНАО", "https://dtdh.yanao.ru/"],
+        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
+        "92": ["Департамент городского хозяйства города Севастополя (включает ЖКХ)", "https://sev.gov.ru/vlast/otraslevye-organy/departament-gorodskogo-khozyaystva/"],
+        "93": ["Администрация города Байконура (включает управление ЖКХ)", "http://www.baikonuradm.ru/city/gkh/"]
+    };
+    const link = links[code];
+    return link ? [link[0], link[1]] : [`Министерство/Департамент ЖКХ ${name}`, `https://yandex.ru/search/?text=Министерство+ЖКХ+${enc}`];
+}
+
+function getRegionalMedLink(code, name) {
+    const enc = encodeURIComponent(name);
+    const links = {
+        "01": ["Министерство здравоохранения Республики Адыгея", "http://www.minzdrav01.ru/"],
+        "02": ["Министерство здравоохранения Республики Башкортостан", "https://health.bashkortostan.ru/"],
+        "03": ["Министерство здравоохранения Республики Бурятия", "https://egov-buryatia.ru/minzdrav/"],
+        "04": ["Министерство здравоохранения Республики Алтай", "https://minzdrav.altai-republic.ru/"],
+        "05": ["Министерство здравоохранения Республики Дагестан", "https://minzdrav.e-dag.ru/"],
+        "06": ["Министерство здравоохранения Республики Ингушетия", "http://minzdravri.ru/"],
+        "07": ["Министерство здравоохранения Кабардино-Балкарской Республики", "https://mz.kbr.ru/"],
+        "08": ["Министерство здравоохранения Республики Калмыкия", "https://mz.rk08.ru/"],
+        "09": ["Министерство здравоохранения Карачаево-Черкесской Республики", "https://www.mz-kchr.ru/"],
+        "10": ["Министерство здравоохранения Республики Карелия", "https://gov.karelia.ru/ministers/zdravoohraneniya/"],
+        "11": ["Министерство здравоохранения Республики Коми", "https://minzdrav.rkomi.ru/"],
+        "12": ["Министерство здравоохранения Республики Марий Эл", "https://mari-el.gov.ru/ministries/minzdrav/"],
+        "13": ["Министерство здравоохранения Республики Мордовия", "https://minzdrav.e-mordovia.ru/"],
+        "14": ["Министерство здравоохранения Республики Саха (Якутия)", "https://minzdrav.sakha.gov.ru/"],
+        "15": ["Министерство здравоохранения Республики Северная Осетия - Алания", "https://minzdrav.alania.gov.ru/"],
+        "16": ["Министерство здравоохранения Республики Татарстан", "https://minzdrav.tatarstan.ru/"],
+        "17": ["Министерство здравоохранения Республики Тыва", "https://minzdrav.rtyva.ru/"],
+        "18": ["Министерство здравоохранения Удмуртской Республики", "https://minzdrav.udmurt.ru/"],
+        "19": ["Министерство здравоохранения Республики Хакасия", "https://minzdrav19.ru/"],
+        "20": ["Министерство здравоохранения Чеченской Республики", "http://minzdravchr.ru/"],
+        "21": ["Министерство здравоохранения Чувашской Республики", "https://med.cap.ru/"],
+        "22": ["Министерство здравоохранения Алтайского края", "https://altairegion22.ru/gov_authority/zdrav/"],
+        "23": ["Министерство здравоохранения Краснодарского края", "https://minzdrav.krasnodar.ru/"],
+        "24": ["Министерство здравоохранения Красноярского края", "https://kraszdrav.ru/"],
+        "25": ["Министерство здравоохранения Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/health/"],
+        "26": ["Министерство здравоохранения Ставропольского края", "https://minzdrav.stavkray.ru/"],
+        "27": ["Министерство здравоохранения Хабаровского края", "https://minzdrav.khabkrai.ru/"],
+        "28": ["Министерство здравоохранения Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_zdravookhraneniya_amurskoy_oblasti/"],
+        "29": ["Министерство здравоохранения Архангельской области", "https://dvinaland.ru/gov/iogv/minzdrav/"],
+        "30": ["Министерство здравоохранения Астраханской области", "https://minzdrav.astrobl.ru/"],
+        "31": ["Министерство здравоохранения Белгородской области", "https://www.belzdrav.ru/"],
+        "32": ["Департамент здравоохранения Брянской области", "https://brkmed.ru/"],
+        "33": ["Министерство здравоохранения Владимирской области", "https://dz.avo.ru/"],
+        "34": ["Комитет здравоохранения Волгоградской области", "https://zdrav.volgograd.ru/"],
+        "35": ["Департамент здравоохранения Вологодской области", "https://dz.gov35.ru/"],
+        "36": ["Департамент здравоохранения Воронежской области", "https://zdrav.govvrn.ru/"],
+        "37": ["Департамент здравоохранения Ивановской области", "https://dz.ivanovoobl.ru/"],
+        "38": ["Министерство здравоохранения Иркутской области", "https://irkobl.ru/sites/minzdrav/"],
+        "39": ["Министерство здравоохранения Калининградской области", "https://gov39.ru/vlast/government/ministers/minzdrav/"],
+        "40": ["Министерство здравоохранения Калужской области", "https://minzdrav.admobl.kaluga.ru/"],
+        "41": ["Министерство здравоохранения Камчатского края", "https://www.kamgov.ru/minzdrav"],
+        "42": ["Министерство здравоохранения Кузбасса", "https://kuzdrav.ru/"],
+        "43": ["Министерство здравоохранения Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/zdrav/"],
+        "44": ["Департамент здравоохранения Костромской области", "https://dzo.adm44.ru/"],
+        "45": ["Департамент здравоохранения Курганской области", "https://dz.gov.kurgan.ru/"],
+        "46": ["Комитет здравоохранения Курской области", "https://kursk.ru/power/executive/zdrav/"],
+        "47": ["Комитет по здравоохранению Ленинградской области", "https://health.lenobl.ru/"],
+        "48": ["Управление здравоохранения Липецкой области", "https://uzalo.lipetsk.ru/"],
+        "49": ["Министерство здравоохранения и демографической политики Магаданской области", "https://minzdrav.49gov.ru/"],
+        "50": ["Министерство здравоохранения Московской области", "https://mz.mosreg.ru/"],
+        "51": ["Министерство здравоохранения Мурманской области", "https://minzdrav.gov-murman.ru/"],
+        "52": ["Министерство здравоохранения Нижегородской области", "https://minzdrav.government-nnov.ru/"],
+        "53": ["Министерство здравоохранения Новгородской области", "https://www.novreg.ru/authorities/executive/minzdrav/"],
+        "54": ["Министерство здравоохранения Новосибирской области", "https://minzdrav.nso.ru/"],
+        "55": ["Министерство здравоохранения Омской области", "https://mzdr.omskportal.ru/"],
+        "56": ["Министерство здравоохранения Оренбургской области", "https://www.minzdrav.orb.ru/"],
+        "57": ["Департамент здравоохранения Орловской области", "https://www.orel-region.ru/index.php?id=381"],
+        "58": ["Министерство здравоохранения Пензенской области", "https://minzdrav.pnzreg.ru/"],
+        "59": ["Министерство здравоохранения Пермского края", "https://minzdrav.permkrai.ru/"],
+        "60": ["Комитет по здравоохранению Псковской области", "https://zdrav.pskov.ru/"],
+        "61": ["Министерство здравоохранения Ростовской области", "https://minzdrav.donland.ru/"],
+        "62": ["Министерство здравоохранения Рязанской области", "https://minzdrav.ryazangov.ru/"],
+        "63": ["Министерство здравоохранения Самарской области", "https://minzdrav.samregion.ru/"],
+        "64": ["Министерство здравоохранения Саратовской области", "https://minzdrav.saratov.gov.ru/"],
+        "65": ["Министерство здравоохранения Сахалинской области", "https://sakhalin.gov.ru/index.php?id=128"],
+        "66": ["Министерство здравоохранения Свердловской области", "https://minzdrav.midural.ru/"],
+        "67": ["Департамент Смоленской области по здравоохранению", "https://zdrav.admin-smolensk.ru/"],
+        "68": ["Министерство здравоохранения Тамбовской области", "https://zdrav.tmbreg.ru/"],
+        "69": ["Министерство здравоохранения Тверской области", "https://minzdrav.tver.ru/"],
+        "70": ["Департамент здравоохранения Томской области", "https://zdrav.tomsk.gov.ru/"],
+        "71": ["Министерство здравоохранения Тульской области", "https://minzdrav.tularegion.ru/"],
+        "72": ["Департамент здравоохранения Тюменской области", "https://www.tyumzdrav.ru/"],
+        "73": ["Министерство здравоохранения Ульяновской области", "https://www.mz.ulgov.ru/"],
+        "74": ["Министерство здравоохранения Челябинской области", "https://www.minzdrav74.ru/"],
+        "75": ["Министерство здравоохранения Забайкальского края", "https://minzdrav.75.ru/"],
+        "76": ["Министерство здравоохранения Ярославской области", "https://www.yarregion.ru/depts/depzdrav/"],
+        "77": ["Департамент здравоохранения города Москвы", "https://mosgorzdrav.ru/"],
+        "78": ["Комитет по здравоохранению Санкт-Петербурга", "https://zdrav.spb.ru/"],
+        "79": ["Управление здравоохранения ЕАО", "https://www.eao.ru/authorities/organs/otdel-zdrav/"],
+        "82": ["Министерство здравоохранения Республики Крым", "https://mzdrav.rk.gov.ru/"],
+        "83": ["Департамент здравоохранения, труда и социальной защиты населения НАО", "https://dztszn.adm-nao.ru/"],
+        "86": ["Департамент здравоохранения ХМАО-Югры", "https://depzdrav.admhmao.ru/"],
+        "87": ["Департамент здравоохранения Чукотского автономного округа", "https://www.chukotka.ru/authorities/executive/departament_zdravookhraneniya/"],
+        "89": ["Департамент здравоохранения ЯНАО", "https://depzdrav.yanao.ru/"],
+        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
+        "92": ["Департамент здравоохранения города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-zdravoohraneniya/"],
+        "93": ["Администрация города Байконура (включает управление здравоохранения)", "http://www.baikonuradm.ru/city/health/"]
+    };
+    const link = links[code];
+    return link ? [link[0], link[1]] : [`Министерство/Департамент здравоохранения ${name}`, `https://yandex.ru/search/?text=Министерство+здравоохранения+${enc}`];
+}
+
+function getRegionalEduLink(code, name) {
+    const enc = encodeURIComponent(name);
+    const links = {
+        "01": ["Министерство образования и науки Республики Адыгея", "http://www.adygheya.ru/minobraz/"],
+        "02": ["Министерство образования и науки Республики Башкортостан", "https://education.bashkortostan.ru/"],
+        "03": ["Министерство образования и науки Республики Бурятия", "https://egov-buryatia.ru/minobr/"],
+        "04": ["Министерство образования и науки Республики Алтай", "https://minobr.altai-republic.ru/"],
+        "05": ["Министерство образования и науки Республики Дагестан", "https://minobrnauki.e-dag.ru/"],
+        "06": ["Министерство образования и науки Республики Ингушетия", "http://minobrri.ru/"],
+        "07": ["Министерство просвещения и науки Кабардино-Балкарской Республики", "https://www.monkbr.ru/"],
+        "08": ["Министерство образования и науки Республики Калмыкия", "https://mon.rk08.ru/"],
+        "09": ["Министерство образования и науки Карачаево-Черкесской Республики", "https://www.minobrkchr.ru/"],
+        "10": ["Министерство образования и спорта Республики Карелия", "https://gov.karelia.ru/ministers/obrazovaniya-sporta/"],
+        "11": ["Министерство образования и науки Республики Коми", "https://minobr.rkomi.ru/"],
+        "12": ["Министерство образования и науки Республики Марий Эл", "https://mari-el.gov.ru/ministries/minobr/"],
+        "13": ["Министерство образования Республики Мордовия", "https://minobr.e-mordovia.ru/"],
+        "14": ["Министерство образования и науки Республики Саха (Якутия)", "https://minobrnauki.sakha.gov.ru/"],
+        "15": ["Министерство образования и науки Республики Северная Осетия - Алания", "https://mon.alania.gov.ru/"],
+        "16": ["Министерство образования и науки Республики Татарстан", "https://mon.tatarstan.ru/"],
+        "17": ["Министерство образования Республики Тыва", "https://mon.rtyva.ru/"],
+        "18": ["Министерство образования и науки Удмуртской Республики", "https://mon.udmurt.ru/"],
+        "19": ["Министерство образования и науки Республики Хакасия", "https://r-19.ru/authorities/ministerstvo-obrazovaniya-i-nauki-respubliki-khakasiya/"],
+        "20": ["Министерство образования и науки Чеченской Республики", "http://mon95.ru/"],
+        "21": ["Министерство образования и молодежной политики Чувашской Республики", "https://obrazov.cap.ru/"],
+        "22": ["Министерство образования и науки Алтайского края", "https://altairegion22.ru/gov_authority/educ/"],
+        "23": ["Министерство образования, науки и молодежной политики Краснодарского края", "https://minobr.krasnodar.ru/"],
+        "24": ["Министерство образования Красноярского края", "https://krao.ru/"],
+        "25": ["Министерство образования Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/education/"],
+        "26": ["Министерство образования Ставропольского края", "https://www.stavminobr.ru/"],
+        "27": ["Министерство образования и науки Хабаровского края", "https://minobr.khabkrai.ru/"],
+        "28": ["Министерство образования и науки Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_obrazovaniya_i_nauki_amurskoy_oblasti/"],
+        "29": ["Министерство образования Архангельской области", "https://dvinaland.ru/gov/iogv/minobr/"],
+        "30": ["Министерство образования и науки Астраханской области", "https://minobr.astrobl.ru/"],
+        "31": ["Министерство образования Белгородской области", "https://beluobr.ru/"],
+        "32": ["Департамент образования и науки Брянской области", "https://www.hq.b-edu.ru/"],
+        "33": ["Министерство образования и молодежной политики Владимирской области", "https://obrazovanie.avo.ru/"],
+        "34": ["Комитет образования, науки и молодежной политики Волгоградской области", "https://obraz.volgograd.ru/"],
+        "35": ["Департамент образования Вологодской области", "https://edu.gov35.ru/"],
+        "36": ["Департамент образования, науки и молодежной политики Воронежской области", "https://obraz.govvrn.ru/"],
+        "37": ["Департамент образования Ивановской области", "https://edu.ivanovoobl.ru/"],
+        "38": ["Министерство образования Иркутской области", "https://irkobl.ru/sites/minobr/"],
+        "39": ["Министерство образования Калининградской области", "https://edu.gov39.ru/"],
+        "40": ["Министерство образования и науки Калужской области", "https://minobr.admobl.kaluga.ru/"],
+        "41": ["Министерство образования Камчатского края", "https://www.kamgov.ru/minobraz"],
+        "42": ["Министерство образования Кузбасса", "https://obrazovanie.kemv.ru/"],
+        "43": ["Министерство образования Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/education/"],
+        "44": ["Департамент образования и науки Костромской области", "https://edu.adm44.ru/"],
+        "45": ["Департамент образования и науки Курганской области", "https://don.gov.kurgan.ru/"],
+        "46": ["Комитет образования и науки Курской области", "https://kursk.ru/power/executive/education/"],
+        "47": ["Комитет общего и профессионального образования Ленинградской области", "https://edu.lenobl.ru/"],
+        "48": ["Управление образования и науки Липецкой области", "https://www.deptno.lipetsk.ru/"],
+        "49": ["Министерство образования Магаданской области", "https://minobr.49gov.ru/"],
+        "50": ["Министерство образования Московской области", "https://mo.mosreg.ru/"],
+        "51": ["Министерство образования и науки Мурманской области", "https://minobr.gov-murman.ru/"],
+        "52": ["Министерство образования и науки Нижегородской области", "https://minobr.government-nnov.ru/"],
+        "53": ["Министерство образования Новгородской области", "https://www.novreg.ru/authorities/executive/minobr/"],
+        "54": ["Министерство образования Новосибирской области", "https://minobr.nso.ru/"],
+        "55": ["Министерство образования Омской области", "https://minobr.omskportal.ru/"],
+        "56": ["Министерство образования Оренбургской области", "https://www.minobr.orb.ru/"],
+        "57": ["Департамент образования Орловской области", "https://www.orel-region.ru/index.php?id=380"],
+        "58": ["Министерство образования Пензенской области", "https://minobr.pnzreg.ru/"],
+        "59": ["Министерство образования и науки Пермского края", "https://minobr.permkrai.ru/"],
+        "60": ["Комитет по образованию Псковской области", "https://edu.pskov.ru/"],
+        "61": ["Министерство общего и профессионального образования Ростовской области", "https://minobr.donland.ru/"],
+        "62": ["Министерство образования и молодежной политики Рязанской области", "https://minobr.ryazangov.ru/"],
+        "63": ["Министерство образования и науки Самарской области", "https://educat.samregion.ru/"],
+        "64": ["Министерство образования Саратовской области", "https://minobr.saratov.gov.ru/"],
+        "65": ["Министерство образования Сахалинской области", "https://sakhalin.gov.ru/index.php?id=126"],
+        "66": ["Министерство образования и молодежной политики Свердловской области", "https://minobraz.egov66.ru/"],
+        "67": ["Департамент Смоленской области по образованию и науке", "https://edu.admin-smolensk.ru/"],
+        "68": ["Министерство образования и науки Тамбовской области", "https://obraz.tmbreg.ru/"],
+        "69": ["Министерство образования Тверской области", "https://minobr.tver.ru/"],
+        "70": ["Департамент общего образования Томской области", "https://edu.tomsk.gov.ru/"],
+        "71": ["Министерство образования Тульской области", "https://education.tularegion.ru/"],
+        "72": ["Департамент образования и науки Тюменской области", "https://don.admtyumen.ru/"],
+        "73": ["Министерство просвещения и воспитания Ульяновской области", "https://minobr.ulgov.ru/"],
+        "74": ["Министерство образования и науки Челябинской области", "https://minobr.gov74.ru/"],
+        "75": ["Министерство образования и науки Забайкальского края", "https://minobr.75.ru/"],
+        "76": ["Министерство образования Ярославской области", "https://www.yarregion.ru/depts/do/"],
+        "77": ["Департамент образования и науки города Москвы", "https://www.mos.ru/donm/"],
+        "78": ["Комитет по образованию Санкт-Петербурга", "https://k-obr.spb.ru/"],
+        "79": ["Комитет образования ЕАО", "https://www.eao.ru/authorities/organs/otdel-obraz/"],
+        "82": ["Министерство образования, науки и молодежи Республики Крым", "https://monm.rk.gov.ru/"],
+        "83": ["Департамент образования, культуры и спорта НАО", "https://depsport.adm-nao.ru/"],
+        "86": ["Департамент образования и науки ХМАО-Югры", "https://depobr.admhmao.ru/"],
+        "87": ["Департамент образования и науки Чукотского автономного округа", "https://www.chukotka.ru/authorities/executive/departament_obrazovaniya_i_nauki/"],
+        "89": ["Департамент образования ЯНАО", "https://yamal-obr.ru/"],
+        "91": ["Образовательный центр \"Сириус\"", "https://sirius.online/"],
+        "92": ["Департамент образования и науки города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-obrazovaniya/"],
+        "93": ["Администрация города Байконура (Управление образования)", "http://www.baikonuradm.ru/city/education/"]
+    };
+    const link = links[code];
+    return link ? [link[0], link[1]] : [`Министерство/Департамент образования ${name}`, `https://yandex.ru/search/?text=Министерство+образования+${enc}`];
+}
+
+
+function getRegionalHubs(code, name) {
+    // Вспомогательная функция для получения региональных ссылок, ведущих на департаменты
+    const getRegionalDepLink = (linkFn, categoryName, encName) => {
+        const link = linkFn(code, name);
+        return [link[0], link[1]]; // Возвращаем текстовое описание и URL
+    };
 
     let hubs = [
         { id: "pride", title: "🏆 Гордость региона", items: [] },
-        { id: "gov_federal", title: "🏛️ Госуслуги (Федеральные)", items: federalGov },
-        { id: "tran_federal", title: "🚆 Транспорт (Федеральный)", items: federalTransport },
-        { id: "jkh_federal", title: "💡 ЖКХ (Федеральные)", items: federalJKH },
-        { id: "med_federal", title: "🏥 Медицина (Федеральная)", items: federalGov }, // Госуслуги в том числе
-        { id: "edu_federal", title: "📚 Образование (Федеральное)", items: federalEducation },
-        { id: "banks_federal", title: "💰 Банки", items: federalBanks },
-        { id: "social_federal", title: "💬 Соцсети и мессенджеры", items: federalSocial },
-        { id: "shopping_federal", title: "🛍️ Покупки", items: federalShopping },
-        { id: "food_taxi_federal", title: "🍔 Еда и Такси", items: federalFoodTaxi },
-        { id: "office_editors_federal", title: "📄 Офис и редакторы", items: federalOfficeEditors },
-        { id: "games_platforms_federal", title: "🎮 Игры и игровые платформы", items: federalGamesPlatforms },
-        { id: "multimedia_entertainment_federal", title: "🎬 Мультимедиа и развлечения", items: federalMultimediaEntertainment },
-        { id: "vpn_filetransfer_federal", title: "🔒 VPN и передача файлов", items: federalVPNTraffic },
-        { id: "ai_neuralnetworks_federal", title: "🤖 Нейросети и ИИ", items: federalAINeuralNetworks },
-        { id: "smarthome_security_federal", title: "🏠 Умный дом и безопасность", items: federalSmartHomeSecurity },
-        { id: "career_federal", title: "💼 Карьера", items: federalCareer },
-        { id: "appstores_federal", title: "📲 Магазины приложений", items: federalAppStores },
-        { id: "tran_regional", title: "🚆 Транспорт (Регион)", items: [] },
-        { id: "jkh_regional", title: "💡 ЖКХ (Регион)", items: [] },
-        { id: "med_regional", title: "🏥 Медицина (Регион)", items: [] },
-        { id: "edu_regional", title: "📚 Образование (Регион)", items: [] }
+        { id: "gov", title: "🏛️ Госуслуги", items: [...federalGovServices, getRegionalDepLink(getRegionalGovLink, "Госуслуги", name)] },
+        { id: "tran", title: "🚆 Транспорт", items: [...federalTransportServices, getRegionalDepLink(getRegionalTransportLink, "Транспорт", name)] },
+        { id: "jkh", title: "💡 ЖКХ", items: [...federalJKHServices, getRegionalDepLink(getRegionalJKHLink, "ЖКХ", name)] },
+        { id: "med", title: "🏥 Медицина", items: [...federalMedServices, getRegionalDepLink(getRegionalMedLink, "Здравоохранение", name)] },
+        { id: "edu", title: "📚 Образование", items: [...federalEducationServices, getRegionalDepLink(getRegionalEduLink, "Образование", name)] },
+        { id: "banks", title: "💰 Банки", items: federalBanksServices },
+        { id: "social", title: "💬 Соцсети и мессенджеры", items: federalSocialMessengers },
+        { id: "shopping", title: "🛍️ Покупки", items: federalShoppingServices },
+        { id: "food_taxi", title: "🍔 Еда и Такси", items: federalFoodTaxiServices },
+        { id: "office_editors", title: "📄 Офис и редакторы", items: federalOfficeEditors },
+        { id: "games_platforms", title: "🎮 Игры и игровые платформы", items: federalGamesPlatforms },
+        { id: "multimedia_entertainment", title: "🎬 Мультимедиа и развлечения", items: federalMultimediaEntertainment },
+        { id: "vpn_traffic", title: "🔒 VPN и передача файлов", items: federalVPNTraffic },
+        { id: "ai_neural_networks", title: "🤖 Нейросети и ИИ", items: federalAINeuralNetworks },
+        { id: "smarthome_security", title: "🏠 Умный дом и безопасность", items: federalSmartHomeSecurity },
+        { id: "career", title: "💼 Карьера", items: federalCareerServices },
+        { id: "appstores", title: "📲 Магазины приложений", items: federalAppStores }
     ];
-
-    // ЗАПОЛНЕНИЕ РЕГИОНАЛЬНЫХ ССЫЛОК (Транспорт, ЖКХ, Медицина, Образование)
-    // Эти ссылки ведут на общий портал или департамент региона
-    hubs.find(h => h.id === "tran_regional").items.push(getRegionalTransportLink(code, name));
-    hubs.find(h => h.id === "jkh_regional").items.push(getRegionalJKHLink(code, name));
-    hubs.find(h => h.id === "med_regional").items.push(getRegionalMedLink(code, name));
-    hubs.find(h => h.id === "edu_regional").items.push(getRegionalEduLink(code, name));
-
 
     // ИНДИВИДУАЛЬНЫЕ БЛОКИ "ГОРДОСТЬ РЕГИОНА" (91 сущность)
     switch (code) {
@@ -512,388 +951,6 @@ function getRegionalHubs(code, name) {
     return hubs;
 }
 
-// Функции для получения региональных ссылок на департаменты
-function getRegionalTransportLink(code, name) {
-    const defaultText = `Министерство/Департамент транспорта ${name}`;
-    const links = {
-        "01": ["Министерство строительства, транспорта, ЖКХ и дорожного хозяйства Республики Адыгея", "https://www.minstroy01.ru/activity/transport/"],
-        "02": ["Министерство транспорта и дорожного хозяйства Республики Башкортостан", "https://transport.bashkortostan.ru/"],
-        "03": ["Министерство по развитию транспорта, энергетики и дорожного хозяйства Республики Бурятия", "https://minintrud.govrb.ru/"],
-        "04": ["Министерство регионального развития Республики Алтай (включает транспорт)", "https://mrd.altai-republic.ru/"],
-        "05": ["Министерство транспорта и дорожного хозяйства Республики Дагестан", "https://mtdx.e-dag.ru/"],
-        "06": ["Министерство строительства и жилищно-коммунального хозяйства Республики Ингушетия (включает транспорт)", "http://minstroyri.ru/"],
-        "07": ["Министерство транспорта и дорожного хозяйства Кабардино-Балкарской Республики", "https://mintrans-kbr.ru/"],
-        "08": ["Министерство по строительству, транспорту и дорожному хозяйству Республики Калмыкия", "https://minstroy.rk08.ru/"],
-        "09": ["Министерство строительства и жилищно-коммунального хозяйства Карачаево-Черкесской Республики (включает транспорт)", "https://minszhkh.ru/"],
-        "10": ["Министерство по дорожному хозяйству, транспорту и связи Республики Карелия", "https://gov.karelia.ru/ministers/dorog-transporta-svyazi/"],
-        "11": ["Министерство строительства и жилищно-коммунального хозяйства Республики Коми (включает транспорт)", "https://minstroy.rkomi.ru/"],
-        "12": ["Министерство транспорта и дорожного хозяйства Республики Марий Эл", "https://mari-el.gov.ru/ministries/mintrans/"],
-        "13": ["Министерство строительства, транспорта, дорожного хозяйства и связи Республики Мордовия", "https://minstroy.e-mordovia.ru/"],
-        "14": ["Министерство транспорта и дорожного хозяйства Республики Саха (Якутия)", "https://mintrans.sakha.gov.ru/"],
-        "15": ["Министерство строительства и архитектуры Республики Северная Осетия - Алания (включает транспорт)", "https://minstroy-osetia.ru/"],
-        "16": ["Министерство транспорта и дорожного хозяйства Республики Татарстан", "https://minzdrav.tatarstan.ru/"],
-        "17": ["Министерство дорожно-транспортного комплекса Республики Тыва", "https://mdtk.rtyva.ru/"],
-        "18": ["Министерство транспорта и дорожного хозяйства Удмуртской Республики", "https://mintrans.udmurt.ru/"],
-        "19": ["Министерство транспорта и дорожного хозяйства Республики Хакасия", "https://mintrans.r-19.ru/"],
-        "20": ["Министерство автомобильных дорог Чеченской Республики", "http://minavtodor-chr.ru/"],
-        "21": ["Министерство транспорта и дорожного хозяйства Чувашской Республики", "https://mintrans.cap.ru/"],
-        "22": ["Министерство транспорта Алтайского края", "https://altairegion22.ru/gov_authority/transport/"],
-        "23": ["Министерство транспорта и дорожного хозяйства Краснодарского края", "https://www.kubantrans.ru/"],
-        "24": ["Министерство транспорта Красноярского края", "https://www.krskstate.ru/transport/"],
-        "25": ["Министерство транспорта и дорожного хозяйства Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/transport/"],
-        "26": ["Министерство дорожного хозяйства и транспорта Ставропольского края", "https://dor.stavkray.ru/"],
-        "27": ["Министерство транспорта и дорожного хозяйства Хабаровского края", "https://mintrans.khabkrai.ru/"],
-        "28": ["Министерство транспорта и дорожного хозяйства Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_transporta_i_dorozhnogo_khozyaystva_amurskoy_oblasti/"],
-        "29": ["Министерство транспорта Архангельской области", "https://dvinaland.ru/gov/iogv/mintrans/"],
-        "30": ["Министерство промышленности и природных ресурсов Астраханской области (включает транспорт)", "https://minprom.astrobl.ru/"],
-        "31": ["Министерство автомобильных дорог и транспорта Белгородской области", "https://belgorodstroy.ru/"],
-        "32": ["Департамент промышленности, транспорта и связи Брянской области", "https://econ.bryanskobl.ru/industries/transport-and-communications/"],
-        "33": ["Министерство транспорта и дорожного хозяйства Владимирской области", "https://doroga.avo.ru/"],
-        "34": ["Комитет транспорта и дорожного хозяйства Волгоградской области", "https://ut.volgograd.ru/"],
-        "35": ["Департамент дорожного хозяйства и транспорта Вологодской области", "https://dor.gov35.ru/"],
-        "36": ["Департамент транспорта и автомобильных дорог Воронежской области", "https://doroga.govvrn.ru/"],
-        "37": ["Департамент дорожного хозяйства и транспорта Ивановской области", "https://dorogi.ivanovoobl.ru/"],
-        "38": ["Министерство транспорта и дорожного хозяйства Иркутской области", "https://irkobl.ru/sites/dor/"],
-        "39": ["Министерство развития инфраструктуры Калининградской области", "https://gov39.ru/vlast/government/ministers/miri/"],
-        "40": ["Министерство дорожного хозяйства Калужской области", "https://dorog.admobl.kaluga.ru/"],
-        "41": ["Министерство транспорта и дорожного строительства Камчатского края", "https://www.kamgov.ru/minstroy"],
-        "42": ["Министерство транспорта Кузбасса", "https://mintrans.kemv.ru/"],
-        "43": ["Министерство транспорта Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/transport/"],
-        "44": ["Департамент транспорта и дорожного хозяйства Костромской области", "https://dk.adm44.ru/"],
-        "45": ["Департамент строительства, госэкспертизы и ЖКХ Курганской области (включает транспорт)", "https://gzhkh.gov.kurgan.ru/"],
-        "46": ["Комитет транспорта и автомобильных дорог Курской области", "https://kursk.ru/power/executive/transport/"],
-        "47": ["Комитет по транспорту Ленинградской области", "https://transport.lenobl.ru/"],
-        "48": ["Управление дорог и транспорта Липецкой области", "https://dor.admlr.lipetsk.ru/"],
-        "49": ["Министерство дорожного хозяйства и транспорта Магаданской области", "https://www.magadan.ru/regions/government/departments/minisiterstvo-dorojnogo-hozyaistva-i-transporta-magadanskoi-oblasti/"],
-        "50": ["Министерство транспорта и дорожной инфраструктуры Московской области", "https://mtdi.mosreg.ru/"],
-        "51": ["Министерство транспорта и дорожного хозяйства Мурманской области", "https://mintrans.gov-murman.ru/"],
-        "52": ["Министерство транспорта и автомобильных дорог Нижегородской области", "https://mintrans.government-nnov.ru/"],
-        "53": ["Министерство транспорта и дорожного хозяйства Новгородской области", "https://www.novreg.ru/authorities/executive/mintransdor/"],
-        "54": ["Министерство транспорта и дорожного хозяйства Новосибирской области", "https://mintrans.nso.ru/"],
-        "55": ["Министерство транспорта и дорожного хозяйства Омской области", "https://mintrans.omskportal.ru/"],
-        "56": ["Министерство строительства, жилищно-коммунального, дорожного хозяйства и транспорта Оренбургской области", "https://www.minstroy.orb.ru/"],
-        "57": ["Департамент дорожного хозяйства, транспорта и реализации государственных строительных программ Орловской области", "https://dor.orel-region.ru/"],
-        "58": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Пензенской области (включает транспорт)", "https://gzh.pnzreg.ru/"],
-        "59": ["Министерство транспорта Пермского края", "https://mintrans.permkrai.ru/"],
-        "60": ["Комитет по транспорту и дорожному хозяйству Псковской области", "https://trans.pskov.ru/"],
-        "61": ["Министерство транспорта Ростовской области", "https://mintrans.donland.ru/"],
-        "62": ["Министерство транспорта и автомобильных дорог Рязанской области", "https://mintrans.ryazangov.ru/"],
-        "63": ["Министерство транспорта и автомобильных дорог Самарской области", "https://mintrans.samregion.ru/"],
-        "64": ["Министерство транспорта и дорожного хозяйства Саратовской области", "https://minstroy.saratov.gov.ru/"],
-        "65": ["Министерство транспорта и дорожного хозяйства Сахалинской области", "https://sakhalin.gov.ru/index.php?id=125"],
-        "66": ["Министерство транспорта и дорожного хозяйства Свердловской области", "https://mid.midural.ru/"],
-        "67": ["Департамент транспорта и дорожного хозяйства Смоленской области", "https://transport.admin-smolensk.ru/"],
-        "68": ["Министерство автомобильных дорог и транспорта Тамбовской области", "https://dor.tmbreg.ru/"],
-        "69": ["Министерство транспорта Тверской области", "https://mintrans.tver.ru/"],
-        "70": ["Департамент транспорта, дорожной деятельности и связи Томской области", "https://dtds.tomsk.gov.ru/"],
-        "71": ["Министерство транспорта и дорожного хозяйства Тульской области", "https://mintrans.tularegion.ru/"],
-        "72": ["Главное управление строительства Тюменской области (включает транспорт)", "https://gus.admtyumen.ru/"],
-        "73": ["Министерство транспорта Ульяновской области", "https://minstroy.ulgov.ru/"],
-        "74": ["Министерство дорожного хозяйства и транспорта Челябинской области", "https://mindortrans.gov74.ru/"],
-        "75": ["Министерство строительства, дорожного хозяйства и транспорта Забайкальского края", "https://minstroy.75.ru/"],
-        "76": ["Министерство транспорта Ярославской области", "https://www.yarregion.ru/depts/depdohd/"],
-        "77": ["Единый транспортный портал Москвы", "https://transport.mos.ru/"],
-        "78": ["Комитет по транспорту Санкт-Петербурга", "https://www.transport.gov.spb.ru/"],
-        "79": ["Управление автомобильных дорог и транспорта ЕАО", "https://www.eao.ru/authorities/organs/otdel-transporta/"],
-        "82": ["Министерство транспорта Республики Крым", "https://mt.rk.gov.ru/"],
-        "83": ["Департамент строительства, ЖКХ, энергетики и транспорта НАО", "https://dstzhkhet.adm-nao.ru/"],
-        "86": ["Департамент дорожного хозяйства и транспорта ХМАО-Югры", "https://depgkh.admhmao.ru/"],
-        "87": ["Департамент промышленной и сельскохозяйственной политики Чукотского автономного округа (включает транспорт)", "https://www.chukotka.ru/authorities/executive/departament_promyshlennoy_i_selskohozyaystvennoy_politiki/"],
-        "89": ["Департамент транспорта и дорожного хозяйства ЯНАО", "https://dtdh.yanao.ru/"],
-        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
-        "92": ["Департамент транспорта и развития дорожно-транспортной инфраструктуры города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-transporta/"],
-        "93": ["Администрация города Байконура (включает управление транспортом)", "http://www.baikonuradm.ru/"]
-    };
-    const link = links[code];
-    return link ? [link[0], link[1]] : [`Транспортная инфраструктура ${name}`, `https://yandex.ru/search/?text=Министерство+транспорта+${enc}`];
-}
-
-function getRegionalJKHLink(code, name) {
-    const defaultText = `Министерство/Департамент ЖКХ ${name}`;
-    const links = {
-        "01": ["Министерство строительства, транспорта, ЖКХ и дорожного хозяйства Республики Адыгея", "https://www.minstroy01.ru/activity/zhkh/"],
-        "02": ["Министерство жилищно-коммунального хозяйства Республики Башкортостан", "https://house.bashkortostan.ru/"],
-        "03": ["Министерство строительства и модернизации жилищно-коммунального комплекса Республики Бурятия", "https://minstroy.govrb.ru/"],
-        "04": ["Министерство регионального развития Республики Алтай (включает ЖКХ)", "https://mrd.altai-republic.ru/"],
-        "05": ["Министерство строительства и жилищно-коммунального хозяйства Республики Дагестан", "https://minstroy.e-dag.ru/"],
-        "06": ["Министерство строительства и жилищно-коммунального хозяйства Республики Ингушетия", "http://minstroyri.ru/"],
-        "07": ["Министерство строительства, жилищно-коммунального хозяйства и дорожного хозяйства Кабардино-Балкарской Республики", "https://minstroykbr.ru/"],
-        "08": ["Министерство жилищно-коммунального хозяйства и энергетики Республики Калмыкия", "https://minzhkh.rk08.ru/"],
-        "09": ["Министерство строительства и жилищно-коммунального хозяйства Карачаево-Черкесской Республики", "https://minszhkh.ru/"],
-        "10": ["Министерство строительства и жилищно-коммунального хозяйства Республики Карелия", "https://gov.karelia.ru/ministers/minstroy/"],
-        "11": ["Министерство строительства и жилищно-коммунального хозяйства Республики Коми", "https://minstroy.rkomi.ru/"],
-        "12": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Марий Эл", "https://mari-el.gov.ru/ministries/minstroy/"],
-        "13": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Республики Мордовия", "https://minzhkh.e-mordovia.ru/"],
-        "14": ["Министерство жилищно-коммунального хозяйства и энергетики Республики Саха (Якутия)", "https://mzhke.sakha.gov.ru/"],
-        "15": ["Министерство жилищно-коммунального хозяйства, топлива и энергетики Республики Северная Осетия - Алания", "https://minzhkh.alania.gov.ru/"],
-        "16": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Татарстан", "https://minstroy.tatarstan.ru/zhkh/"],
-        "17": ["Министерство строительства Республики Тыва (включает ЖКХ)", "https://minstroy.rtyva.ru/"],
-        "18": ["Министерство строительства, жилищно-коммунального хозяйства и энергетики Удмуртской Республики", "https://minstroy.udmurt.ru/"],
-        "19": ["Министерство строительства и жилищно-коммунального хозяйства Республики Хакасия", "https://minstroy.r-19.ru/"],
-        "20": ["Министерство строительства и жилищно-коммунального хозяйства Чеченской Республики", "http://minstroychr.ru/"],
-        "21": ["Министерство строительства, архитектуры и жилищно-коммунального хозяйства Чувашской Республики", "https://minstroy.cap.ru/"],
-        "22": ["Министерство строительства и жилищно-коммунального хозяйства Алтайского края", "https://altairegion22.ru/gov_authority/stroy/"],
-        "23": ["Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Краснодарского края", "https://tekk.krasnodar.ru/"],
-        "24": ["Министерство промышленности, энергетики и жилищно-коммунального хозяйства Красноярского края", "https://www.krskstate.ru/prom"],
-        "25": ["Министерство жилищно-коммунального хозяйства Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/zkh/"],
-        "26": ["Министерство жилищно-коммунального хозяйства Ставропольского края", "https://gkh.stavkray.ru/"],
-        "27": ["Министерство жилищно-коммунального хозяйства Хабаровского края", "https://gkh.khabkrai.ru/"],
-        "28": ["Министерство жилищно-коммунального хозяйства Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_zhilishchno_kommunalnogo_khozyaystva_amurskoy_oblasti/"],
-        "29": ["Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Архангельской области", "https://dvinaland.ru/gov/iogv/mtekzhkh/"],
-        "30": ["Министерство строительства и жилищно-коммунального хозяйства Астраханской области", "https://minstroy.astrobl.ru/"],
-        "31": ["Министерство жилищно-коммунального хозяйства Белгородской области", "https://gkh31.ru/"],
-        "32": ["Департамент ТЭК и ЖКХ Брянской области", "https://tek.bryanskobl.ru/"],
-        "33": ["Министерство жилищно-коммунального хозяйства Владимирской области", "https://minstroy.avo.ru/zhkh"],
-        "34": ["Комитет жилищно-коммунального хозяйства Волгоградской области", "https://gkh.volgograd.ru/"],
-        "35": ["Департамент топливно-энергетического комплекса и тарифного регулирования Вологодской области (включает ЖКХ)", "https://tek.gov35.ru/"],
-        "36": ["Департамент жилищно-коммунального хозяйства и энергетики Воронежской области", "https://gkh.govvrn.ru/"],
-        "37": ["Департамент жилищно-коммунального хозяйства Ивановской области", "https://gzhi.ivanovoobl.ru/"],
-        "38": ["Министерство жилищной политики и энергетики Иркутской области", "https://irkobl.ru/sites/gkhe/"],
-        "39": ["Министерство строительства и жилищно-коммунального хозяйства Калининградской области", "https://gov39.ru/vlast/government/ministers/minstroy/"],
-        "40": ["Министерство строительства и жилищно-коммунального хозяйства Калужской области", "https://minstroy.admobl.kaluga.ru/"],
-        "41": ["Министерство жилищно-коммунального хозяйства и энергетики Камчатского края", "https://www.kamgov.ru/mzhkie"],
-        "42": ["Министерство жилищно-коммунального и дорожного комплекса Кузбасса", "https://mzhkd.kemv.ru/"],
-        "43": ["Министерство строительства, энергетики и жилищно-коммунального хозяйства Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/stroy/"],
-        "44": ["Департамент строительства и жилищно-коммунального хозяйства Костромской области", "https://dsz.adm44.ru/"],
-        "45": ["Департамент строительства, госэкспертизы и ЖКХ Курганской области", "https://gzhkh.gov.kurgan.ru/"],
-        "46": ["Комитет жилищно-коммунального хозяйства и ТЭК Курской области", "https://kursk.ru/power/executive/zhkh/"],
-        "47": ["Комитет по жилищно-коммунальному хозяйству Ленинградской области", "https://kzkh.lenobl.ru/"],
-        "48": ["Управление жилищно-коммунального хозяйства Липецкой области", "https://uprgkh.admlr.lipetsk.ru/"],
-        "49": ["Министерство строительства, жилищно-коммунального хозяйства и энергетики Магаданской области", "https://minstroy.49gov.ru/"],
-        "50": ["Министерство жилищно-коммунального хозяйства Московской области", "https://mgkh.mosreg.ru/"],
-        "51": ["Министерство государственного жилищного и строительного надзора Мурманской области", "https://minstroi.gov-murman.ru/"],
-        "52": ["Министерство жилищно-коммунального хозяйства и топливно-энергетического комплекса Нижегородской области", "https://mintzhtek.government-nnov.ru/"],
-        "53": ["Министерство жилищно-коммунального хозяйства и топливно-энергетического комплекса Новгородской области", "https://www.novreg.ru/authorities/executive/mzhkt/"],
-        "54": ["Министерство жилищно-коммунального хозяйства и энергетики Новосибирской области", "https://minzhkh.nso.ru/"],
-        "55": ["Министерство энергетики и жилищно-коммунального комплекса Омской области", "https://mineco.omskportal.ru/"],
-        "56": ["Министерство строительства, жилищно-коммунального, дорожного хозяйства и транспорта Оренбургской области", "https://www.minstroy.orb.ru/"],
-        "57": ["Управление по тарифам и ценовой политике Орловской области (включает ЖКХ)", "https://utcp.orel-region.ru/"],
-        "58": ["Министерство жилищно-коммунального хозяйства и гражданской защиты населения Пензенской области", "https://gzh.pnzreg.ru/"],
-        "59": ["Министерство жилищно-коммунального хозяйства и благоустройства Пермского края", "https://mzhkh.permkrai.ru/"],
-        "60": ["Комитет по тарифам и ценам Псковской области (регулирование ЖКХ)", "https://tarify.pskov.ru/"],
-        "61": ["Министерство жилищно-коммунального хозяйства Ростовской области", "https://minzhkh.donland.ru/"],
-        "62": ["Министерство жилищно-коммунального хозяйства и энергетики Рязанской области", "https://mgkh.ryazangov.ru/"],
-        "63": ["Министерство энергетики и жилищно-коммунального хозяйства Самарской области", "https://minenergo.samregion.ru/"],
-        "64": ["Министерство строительства и жилищно-коммунального хозяйства Саратовской области", "https://minstroy.saratov.gov.ru/"],
-        "65": ["Министерство жилищно-коммунального хозяйства Сахалинской области", "https://sakhalin.gov.ru/index.php?id=129"],
-        "66": ["Министерство жилищно-коммунального хозяйства Свердловской области", "https://mzhkh.midural.ru/"],
-        "67": ["Департамент Смоленской области по жилищно-коммунальному хозяйству и энергетике", "https://gkh.admin-smolensk.ru/"],
-        "68": ["Управление по регулированию тарифов Тамбовской области (включает ЖКХ)", "https://rtt.tmbreg.ru/"],
-        "69": ["Министерство энергетики и жилищно-коммунального хозяйства Тверской области", "https://minenergo.tver.ru/"],
-        "70": ["Департамент ЖКХ и государственного жилищного надзора Томской области", "https://www.tomsk.gov.ru/zhkh/"],
-        "71": ["Министерство строительства и жилищно-коммунального хозяйства Тульской области", "https://minstroy.tularegion.ru/"],
-        "72": ["Главное управление строительства Тюменской области (включает ЖКХ)", "https://gus.admtyumen.ru/"],
-        "73": ["Министерство жилищно-коммунального хозяйства и строительства Ульяновской области", "https://minstroy.ulgov.ru/"],
-        "74": ["Министерство строительства и инфраструктуры Челябинской области (включает ЖКХ)", "https://minstroy.gov74.ru/"],
-        "75": ["Министерство строительства, дорожного хозяйства и транспорта Забайкальского края (включает ЖКХ)", "https://minstroy.75.ru/"],
-        "76": ["Департамент жилищно-коммунального хозяйства, энергетики и регулирования тарифов Ярославской области", "https://www.yarregion.ru/depts/depgkh/"],
-        "77": ["Департамент жилищно-коммунального хозяйства города Москвы", "https://www.mos.ru/dgkh/"],
-        "78": ["Жилищный комитет Санкт-Петербурга", "https://jk.gov.spb.ru/"],
-        "79": ["Управление ЖКХ и строительства ЕАО", "https://www.eao.ru/authorities/organs/otdel-gkh/"],
-        "82": ["Министерство жилищно-коммунального хозяйства Республики Крым", "https://mzhkh.rk.gov.ru/"],
-        "83": ["Департамент строительства, ЖКХ, энергетики и транспорта НАО", "https://dstzhkhet.adm-nao.ru/"],
-        "86": ["Департамент жилищно-коммунального комплекса и энергетики ХМАО-Югры", "https://depgkh.admhmao.ru/"],
-        "87": ["Департамент промышленной и сельскохозяйственной политики Чукотского автономного округа (включает ЖКХ)", "https://www.chukotka.ru/authorities/executive/departament_promyshlennoy_i_selskohozyaystvennoy_politiki/"],
-        "89": ["Департамент тарифной политики, энергетики и жилищно-коммунального комплекса ЯНАО", "https://dtdh.yanao.ru/"],
-        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
-        "92": ["Департамент городского хозяйства города Севастополя (включает ЖКХ)", "https://sev.gov.ru/vlast/otraslevye-organy/departament-gorodskogo-khozyaystva/"],
-        "93": ["Администрация города Байконура (включает управление ЖКХ)", "http://www.baikonuradm.ru/city/gkh/"]
-    };
-    const link = links[code];
-    return link ? [link[0], link[1]] : [`Министерство/Департамент ЖКХ ${name}`, `https://yandex.ru/search/?text=Министерство+ЖКХ+${enc}`];
-}
-
-function getRegionalMedLink(code, name) {
-    const defaultText = `Министерство/Департамент здравоохранения ${name}`;
-    const links = {
-        "01": ["Министерство здравоохранения Республики Адыгея", "http://www.minzdrav01.ru/"],
-        "02": ["Министерство здравоохранения Республики Башкортостан", "https://health.bashkortostan.ru/"],
-        "03": ["Министерство здравоохранения Республики Бурятия", "https://egov-buryatia.ru/minzdrav/"],
-        "04": ["Министерство здравоохранения Республики Алтай", "https://minzdrav.altai-republic.ru/"],
-        "05": ["Министерство здравоохранения Республики Дагестан", "https://minzdrav.e-dag.ru/"],
-        "06": ["Министерство здравоохранения Республики Ингушетия", "http://minzdravri.ru/"],
-        "07": ["Министерство здравоохранения Кабардино-Балкарской Республики", "https://mz.kbr.ru/"],
-        "08": ["Министерство здравоохранения Республики Калмыкия", "https://mz.rk08.ru/"],
-        "09": ["Министерство здравоохранения Карачаево-Черкесской Республики", "https://www.mz-kchr.ru/"],
-        "10": ["Министерство здравоохранения Республики Карелия", "https://gov.karelia.ru/ministers/zdravoohraneniya/"],
-        "11": ["Министерство здравоохранения Республики Коми", "https://minzdrav.rkomi.ru/"],
-        "12": ["Министерство здравоохранения Республики Марий Эл", "https://mari-el.gov.ru/ministries/minzdrav/"],
-        "13": ["Министерство здравоохранения Республики Мордовия", "https://minzdrav.e-mordovia.ru/"],
-        "14": ["Министерство здравоохранения Республики Саха (Якутия)", "https://minzdrav.sakha.gov.ru/"],
-        "15": ["Министерство здравоохранения Республики Северная Осетия - Алания", "https://minzdrav.alania.gov.ru/"],
-        "16": ["Министерство здравоохранения Республики Татарстан", "https://minzdrav.tatarstan.ru/"],
-        "17": ["Министерство здравоохранения Республики Тыва", "https://minzdrav.rtyva.ru/"],
-        "18": ["Министерство здравоохранения Удмуртской Республики", "https://minzdrav.udmurt.ru/"],
-        "19": ["Министерство здравоохранения Республики Хакасия", "https://minzdrav19.ru/"],
-        "20": ["Министерство здравоохранения Чеченской Республики", "http://minzdravchr.ru/"],
-        "21": ["Министерство здравоохранения Чувашской Республики", "https://med.cap.ru/"],
-        "22": ["Министерство здравоохранения Алтайского края", "https://altairegion22.ru/gov_authority/zdrav/"],
-        "23": ["Министерство здравоохранения Краснодарского края", "https://minzdrav.krasnodar.ru/"],
-        "24": ["Министерство здравоохранения Красноярского края", "https://kraszdrav.ru/"],
-        "25": ["Министерство здравоохранения Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/health/"],
-        "26": ["Министерство здравоохранения Ставропольского края", "https://minzdrav.stavkray.ru/"],
-        "27": ["Министерство здравоохранения Хабаровского края", "https://minzdrav.khabkrai.ru/"],
-        "28": ["Министерство здравоохранения Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_zdravookhraneniya_amurskoy_oblasti/"],
-        "29": ["Министерство здравоохранения Архангельской области", "https://dvinaland.ru/gov/iogv/minzdrav/"],
-        "30": ["Министерство здравоохранения Астраханской области", "https://minzdrav.astrobl.ru/"],
-        "31": ["Министерство здравоохранения Белгородской области", "https://www.belzdrav.ru/"],
-        "32": ["Департамент здравоохранения Брянской области", "https://brkmed.ru/"],
-        "33": ["Министерство здравоохранения Владимирской области", "https://dz.avo.ru/"],
-        "34": ["Комитет здравоохранения Волгоградской области", "https://zdrav.volgograd.ru/"],
-        "35": ["Департамент здравоохранения Вологодской области", "https://dz.gov35.ru/"],
-        "36": ["Департамент здравоохранения Воронежской области", "https://zdrav.govvrn.ru/"],
-        "37": ["Департамент здравоохранения Ивановской области", "https://dz.ivanovoobl.ru/"],
-        "38": ["Министерство здравоохранения Иркутской области", "https://irkobl.ru/sites/minzdrav/"],
-        "39": ["Министерство здравоохранения Калининградской области", "https://gov39.ru/vlast/government/ministers/minzdrav/"],
-        "40": ["Министерство здравоохранения Калужской области", "https://minzdrav.admobl.kaluga.ru/"],
-        "41": ["Министерство здравоохранения Камчатского края", "https://www.kamgov.ru/minzdrav"],
-        "42": ["Министерство здравоохранения Кузбасса", "https://kuzdrav.ru/"],
-        "43": ["Министерство здравоохранения Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/zdrav/"],
-        "44": ["Департамент здравоохранения Костромской области", "https://dzo.adm44.ru/"],
-        "45": ["Департамент здравоохранения Курганской области", "https://dz.gov.kurgan.ru/"],
-        "46": ["Комитет здравоохранения Курской области", "https://kursk.ru/power/executive/zdrav/"],
-        "47": ["Комитет по здравоохранению Ленинградской области", "https://health.lenobl.ru/"],
-        "48": ["Управление здравоохранения Липецкой области", "https://uzalo.lipetsk.ru/"],
-        "49": ["Министерство здравоохранения и демографической политики Магаданской области", "https://minzdrav.49gov.ru/"],
-        "50": ["Министерство здравоохранения Московской области", "https://mz.mosreg.ru/"],
-        "51": ["Министерство здравоохранения Мурманской области", "https://minzdrav.gov-murman.ru/"],
-        "52": ["Министерство здравоохранения Нижегородской области", "https://minzdrav.government-nnov.ru/"],
-        "53": ["Министерство здравоохранения Новгородской области", "https://www.novreg.ru/authorities/executive/minzdrav/"],
-        "54": ["Министерство здравоохранения Новосибирской области", "https://minzdrav.nso.ru/"],
-        "55": ["Министерство здравоохранения Омской области", "https://mzdr.omskportal.ru/"],
-        "56": ["Министерство здравоохранения Оренбургской области", "https://www.minzdrav.orb.ru/"],
-        "57": ["Департамент здравоохранения Орловской области", "https://www.orel-region.ru/index.php?id=381"],
-        "58": ["Министерство здравоохранения Пензенской области", "https://minzdrav.pnzreg.ru/"],
-        "59": ["Министерство здравоохранения Пермского края", "https://minzdrav.permkrai.ru/"],
-        "60": ["Комитет по здравоохранению Псковской области", "https://zdrav.pskov.ru/"],
-        "61": ["Министерство здравоохранения Ростовской области", "https://minzdrav.donland.ru/"],
-        "62": ["Министерство здравоохранения Рязанской области", "https://minzdrav.ryazangov.ru/"],
-        "63": ["Министерство здравоохранения Самарской области", "https://minzdrav.samregion.ru/"],
-        "64": ["Министерство здравоохранения Саратовской области", "https://minzdrav.saratov.gov.ru/"],
-        "65": ["Министерство здравоохранения Сахалинской области", "https://sakhalin.gov.ru/index.php?id=128"],
-        "66": ["Министерство здравоохранения Свердловской области", "https://minzdrav.midural.ru/"],
-        "67": ["Департамент Смоленской области по здравоохранению", "https://zdrav.admin-smolensk.ru/"],
-        "68": ["Министерство здравоохранения Тамбовской области", "https://zdrav.tmbreg.ru/"],
-        "69": ["Министерство здравоохранения Тверской области", "https://minzdrav.tver.ru/"],
-        "70": ["Департамент здравоохранения Томской области", "https://zdrav.tomsk.gov.ru/"],
-        "71": ["Министерство здравоохранения Тульской области", "https://minzdrav.tularegion.ru/"],
-        "72": ["Департамент здравоохранения Тюменской области", "https://www.tyumzdrav.ru/"],
-        "73": ["Министерство здравоохранения Ульяновской области", "https://www.mz.ulgov.ru/"],
-        "74": ["Министерство здравоохранения Челябинской области", "https://www.minzdrav74.ru/"],
-        "75": ["Министерство здравоохранения Забайкальского края", "https://minzdrav.75.ru/"],
-        "76": ["Министерство здравоохранения Ярославской области", "https://www.yarregion.ru/depts/depzdrav/"],
-        "77": ["Департамент здравоохранения города Москвы", "https://mosgorzdrav.ru/"],
-        "78": ["Комитет по здравоохранению Санкт-Петербурга", "https://zdrav.spb.ru/"],
-        "79": ["Управление здравоохранения ЕАО", "https://www.eao.ru/authorities/organs/otdel-zdrav/"],
-        "82": ["Министерство здравоохранения Республики Крым", "https://mzdrav.rk.gov.ru/"],
-        "83": ["Департамент здравоохранения, труда и социальной защиты населения НАО", "https://dztszn.adm-nao.ru/"],
-        "86": ["Департамент здравоохранения ХМАО-Югры", "https://depzdrav.admhmao.ru/"],
-        "87": ["Департамент здравоохранения Чукотского автономного округа", "https://www.chukotka.ru/authorities/executive/departament_zdravookhraneniya/"],
-        "89": ["Департамент здравоохранения ЯНАО", "https://depzdrav.yanao.ru/"],
-        "91": ["Администрация федеральной территории \"Сириус\" (общая информация)", "https://sirius-ft.ru/"],
-        "92": ["Департамент здравоохранения города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-zdravoohraneniya/"],
-        "93": ["Администрация города Байконура (включает управление здравоохранения)", "http://www.baikonuradm.ru/city/health/"]
-    };
-    const link = links[code];
-    return link ? [link[0], link[1]] : [`Министерство/Департамент здравоохранения ${name}`, `https://yandex.ru/search/?text=Министерство+здравоохранения+${enc}`];
-}
-
-function getRegionalEduLink(code, name) {
-    const defaultText = `Министерство/Департамент образования ${name}`;
-    const links = {
-        "01": ["Министерство образования и науки Республики Адыгея", "http://www.adygheya.ru/minobraz/"],
-        "02": ["Министерство образования и науки Республики Башкортостан", "https://education.bashkortostan.ru/"],
-        "03": ["Министерство образования и науки Республики Бурятия", "https://egov-buryatia.ru/minobr/"],
-        "04": ["Министерство образования и науки Республики Алтай", "https://minobr.altai-republic.ru/"],
-        "05": ["Министерство образования и науки Республики Дагестан", "https://minobrnauki.e-dag.ru/"],
-        "06": ["Министерство образования и науки Республики Ингушетия", "http://minobrri.ru/"],
-        "07": ["Министерство просвещения и науки Кабардино-Балкарской Республики", "https://www.monkbr.ru/"],
-        "08": ["Министерство образования и науки Республики Калмыкия", "https://mon.rk08.ru/"],
-        "09": ["Министерство образования и науки Карачаево-Черкесской Республики", "https://www.minobrkchr.ru/"],
-        "10": ["Министерство образования и спорта Республики Карелия", "https://gov.karelia.ru/ministers/obrazovaniya-sporta/"],
-        "11": ["Министерство образования и науки Республики Коми", "https://minobr.rkomi.ru/"],
-        "12": ["Министерство образования и науки Республики Марий Эл", "https://mari-el.gov.ru/ministries/minobr/"],
-        "13": ["Министерство образования Республики Мордовия", "https://minobr.e-mordovia.ru/"],
-        "14": ["Министерство образования и науки Республики Саха (Якутия)", "https://minobrnauki.sakha.gov.ru/"],
-        "15": ["Министерство образования и науки Республики Северная Осетия - Алания", "https://mon.alania.gov.ru/"],
-        "16": ["Министерство образования и науки Республики Татарстан", "https://mon.tatarstan.ru/"],
-        "17": ["Министерство образования Республики Тыва", "https://mon.rtyva.ru/"],
-        "18": ["Министерство образования и науки Удмуртской Республики", "https://mon.udmurt.ru/"],
-        "19": ["Министерство образования и науки Республики Хакасия", "https://r-19.ru/authorities/ministerstvo-obrazovaniya-i-nauki-respubliki-khakasiya/"],
-        "20": ["Министерство образования и науки Чеченской Республики", "http://mon95.ru/"],
-        "21": ["Министерство образования и молодежной политики Чувашской Республики", "https://obrazov.cap.ru/"],
-        "22": ["Министерство образования и науки Алтайского края", "https://altairegion22.ru/gov_authority/educ/"],
-        "23": ["Министерство образования, науки и молодежной политики Краснодарского края", "https://minobr.krasnodar.ru/"],
-        "24": ["Министерство образования Красноярского края", "https://krao.ru/"],
-        "25": ["Министерство образования Приморского края", "https://primorsky.ru/authorities/executive-agencies/departments/education/"],
-        "26": ["Министерство образования Ставропольского края", "https://www.stavminobr.ru/"],
-        "27": ["Министерство образования и науки Хабаровского края", "https://minobr.khabkrai.ru/"],
-        "28": ["Министерство образования и науки Амурской области", "https://www.amurobl.ru/government/organy_ispolnitelnoy_vlasti/ministerstvo_obrazovaniya_i_nauki_amurskoy_oblasti/"],
-        "29": ["Министерство образования Архангельской области", "https://dvinaland.ru/gov/iogv/minobr/"],
-        "30": ["Министерство образования и науки Астраханской области", "https://minobr.astrobl.ru/"],
-        "31": ["Министерство образования Белгородской области", "https://beluobr.ru/"],
-        "32": ["Департамент образования и науки Брянской области", "https://www.hq.b-edu.ru/"],
-        "33": ["Министерство образования и молодежной политики Владимирской области", "https://obrazovanie.avo.ru/"],
-        "34": ["Комитет образования, науки и молодежной политики Волгоградской области", "https://obraz.volgograd.ru/"],
-        "35": ["Департамент образования Вологодской области", "https://edu.gov35.ru/"],
-        "36": ["Департамент образования, науки и молодежной политики Воронежской области", "https://obraz.govvrn.ru/"],
-        "37": ["Департамент образования Ивановской области", "https://edu.ivanovoobl.ru/"],
-        "38": ["Министерство образования Иркутской области", "https://irkobl.ru/sites/minobr/"],
-        "39": ["Министерство образования Калининградской области", "https://edu.gov39.ru/"],
-        "40": ["Министерство образования и науки Калужской области", "https://minobr.admobl.kaluga.ru/"],
-        "41": ["Министерство образования Камчатского края", "https://www.kamgov.ru/minobraz"],
-        "42": ["Министерство образования Кузбасса", "https://obrazovanie.kemv.ru/"],
-        "43": ["Министерство образования Кировской области", "https://www.ako.kirov.ru/power/executive/organy-ispolnitelnoi-vlasti/education/"],
-        "44": ["Департамент образования и науки Костромской области", "https://edu.adm44.ru/"],
-        "45": ["Департамент образования и науки Курганской области", "https://don.gov.kurgan.ru/"],
-        "46": ["Комитет образования и науки Курской области", "https://kursk.ru/power/executive/education/"],
-        "47": ["Комитет общего и профессионального образования Ленинградской области", "https://edu.lenobl.ru/"],
-        "48": ["Управление образования и науки Липецкой области", "https://www.deptno.lipetsk.ru/"],
-        "49": ["Министерство образования Магаданской области", "https://minobr.49gov.ru/"],
-        "50": ["Министерство образования Московской области", "https://mo.mosreg.ru/"],
-        "51": ["Министерство образования и науки Мурманской области", "https://minobr.gov-murman.ru/"],
-        "52": ["Министерство образования и науки Нижегородской области", "https://minobr.government-nnov.ru/"],
-        "53": ["Министерство образования Новгородской области", "https://www.novreg.ru/authorities/executive/minobr/"],
-        "54": ["Министерство образования Новосибирской области", "https://minobr.nso.ru/"],
-        "55": ["Министерство образования Омской области", "https://minobr.omskportal.ru/"],
-        "56": ["Министерство образования Оренбургской области", "https://www.minobr.orb.ru/"],
-        "57": ["Департамент образования Орловской области", "https://www.orel-region.ru/index.php?id=380"],
-        "58": ["Министерство образования Пензенской области", "https://minobr.pnzreg.ru/"],
-        "59": ["Министерство образования и науки Пермского края", "https://minobr.permkrai.ru/"],
-        "60": ["Комитет по образованию Псковской области", "https://edu.pskov.ru/"],
-        "61": ["Министерство общего и профессионального образования Ростовской области", "https://minobr.donland.ru/"],
-        "62": ["Министерство образования и молодежной политики Рязанской области", "https://minobr.ryazangov.ru/"],
-        "63": ["Министерство образования и науки Самарской области", "https://educat.samregion.ru/"],
-        "64": ["Министерство образования Саратовской области", "https://minobr.saratov.gov.ru/"],
-        "65": ["Министерство образования Сахалинской области", "https://sakhalin.gov.ru/index.php?id=126"],
-        "66": ["Министерство образования и молодежной политики Свердловской области", "https://minobraz.egov66.ru/"],
-        "67": ["Департамент Смоленской области по образованию и науке", "https://edu.admin-smolensk.ru/"],
-        "68": ["Министерство образования и науки Тамбовской области", "https://obraz.tmbreg.ru/"],
-        "69": ["Министерство образования Тверской области", "https://minobr.tver.ru/"],
-        "70": ["Департамент общего образования Томской области", "https://edu.tomsk.gov.ru/"],
-        "71": ["Министерство образования Тульской области", "https://education.tularegion.ru/"],
-        "72": ["Департамент образования и науки Тюменской области", "https://don.admtyumen.ru/"],
-        "73": ["Министерство просвещения и воспитания Ульяновской области", "https://minobr.ulgov.ru/"],
-        "74": ["Министерство образования и науки Челябинской области", "https://minobr.gov74.ru/"],
-        "75": ["Министерство образования и науки Забайкальского края", "https://minobr.75.ru/"],
-        "76": ["Министерство образования Ярославской области", "https://www.yarregion.ru/depts/do/"],
-        "77": ["Департамент образования и науки города Москвы", "https://www.mos.ru/donm/"],
-        "78": ["Комитет по образованию Санкт-Петербурга", "https://k-obr.spb.ru/"],
-        "79": ["Комитет образования ЕАО", "https://www.eao.ru/authorities/organs/otdel-obraz/"],
-        "82": ["Министерство образования, науки и молодежи Республики Крым", "https://monm.rk.gov.ru/"],
-        "83": ["Департамент образования, культуры и спорта НАО", "https://depsport.adm-nao.ru/"],
-        "86": ["Департамент образования и науки ХМАО-Югры", "https://depobr.admhmao.ru/"],
-        "87": ["Департамент образования и науки Чукотского автономного округа", "https://www.chukotka.ru/authorities/executive/departament_obrazovaniya_i_nauki/"],
-        "89": ["Департамент образования ЯНАО", "https://yamal-obr.ru/"],
-        "91": ["Образовательный центр \"Сириус\"", "https://sirius.online/"],
-        "92": ["Департамент образования и науки города Севастополя", "https://sev.gov.ru/vlast/otraslevye-organy/departament-obrazovaniya/"],
-        "93": ["Администрация города Байконура (Управление образования)", "http://www.baikonuradm.ru/city/education/"]
-    };
-    const link = links[code];
-    return link ? [link[0], link[1]] : [`Министерство/Департамент образования ${name}`, `https://yandex.ru/search/?text=Министерство+образования+${enc}`];
-}
-
-
 const regInput = document.getElementById('regInput');
 const regSuggests = document.getElementById('regSuggests');
 const homeScreen = document.getElementById('home-screen');
@@ -930,9 +987,8 @@ function renderRegion(code) {
     hubs.forEach(hub => {
         const chip = document.createElement('div');
         chip.className = 'nav-chip';
-        // Для региональных категорий, отображаем только часть заголовка, чтобы чипсы не были слишком длинными
-        const chipText = hub.id.endsWith('_regional') ? hub.title.split('(')[0].trim() : (hub.title.split(' ')[1] || hub.title);
-        chip.innerText = chipText;
+        // Упрощенный текст чипса: убираем всё в скобках, если есть.
+        chip.innerText = hub.title.split('(')[0].trim(); 
         chip.onclick = () => document.getElementById('hub-' + hub.id).scrollIntoView({ behavior: 'smooth', block: 'center' });
         nav.appendChild(chip);
 
