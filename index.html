@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ГосНавигатор — агрегатор услуг регионов РФ</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2294%22 height=%2294%22 x=%223%22 y=%223%22 rx=%2222%22 fill=%22white%22 stroke=%22%23ef4444%22 stroke-width=%226%22/><text y=%2275%22 x=%2222%22 font-size=%2275%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 fill=%22%23ef4444%22>А</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>ГосНавигатор — агрегатор приложений и услуг РФ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='94' height='94' x='3' y='3' rx='22' fill='white' stroke='%23ef4444' stroke-width='6'/><text y='75' x='22' font-size='75' font-family='Arial, sans-serif' font-weight='900' fill='%23ef4444'>А</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <style>
         :root {
             --bg: #f2f4f7;
@@ -26,346 +27,1017 @@
             }
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.4; }
-        header { 
-            background: var(--bg); 
-            padding: 8px 15px; 
-            border-bottom: 2px solid var(--accent);
-            position: sticky; 
-            top: 0; 
-            z-index: 10000; 
-            box-shadow: var(--shadow);
-        }
-        .nav-inner { max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-box { background: #fff; border: 2px solid var(--accent); color: var(--accent); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; font-size: 20px; }
-        #home-screen { padding: 40px 15px; text-align: center; max-width: 800px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-        .hero-h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -2px; margin-bottom: 30px; line-height: 1; }
-        .main-input { width: 100%; padding: 25px 35px; border-radius: 50px; border: 3px solid var(--border); font-size: 1.3rem; outline: none; background: var(--card-bg); color: var(--text); font-weight: 800; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        #region-screen { display: none; padding: 20px 15px 60px; max-width: 1800px; margin: 0 auto; }
-        .region-header { margin-bottom: 20px; }
-        .region-header h2 { font-size: 1.8rem; font-weight: 950; letter-spacing: -1.5px; margin-bottom: 10px; }
-        .search-bar { margin: 15px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .search-bar input { flex: 1; padding: 12px 20px; border-radius: 40px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 1rem; }
-        .search-bar button { padding: 10px 20px; border-radius: 40px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
-        .toc { 
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            padding: 15px 20px; 
-            margin: 15px 0 25px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-        .toc a {
-            background: var(--bg);
-            padding: 5px 12px;
-            border-radius: 20px;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
-            font-size: 0.8rem;
-            border: 1px solid var(--border);
-            transition: 0.2s;
-        }
-        .toc a:hover { background: var(--accent); color: white; border-color: var(--accent); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; margin-top: 15px; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .card-h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; color: var(--accent); }
-        .service-link { display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--text); padding: 8px 0; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 0.9rem; }
-        .service-link:hover { color: var(--accent); padding-left: 5px; }
-        details { margin-top: 5px; }
-        summary { cursor: pointer; font-weight: 900; color: var(--muted); list-style: none; font-size: 0.7rem; text-transform: uppercase; padding: 8px; text-align: center; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); }
-        summary:hover { color: var(--accent); border-color: var(--accent); }
-        .suggest-list { position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 10001; display: none; padding: 15px; max-height: 400px; overflow-y: auto; text-align: left; }
-        .suggest-item { padding: 15px 25px; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; margin-bottom: 5px; }
-        .suggest-item:hover { background: var(--accent); color: white; }
-        footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); color: var(--muted); font-weight: 800; margin-top: 40px; }
-        .hidden { display: none; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.4; padding-bottom: 70px; }
+        header { background: var(--bg); padding: 12px 15px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; }
+        .logo-box { background: #fff; border: 2px solid var(--accent); color: var(--accent); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 900; font-size: 22px; }
+        .tabs { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .tab-btn { background: none; border: none; padding: 8px 16px; font-size: 0.9rem; font-weight: 800; color: var(--muted); cursor: pointer; border-radius: 30px; transition: 0.2s; }
+        .tab-btn.active { background: var(--accent); color: white; }
+        .tab-content { display: none; padding: 20px 15px 30px; max-width: 800px; margin: 0 auto; }
+        .tab-content.active { display: block; }
+        .search-box { width: 100%; padding: 14px 20px; border-radius: 50px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 1rem; margin-bottom: 20px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+        .service-card { background: var(--card-bg); border-radius: 20px; padding: 12px 15px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .service-name { font-weight: 800; }
+        .open-btn { background: var(--accent); color: white; border: none; border-radius: 30px; padding: 6px 16px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .add-to-folder-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 8px; color: var(--muted); }
+        .folder-card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 900; }
+        .service-in-folder { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+        input, button, textarea { font-family: inherit; }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; padding: 12px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        .btn-secondary { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); }
+        .contact-links a { color: var(--accent); text-decoration: none; display: inline-block; margin: 5px 0; }
+        textarea { width: 100%; padding: 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical; }
+        .info-note { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
 <header>
-    <div class="nav-inner">
-        <div class="logo" onclick="goHome()" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-            <div class="logo-box">А</div>
-            <div style="font-weight: 950; letter-spacing: -0.5px;">ГосНавигатор</div>
-        </div>
-        <div style="background:var(--accent); color:#fff; padding:4px 12px; border-radius:8px; font-weight:950;">Регионы РФ</div>
-    </div>
+    <div class="logo-box">А</div>
+    <div style="font-weight: 950; font-size: 1.3rem;">ГосНавигатор</div>
 </header>
-<main id="home-screen">
-    <h1 class="hero-h1">Цифровая экосистема <br>твоего региона.</h1>
-    <div style="position: relative; width: 100%;">
-        <input type="text" id="regInput" class="main-input" placeholder="Поиск региона (напр. 54 или Дагестан)..." autocomplete="off">
-        <div id="regSuggests" class="suggest-list"></div>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="home">🏠 Главная</button>
+    <button class="tab-btn" data-tab="profile">👤 Профиль</button>
+    <button class="tab-btn" data-tab="folders">📁 Мои папки</button>
+    <button class="tab-btn" data-tab="support">💬 Поддержка</button>
+</div>
+
+<!-- Главная -->
+<div id="home-tab" class="tab-content active">
+    <input type="text" id="searchInput" class="search-box" placeholder="Поиск приложений (Яндекс, такси, карты...)">
+    <div id="servicesContainer" class="services-grid"></div>
+    <div class="info-note">⭐ Нажмите «Открыть» → переход в магазин (Google Play / RuStore). Если приложение установлено, откроется сразу.</div>
+</div>
+
+<!-- Профиль -->
+<div id="profile-tab" class="tab-content">
+    <div id="authSection">
+        <h3>Вход / Регистрация</h3>
+        <div class="form-group"><input type="text" id="loginInput" placeholder="Логин"></div>
+        <div class="form-group"><input type="password" id="passwordInput" placeholder="Пароль"></div>
+        <button id="loginBtn" class="btn">Войти</button>
+        <button id="registerBtn" class="btn btn-secondary">Регистрация</button>
     </div>
-</main>
-<main id="region-screen">
-    <div class="region-header">
-        <h2 id="regTitle">Регион</h2>
-        <div class="search-bar">
-            <input type="text" id="serviceSearchInput" placeholder="Поиск сервиса по названию...">
-            <button id="searchBtn">🔍 Найти</button>
+    <div id="profileInfo" style="display: none;">
+        <p>👋 Привет, <span id="usernameSpan"></span>!</p>
+        <button id="logoutBtn" class="btn btn-secondary">Выйти</button>
+    </div>
+</div>
+
+<!-- Мои папки -->
+<div id="folders-tab" class="tab-content">
+    <div id="foldersRequireAuth" style="display: none;">
+        <p>🔐 Войдите в аккаунт, чтобы создавать папки и сохранять сервисы.</p>
+    </div>
+    <div id="foldersAuthContent" style="display: none;">
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="newFolderName" placeholder="Название папки" style="padding: 8px; border-radius: 30px; border:1px solid var(--border); background:var(--bg); width: 70%;">
+            <button id="createFolderBtn" class="btn" style="padding: 8px 16px;">➕ Создать</button>
         </div>
-        <div id="tocContainer" class="toc"></div>
-        <button onclick="goHome()" style="margin: 10px 0; padding: 6px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); cursor: pointer;">← Сменить регион</button>
+        <div id="foldersList"></div>
+        <div class="info-note">⭐ На главной у каждого сервиса есть кнопка «📂+» — добавьте в любую папку.</div>
     </div>
-    <div id="megaGrid" class="grid"></div>
-</main>
-<footer><p>ГосНавигатор 2026 — агрегатор услуг регионов РФ. Все ссылки актуальны на апрель 2026.</p></footer>
+</div>
+
+<!-- Поддержка -->
+<div id="support-tab" class="tab-content">
+    <h3>📞 Контакты</h3>
+    <div class="contact-links">
+        <p>Telegram: <a href="https://t.me/IzanaKurokawa0" target="_blank">@IzanaKurokawa0</a></p>
+        <p>Email: <a href="mailto:bombafara@gmail.com">bombafara@gmail.com</a></p>
+    </div>
+    <div class="chat-message">
+        <h4>Написать разработчику</h4>
+        <textarea id="supportMessage" rows="3" placeholder="Ваше сообщение..."></textarea>
+        <button id="sendSupportBtn" class="btn" style="margin-top: 10px;">📨 Отправить</button>
+        <div class="info-note">(сообщение не отправляется реально, демо-режим)</div>
+    </div>
+</div>
+
 <script>
-// ---------- БАЗА РЕГИОНОВ (91) ----------
-const regionsDB = [
-    ["01","Республика Адыгея"],["02","Республика Башкортостан"],["03","Республика Бурятия"],["04","Республика Алтай"],["05","Республика Дагестан"],["06","Республика Ингушетия"],
-    ["07","Кабардино-Балкарская Республика"],["08","Республика Калмыкия"],["09","Карачаево-Черкесская Республика"],["10","Республика Карелия"],["11","Республика Коми"],
-    ["12","Республика Марий Эл"],["13","Республика Мордовия"],["14","Республика Саха (Якутия)"],["15","Республика Северная Осетия — Алания"],["16","Республика Татарстан"],
-    ["17","Республика Тыва"],["18","Удмуртская Республика"],["19","Республика Хакасия"],["20","Чеченская Республика"],["21","Чувашская Республика"],["22","Алтайский край"],
-    ["23","Краснодарский край"],["24","Красноярский край"],["25","Приморский край"],["26","Ставропольский край"],["27","Хабаровский край"],["28","Амурская область"],
-    ["29","Архангельская область"],["30","Астраханская область"],["31","Белгородская область"],["32","Брянская область"],["33","Владимирская область"],["34","Волгоградская область"],
-    ["35","Вологодская область"],["36","Воронежская область"],["37","Ивановская область"],["38","Иркутская область"],["39","Калининградская область"],["40","Калужская область"],
-    ["41","Камчатский край"],["42","Кемеровская область — Кузбасс"],["43","Кировская область"],["44","Костромская область"],["45","Курганская область"],["46","Курская область"],
-    ["47","Ленинградская область"],["48","Липецкая область"],["49","Магаданская область"],["50","Московская область"],["51","Мурманская область"],["52","Нижегородская область"],
-    ["53","Новгородская область"],["54","Новосибирская область"],["55","Омская область"],["56","Оренбургская область"],["57","Орловская область"],["58","Пензенская область"],
-    ["59","Пермский край"],["60","Псковская область"],["61","Ростовская область"],["62","Рязанская область"],["63","Самарская область"],["64","Саратовская область"],
-    ["65","Сахалинская область"],["66","Свердловская область"],["67","Смоленская область"],["68","Тамбовская область"],["69","Тверская область"],["70","Томская область"],
-    ["71","Тульская область"],["72","Тюменская область"],["73","Ульяновская область"],["74","Челябинская область"],["75","Забайкальский край"],["76","Ярославская область"],
-    ["77","г. Москва"],["78","г. Санкт-Петербург"],["79","Еврейская автономная область"],["82","Республика Крым"],["83","Ненецкий АО"],["86","Ханты-Мансийский АО — Югра"],
-    ["87","Чукотский АО"],["89","Ямало-Ненецкий АО"],["91","ФТ Сириус"],["92","г. Севастополь"],["93","г. Байконур"]
-];
-
-// ---------- ФЕДЕРАЛЬНЫЕ СЕРВИСЫ (РОССИЙСКИЕ ПРИОРИТЕТ) ----------
-const federalGovServices = [
-    ["Единый портал Госуслуг","https://www.gosuslugi.ru/"], 
-    ["Поиск МФЦ по региону","https://yandex.ru/search/?text=МФЦ+запись+онлайн"], 
-    ["ФНС Налоги","https://lkfl2.nalog.ru/"], 
-    ["Росреестр","https://rosreestr.gov.ru/"]
-];
-const federalTransportServices = [["Яндекс.Карты","https://yandex.ru/maps/"],["2ГИС","https://2gis.ru/"],["РЖД","https://www.rzd.ru/"],["Туту.ру","https://www.tutu.ru/"]];
-const federalJKHServices = [["ГИС ЖКХ","https://dom.gosuslugi.ru/"],["Госуслуги ЖКХ","https://www.gosuslugi.ru/category/housing"],["Квартплата.ру","https://kvartplata.ru"]];
-const federalEducationServices = [["ГИС Моя Школа","https://myschool.edu.ru/"],["РЭШ","https://resh.edu.ru/"],["Сферум","https://sferum.ru/"],["Учи.ру","https://uchi.ru/"],["ЯКласс","https://www.yaklass.ru/"]];
-const federalBanksServices = [["СберБанк","https://www.sberbank.ru/"],["Т-Банк","https://www.tbank.ru/"],["Альфа-Банк","https://alfabank.ru/"],["СБП","https://sbp.nspk.ru/"]];
-const federalSocialMessengers = [
-    ["ВКонтакте (VK)","https://vk.com/"],["Telegram","https://telegram.org/"],["Одноклассники","https://ok.ru/"],
-    ["WhatsApp (иноагент, доступен)","https://www.whatsapp.com/"],["TikTok (VPN)","https://www.tiktok.com/"],["Instagram (VPN, запрещён в РФ)","https://www.instagram.com/"]
-];
-const federalShoppingServices = [["Ozon","https://www.ozon.ru/"],["Wildberries","https://www.wildberries.ru/"],["Яндекс Маркет","https://market.yandex.ru/"],["Avito","https://www.avito.ru/"]];
-const federalFoodTaxiServices = [["Яндекс.Еда","https://eda.yandex.ru/"],["Delivery Club","https://www.delivery-club.ru/"],["Самокат","https://samokat.ru/"],["Яндекс Go","https://go.yandex/"]];
-const federalOfficeEditors = [
-    ["МойОфис","https://myoffice.ru/"], 
-    ["Microsoft Office Online","https://www.office.com/"], 
-    ["CapCut Онлайн","https://www.capcut.com/ru-by/"],
-    ["Р7-Офис","https://www.r7-office.ru/"]
-];
-const federalGamesPlatforms = [["Steam","https://store.steampowered.com/"],["VK Play","https://vkplay.ru/"],["GeForce NOW","https://gfn.ru/"]];
-const federalMultimedia = [["YouTube (доступен)","https://www.youtube.com/"],["VK Видео","https://vk.com/video"],["Rutube","https://rutube.ru/"],["Кинопоиск","https://www.kinopoisk.ru/"]];
-const federalVPN = [["Proton VPN Free","https://protonvpn.com/"],["Opera VPN","https://www.opera.com/ru"]];
-const federalAI = [["ChatGPT (VPN)","https://chat.openai.com/"],["Кандинский (Сбер)","https://www.sberbank.ru/promo/kandinsky/"],["Google Gemini (VPN)","https://gemini.google.com/"]];
-const federalCareer = [["HeadHunter","https://hh.ru/"],["SuperJob","https://www.superjob.ru/"],["Госуслуги Работа","https://www.gosuslugi.ru/employment"]];
-const federalAppStores = [["RuStore","https://www.rustore.ru/"],["AppGallery","https://appgallery.huawei.com/"],["Google Play","https://play.google.com/store"]];
-const federalCulture = [["Пушкинская карта","https://www.culture.ru/pushkinskaya-karta"]];
-
-// ФЕДЕРАЛЬНЫЕ СЕРВИСЫ МЕДИЦИНЫ (ДОБАВЛЕНО)
-const federalMedServices = [
-    ["Госуслуги Здоровье","https://www.gosuslugi.ru/health"],
-    ["Портал Мое здоровье (ЕМИАС)","https://emias.info/"],
-    ["Телемедицина СберЗдоровье","https://sberhealth.ru/"],
-    ["Яндекс.Здоровье","https://yandex.ru/health"]
-];
-
-// ---------- ФУНКЦИИ ПОЛУЧЕНИЯ РЕГИОНАЛЬНЫХ ССЫЛОК (СОКРАЩЕННО, ВСЕ 91 ЕСТЬ В ПОЛНОЙ ВЕРСИИ, ЗДЕСЬ ПРИВЕДУ ТОЛЬКО НЕСКОЛЬКО ДЛЯ ПРИМЕРА) ----------
-function getRegionalGovLink(code, name) {
-    const links = {
-        "54": ["Правительство Новосибирской области", "https://www.nso.ru/"],
-        "77": ["Правительство Москвы", "https://www.mos.ru/"],
-        "78": ["Администрация СПб", "https://www.gov.spb.ru/"],
-    };
-    return links[code] || [`Правительство ${name}`, `https://yandex.ru/search/?text=Правительство+${encodeURIComponent(name)}`];
-}
-function getRegionalTransportLink(code, name) {
-    const links = { "54": ["Минтранс НСО", "https://mintrans.nso.ru/"], "77": ["Дептранс Москвы", "https://transport.mos.ru/"] };
-    return links[code] || [`Транспорт ${name}`, `https://yandex.ru/search/?text=Транспорт+${encodeURIComponent(name)}`];
-}
-function getRegionalJKHLink(code, name) {
-    const links = { "54": ["МинЖКХ НСО", "https://mjkh.nso.ru/"], "77": ["Комплекс ЖКХ Москвы", "https://www.mos.ru/kh/"] };
-    return links[code] || [`ЖКХ ${name}`, `https://yandex.ru/search/?text=ЖКХ+${encodeURIComponent(name)}`];
-}
-function getRegionalMedLink(code, name) {
-    const links = { "54": ["Минздрав НСО", "https://zdrav.nso.ru/"], "77": ["Депздрав Москвы", "https://mosgorzdrav.ru/"] };
-    return links[code] || [`Здравоохранение ${name}`, `https://yandex.ru/search/?text=Здравоохранение+${encodeURIComponent(name)}`];
-}
-function getRegionalEduLink(code, name) {
-    const links = { "54": ["Минобр НСО", "https://minobr.nso.ru/"], "77": ["ДОНМ Москвы", "https://www.mos.ru/donm/"] };
-    return links[code] || [`Образование ${name}`, `https://yandex.ru/search/?text=Образование+${encodeURIComponent(name)}`];
-}
-
-// Функция детерминированного перемешивания (на основе кода региона)
-function deterministicShuffle(array, seed) {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.abs(Math.sin(seed + i)) * 1000000) % (i + 1);
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-function getRegionalHubs(code, name) {
-    // Собираем все ссылки вперемешку
-    const govItems = deterministicShuffle([...federalGovServices, getRegionalGovLink(code, name)], code.charCodeAt(0) + 1);
-    const transportItems = deterministicShuffle([...federalTransportServices, getRegionalTransportLink(code, name)], code.charCodeAt(0) + 2);
-    const jkhItems = deterministicShuffle([...federalJKHServices, getRegionalJKHLink(code, name)], code.charCodeAt(0) + 3);
-    const medItems = deterministicShuffle([...federalMedServices, getRegionalMedLink(code, name)], code.charCodeAt(0) + 4);
-    const eduItems = deterministicShuffle([...federalEducationServices, getRegionalEduLink(code, name)], code.charCodeAt(0) + 5);
-    const banksItems = deterministicShuffle(federalBanksServices, code.charCodeAt(0) + 6);
-    const socialItems = deterministicShuffle(federalSocialMessengers, code.charCodeAt(0) + 7);
-    const shoppingItems = deterministicShuffle(federalShoppingServices, code.charCodeAt(0) + 8);
-    const foodItems = deterministicShuffle(federalFoodTaxiServices, code.charCodeAt(0) + 9);
-    const officeItems = deterministicShuffle(federalOfficeEditors, code.charCodeAt(0) + 10);
-    const gamesItems = deterministicShuffle(federalGamesPlatforms, code.charCodeAt(0) + 11);
-    const mediaItems = deterministicShuffle(federalMultimedia, code.charCodeAt(0) + 12);
-    const vpnItems = deterministicShuffle(federalVPN, code.charCodeAt(0) + 13);
-    const aiItems = deterministicShuffle(federalAI, code.charCodeAt(0) + 14);
-    const careerItems = deterministicShuffle(federalCareer, code.charCodeAt(0) + 15);
-    const storeItems = deterministicShuffle(federalAppStores, code.charCodeAt(0) + 16);
-    const cultureItems = deterministicShuffle(federalCulture, code.charCodeAt(0) + 17);
-    
-    // Блок гордости региона (пример для некоторых)
-    let prideItems = [];
-    if (code === "54") prideItems = [["НОВАТ", "https://novat.nsk.ru/"], ["НГУ", "https://www.nsu.ru/"], ["Институт ядерной физики", "https://www.inp.nsk.su/"]];
-    else if (code === "77") prideItems = [["Московский Кремль", "https://www.kreml.ru/"], ["МГУ", "https://www.msu.ru/"], ["Большой театр", "https://www.bolshoi.ru/"]];
-    else prideItems = [["Узнайте о регионе", "https://yandex.ru/search/?text=Достопримечательности+"+encodeURIComponent(name)]];
-    
-    return [
-        { id: "pride", title: "🏆 Гордость региона", items: prideItems },
-        { id: "gov", title: "🏛️ Госуслуги", items: govItems },
-        { id: "tran", title: "🚆 Транспорт", items: transportItems },
-        { id: "jkh", title: "💡 ЖКХ", items: jkhItems },
-        { id: "med", title: "🏥 Медицина", items: medItems },
-        { id: "edu", title: "📚 Образование", items: eduItems },
-        { id: "banks", title: "💰 Банки", items: banksItems },
-        { id: "social", title: "💬 Мессенджеры и соцсети", items: socialItems },
-        { id: "shopping", title: "🛍️ Покупки", items: shoppingItems },
-        { id: "food", title: "🍔 Еда и такси", items: foodItems },
-        { id: "office", title: "📄 Офис и редакторы", items: officeItems },
-        { id: "games", title: "🎮 Игры", items: gamesItems },
-        { id: "media", title: "🎬 Мультимедиа", items: mediaItems },
-        { id: "vpn", title: "🔒 VPN и безопасность", items: vpnItems },
-        { id: "ai", title: "🤖 Нейросети", items: aiItems },
-        { id: "career", title: "💼 Карьера", items: careerItems },
-        { id: "stores", title: "📲 Магазины приложений", items: storeItems },
-        { id: "culture", title: "🎭 Культура", items: cultureItems }
+    // --------------------------------------------------------------
+    // 1. МАССИВ ПРИЛОЖЕНИЙ (100+ рабочих ссылок, доступных в РФ)
+    // --------------------------------------------------------------
+    const services = [
+        // Банки и финансы
+        { name: "СберБанк Онлайн", packageName: "ru.sberbankmobile", store: "googleplay" },
+        { name: "Т-Банк", packageName: "ru.tbank", store: "googleplay" },
+        { name: "ВТБ Онлайн", packageName: "ru.vtb24.mobile.android", store: "googleplay" },
+        { name: "Альфа-Банк", packageName: "ru.alfabank.mobile.android", store: "googleplay" },
+        { name: "Газпромбанк", packageName: "ru.gazprombank.android", store: "googleplay" },
+        { name: "ПСБ", packageName: "ru.psbank.mobile", store: "googleplay" },
+        { name: "Россельхозбанк", packageName: "ru.rshb.mobile", store: "googleplay" },
+        { name: "Совкомбанк", packageName: "ru.sovcombank.sovkombank", store: "googleplay" },
+        { name: "Открытие", packageName: "ru.openbank.mobile", store: "googleplay" },
+        { name: "Райффайзенбанк", packageName: "ru.raiffeisenbank.rbo", store: "googleplay" },
+        { name: "МТС Банк", packageName: "ru.mts.bank", store: "googleplay" },
+        { name: "Почта Банк", packageName: "ru.pochtabank.app", store: "googleplay" },
+        { name: "Mir Pay", packageName: "ru.nspk.mirpay", store: "rustore" },
+        // Маркетплейсы
+        { name: "Ozon", packageName: "ru.ozon.app.android", store: "googleplay" },
+        { name: "Wildberries", packageName: "com.wildberries.wildberries", store: "googleplay" },
+        { name: "Авито", packageName: "com.avito.android", store: "googleplay" },
+        { name: "Яндекс Маркет", packageName: "ru.yandex.market", store: "googleplay" },
+        { name: "Lamoda", packageName: "ru.lamoda", store: "googleplay" },
+        { name: "DNS Shop", packageName: "ru.dns.shop", store: "googleplay" },
+        { name: "Ситилинк", packageName: "com.citilink", store: "googleplay" },
+        { name: "М.Видео", packageName: "ru.mvideo.mvideoapp", store: "googleplay" },
+        { name: "Эльдорадо", packageName: "ru.eldorado.app", store: "googleplay" },
+        { name: "Юла", packageName: "com.youla.android", store: "googleplay" },
+        { name: "Магнит", packageName: "ru.magnit.magnitapp", store: "googleplay" },
+        { name: "Пятёрочка", packageName: "ru.pyaterochka", store: "googleplay" },
+        { name: "Перекрёсток", packageName: "com.perekrestok.app", store: "googleplay" },
+        { name: "Лента", packageName: "ru.lenta.lentaapp", store: "googleplay" },
+        // Транспорт и навигация
+        { name: "Яндекс Карты", packageName: "ru.yandex.yandexmaps", store: "googleplay" },
+        { name: "2ГИС", packageName: "ru.dublgis.dgismobile", store: "googleplay" },
+        { name: "Яндекс Go", packageName: "ru.yandex.taxi", store: "googleplay" },
+        { name: "Яндекс Метро", packageName: "ru.yandex.metro", store: "googleplay" },
+        { name: "Google Maps", packageName: "com.google.android.apps.maps", store: "googleplay" },
+        // Соцсети и мессенджеры
+        { name: "ВКонтакте", packageName: "com.vkontakte.android", store: "googleplay" },
+        { name: "Одноклассники", packageName: "ru.ok.android", store: "googleplay" },
+        { name: "Telegram", packageName: "org.telegram.messenger", store: "googleplay" },
+        { name: "WhatsApp", packageName: "com.whatsapp", store: "googleplay" },
+        { name: "VK Мессенджер", packageName: "com.vk.im", store: "googleplay" },
+        { name: "ТамТам", packageName: "ru.mail.tamtam", store: "googleplay" },
+        { name: "ICQ", packageName: "ru.icq", store: "googleplay" },
+        { name: "Yappy", packageName: "ru.yappy.app", store: "rustore" },
+        // Операторы
+        { name: "Мой МТС", packageName: "ru.mts.mymts", store: "googleplay" },
+        { name: "МегаФон", packageName: "ru.megafon.megafonapp", store: "googleplay" },
+        { name: "Билайн", packageName: "ru.beeline.beelineapp", store: "googleplay" },
+        { name: "Tele2", packageName: "ru.tele2.mytele2", store: "googleplay" },
+        { name: "Yota", packageName: "ru.yota.app", store: "googleplay" },
+        // Госуслуги
+        { name: "Госуслуги", packageName: "ru.gosuslugi.app", store: "googleplay" },
+        { name: "Госключ", packageName: "ru.gosuslugi.goskey", store: "googleplay" },
+        { name: "Моя Москва", packageName: "ru.mos.app", store: "googleplay" },
+        // Новости
+        { name: "Яндекс.Дзен", packageName: "ru.yandex.zen", store: "googleplay" },
+        { name: "РИА Новости", packageName: "ru.ria.ria", store: "googleplay" },
+        { name: "ТАСС", packageName: "ru.tass.app", store: "googleplay" },
+        { name: "Газета.Ru", packageName: "ru.gazeta.app", store: "googleplay" },
+        { name: "РБК", packageName: "ru.rbc.rbc", store: "googleplay" },
+        { name: "Известия", packageName: "ru.izvestia.iz", store: "googleplay" },
+        { name: "RT", packageName: "com.rt.news", store: "googleplay" },
+        // Видео, музыка
+        { name: "YouTube", packageName: "com.google.android.youtube", store: "googleplay" },
+        { name: "Кинопоиск", packageName: "ru.yandex.kinopoisk", store: "googleplay" },
+        { name: "Rutube", packageName: "ru.rutube.rutube", store: "rustore" },
+        { name: "VK Видео", packageName: "com.vk.video", store: "googleplay" },
+        { name: "VK Музыка", packageName: "com.vk.music", store: "googleplay" },
+        { name: "Яндекс Музыка", packageName: "ru.yandex.music", store: "googleplay" },
+        { name: "Звук", packageName: "ru.zvuk.app", store: "googleplay" },
+        { name: "Иви", packageName: "ru.ivi", store: "googleplay" },
+        { name: "Premier", packageName: "ru.premier", store: "googleplay" },
+        { name: "START", packageName: "ru.start.app", store: "googleplay" },
+        // Образование
+        { name: "Учи.ру", packageName: "ru.uchi.uchi", store: "googleplay" },
+        { name: "Дневник.ру", packageName: "ru.dnevnik.dnevnikapp", store: "googleplay" },
+        { name: "Яндекс Практикум", packageName: "ru.yandex.practicum", store: "googleplay" },
+        { name: "Skyeng", packageName: "com.skyeng", store: "googleplay" },
+        { name: "Duolingo", packageName: "com.duolingo", store: "googleplay" },
+        // Игры
+        { name: "Tanks Blitz", packageName: "net.wargaming.wot.blitz", store: "googleplay" },
+        { name: "CarX Drift Racing 2", packageName: "com.carx.drift2", store: "googleplay" },
+        { name: "Brawl Stars", packageName: "com.supercell.brawlstars", store: "googleplay" },
+        { name: "Clash of Clans", packageName: "com.supercell.clashofclans", store: "googleplay" },
+        { name: "Standoff 2", packageName: "com.standoff.standoff2", store: "googleplay" },
+        // Утилиты
+        { name: "Яндекс Браузер", packageName: "ru.yandex.browser", store: "googleplay" },
+        { name: "Яндекс Диск", packageName: "ru.yandex.disk", store: "googleplay" },
+        { name: "Gmail", packageName: "com.google.android.gm", store: "googleplay" },
+        { name: "Google Drive", packageName: "com.google.android.apps.docs", store: "googleplay" },
+        { name: "Microsoft Office", packageName: "com.microsoft.office.officehubrow", store: "googleplay" },
+        { name: "Kaspersky", packageName: "com.kms.free", store: "googleplay" },
+        { name: "Dr.Web Light", packageName: "com.drweb", store: "googleplay" },
+        { name: "CapCut", packageName: "com.lemon.lvoverseas", store: "googleplay" },
+        // Путешествия
+        { name: "Aviasales", packageName: "com.aviasales.android", store: "googleplay" },
+        { name: "Туту.ру", packageName: "ru.tutu.android", store: "googleplay" },
+        { name: "Яндекс Путешествия", packageName: "ru.yandex.travel", store: "googleplay" },
+        // Еда и доставка
+        { name: "Яндекс Еда", packageName: "ru.yandex.eda", store: "googleplay" },
+        { name: "Самокат", packageName: "com.samokat.android", store: "googleplay" },
+        { name: "Delivery Club", packageName: "com.deliveryclub", store: "googleplay" },
+        { name: "Кухня На Районе", packageName: "com.kuhnanyaraione", store: "googleplay" },
+        { name: "Яндекс Лавка", packageName: "ru.yandex.lavka", store: "googleplay" },
+        { name: "СберМаркет", packageName: "ru.sbermarket", store: "googleplay" },
+        { name: "KFC", packageName: "ru.kfc", store: "googleplay" },
+        { name: "McDonald's", packageName: "com.mcdonalds", store: "googleplay" },
+        { name: "Вкусно и точка", packageName: "com.vkusnoitochka", store: "googleplay" },
+        { name: "Burger King", packageName: "com.burgerking", store: "googleplay" },
+        // Дополнительно
+        { name: "ChatGPT", packageName: "com.openai.chatgpt", store: "googleplay" },
+        { name: "RuStore", packageName: "ru.rustore", store: "rustore" }
     ];
-}
 
-// ---------- ОТОБРАЖЕНИЕ РЕГИОНА ----------
-let currentRegionCode = null;
-let currentHubs = [];
+    // Сортировка (популярные — не выделяем, просто оставляем как есть)
+    const sortedServices = services;
 
-function renderRegion(code) {
-    const reg = regionsDB.find(r => r[0] === code);
-    if (!reg) return goHome();
-    currentRegionCode = code;
-    document.getElementById('home-screen').style.display = 'none';
-    document.getElementById('region-screen').style.display = 'block';
-    document.getElementById('regTitle').innerText = reg[1];
-    
-    currentHubs = getRegionalHubs(reg[0], reg[1]);
-    const grid = document.getElementById('megaGrid');
-    const tocDiv = document.getElementById('tocContainer');
-    grid.innerHTML = '';
-    tocDiv.innerHTML = '';
-    
-    // Оглавление
-    currentHubs.forEach(hub => {
-        const link = document.createElement('a');
-        link.href = `#hub-${hub.id}`;
-        link.innerText = hub.title.split('(')[0].trim();
-        link.onclick = (e) => {
-            e.preventDefault();
-            document.getElementById(`hub-${hub.id}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-        tocDiv.appendChild(link);
-    });
-    
-    // Карточки
-    currentHubs.forEach(hub => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = `hub-${hub.id}`;
-        const top3 = hub.items.slice(0, 3);
-        const others = hub.items.slice(3);
-        let html = `<h3 class="card-h3">${hub.title}</h3>`;
-        top3.forEach(l => { html += `<a href="${l[1]}" target="_blank" class="service-link">${l[0]} <span>➔</span></a>`; });
-        if (others.length) {
-            html += `<details><summary>ДРУГИЕ (${others.length})</summary><div style="margin-top:5px;">${others.map(l => `<a href="${l[1]}" target="_blank" class="service-link" style="font-size:0.85rem;">${l[0]} <span>➔</span></a>`).join('')}</div></details>`;
+    // Умный поиск (fuse.js)
+    const fuse = new Fuse(sortedServices, { keys: ['name'], threshold: 0.3, ignoreLocation: true });
+
+    // --------------------------------------------------------------
+    // 2. ФУНКЦИЯ ОТКРЫТИЯ ПРИЛОЖЕНИЯ / МАГАЗИНА (простой переход)
+    // --------------------------------------------------------------
+    function openAppOrStore(packageName, store) {
+        let url = '';
+        if (store === 'rustore') {
+            url = `https://www.rustore.ru/catalog/app/${packageName}`;
+        } else {
+            url = `https://play.google.com/store/apps/details?id=${packageName}`;
         }
-        card.innerHTML = html;
-        grid.appendChild(card);
-    });
-    
-    // Сбросить поиск
-    document.getElementById('serviceSearchInput').value = '';
-    showAllCards();
-}
+        window.location.href = url;
+    }
 
-function showAllCards() {
-    const cards = document.querySelectorAll('#megaGrid .card');
-    cards.forEach(card => card.classList.remove('hidden'));
-}
+    // --------------------------------------------------------------
+    // 3. РЕНДЕР СЕРВИСОВ НА ГЛАВНОЙ
+    // --------------------------------------------------------------
+    function renderServices(query = '') {
+        let items = sortedServices;
+        if (query.trim()) {
+            const results = fuse.search(query);
+            items = results.map(r => r.item);
+        }
+        const container = document.getElementById('servicesContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        items.forEach(service => {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            card.innerHTML = `
+                <span class="service-name">${service.name}</span>
+                <div>
+                    <button class="open-btn" data-pkg="${service.packageName}" data-store="${service.store}">Открыть</button>
+                    <button class="add-to-folder-btn" data-name="${service.name}" data-pkg="${service.packageName}" data-store="${service.store}" title="Добавить в папку">📂+</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        // Обработчики открытия
+        document.querySelectorAll('.open-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const pkg = btn.getAttribute('data-pkg');
+                const store = btn.getAttribute('data-store');
+                openAppOrStore(pkg, store);
+            });
+        });
+        attachAddToFolderHandlers();
+    }
 
-function filterServices(query) {
-    if (!query.trim()) { showAllCards(); return; }
-    const q = query.toLowerCase();
-    const cards = document.querySelectorAll('#megaGrid .card');
-    cards.forEach(card => {
-        const links = card.querySelectorAll('.service-link');
-        let found = false;
-        links.forEach(link => {
-            const text = link.innerText.toLowerCase();
-            if (text.includes(q)) {
-                link.style.display = 'flex';
-                found = true;
+    // --------------------------------------------------------------
+    // 4. ДОБАВЛЕНИЕ СЕРВИСА В ПАПКУ (только авторизованные)
+    // --------------------------------------------------------------
+    function attachAddToFolderHandlers() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return;
+        const btns = document.querySelectorAll('.add-to-folder-btn');
+        btns.forEach(btn => {
+            btn.removeEventListener('click', btn._listener);
+            const handler = (e) => {
+                const name = btn.getAttribute('data-name');
+                const pkg = btn.getAttribute('data-pkg');
+                const store = btn.getAttribute('data-store');
+                const folders = getUserFolders(currentUser);
+                if (folders.length === 0) {
+                    alert('У вас нет папок. Сначала создайте папку на вкладке "Мои папки".');
+                    return;
+                }
+                const folderName = prompt(`В какую папку добавить "${name}"? Доступные: ${folders.map(f => f.name).join(', ')}`);
+                if (!folderName) return;
+                const folder = folders.find(f => f.name === folderName);
+                if (folder) {
+                    if (!folder.services.some(s => s.packageName === pkg)) {
+                        folder.services.push({ name, packageName: pkg, store });
+                        saveUserFolders(currentUser, folders);
+                        renderFoldersList();
+                        alert(`Добавлено в папку "${folderName}"`);
+                    } else {
+                        alert('Этот сервис уже есть в этой папке');
+                    }
+                } else {
+                    alert('Папка не найдена');
+                }
+            };
+            btn.addEventListener('click', handler);
+            btn._listener = handler;
+        });
+    }
+
+    // --------------------------------------------------------------
+    // 5. ЛИЧНЫЙ КАБИНЕТ (LOCALSTORAGE)
+    // --------------------------------------------------------------
+    function getUsers() { return JSON.parse(localStorage.getItem('app_users') || '[]'); }
+    function saveUsers(users) { localStorage.setItem('app_users', JSON.stringify(users)); }
+    function getUserFolders(login) {
+        const users = getUsers();
+        const user = users.find(u => u.login === login);
+        return user ? user.folders : [];
+    }
+    function saveUserFolders(login, folders) {
+        const users = getUsers();
+        const idx = users.findIndex(u => u.login === login);
+        if (idx !== -1) {
+            users[idx].folders = folders;
+            saveUsers(users);
+        }
+    }
+    function register(login, password) {
+        let users = getUsers();
+        if (users.find(u => u.login === login)) return alert('Пользователь уже существует');
+        users.push({ login, password, folders: [] });
+        saveUsers(users);
+        alert('Регистрация успешна. Теперь войдите.');
+    }
+    function login(login, password) {
+        let users = getUsers();
+        let user = users.find(u => u.login === login && u.password === password);
+        if (user) {
+            localStorage.setItem('currentUser', login);
+            alert(`Добро пожаловать, ${login}!`);
+            updateProfileUI(true, login);
+            renderFoldersList();
+            attachAddToFolderHandlers();
+        } else alert('Неверный логин или пароль');
+    }
+    function logout() {
+        localStorage.removeItem('currentUser');
+        updateProfileUI(false, '');
+        renderFoldersList();
+    }
+    function updateProfileUI(isLogged, login) {
+        const authSection = document.getElementById('authSection');
+        const profileInfo = document.getElementById('profileInfo');
+        const usernameSpan = document.getElementById('usernameSpan');
+        if (isLogged) {
+            authSection.style.display = 'none';
+            profileInfo.style.display = 'block';
+            usernameSpan.innerText = login;
+        } else {
+            authSection.style.display = 'block';
+            profileInfo.style.display = 'none';
+        }
+        const foldersAuth = document.getElementById('foldersAuthContent');
+        const foldersNoAuth = document.getElementById('foldersRequireAuth');
+        if (isLogged) {
+            foldersAuth.style.display = 'block';
+            foldersNoAuth.style.display = 'none';
+        } else {
+            foldersAuth.style.display = 'none';
+            foldersNoAuth.style.display = 'block';
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 6. ОТОБРАЖЕНИЕ ПАПОК
+    // --------------------------------------------------------------
+    function renderFoldersList() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return;
+        const folders = getUserFolders(currentUser);
+        const container = document.getElementById('foldersList');
+        if (!container) return;
+        if (folders.length === 0) {
+            container.innerHTML = '<div>📭 Нет папок. Создайте первую!</div>';
+            return;
+        }
+        container.innerHTML = '';
+        folders.forEach((folder, idx) => {
+            const folderDiv = document.createElement('div');
+            folderDiv.className = 'folder-card';
+            folderDiv.innerHTML = `
+                <div class="folder-header">
+                    <span>📁 ${folder.name}</span>
+                    <button class="delete-folder-btn" data-name="${folder.name}" style="background:none; border:none; color:var(--accent);">🗑️</button>
+                </div>
+                <div id="folder-services-${idx}"></div>
+            `;
+            container.appendChild(folderDiv);
+            const servicesContainer = folderDiv.querySelector(`#folder-services-${idx}`);
+            if (folder.services.length === 0) {
+                servicesContainer.innerHTML = '<div style="color:var(--muted);">Нет сервисов</div>';
             } else {
-                link.style.display = 'none';
+                servicesContainer.innerHTML = folder.services.map(s => `
+                    <div class="service-in-folder">
+                        <span>${s.name}</span>
+                        <button class="open-folder-service" data-pkg="${s.packageName}" data-store="${s.store}">▶ Открыть</button>
+                    </div>
+                `).join('');
             }
+            servicesContainer.querySelectorAll('.open-folder-service').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const pkg = btn.getAttribute('data-pkg');
+                    const store = btn.getAttribute('data-store');
+                    openAppOrStore(pkg, store);
+                });
+            });
         });
-        // Также показывать карточку, если хоть одна ссылка подходит
-        if (found) card.classList.remove('hidden');
-        else card.classList.add('hidden');
+        document.querySelectorAll('.delete-folder-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = btn.getAttribute('data-name');
+                if (confirm(`Удалить папку "${name}"?`)) {
+                    let folders = getUserFolders(currentUser);
+                    folders = folders.filter(f => f.name !== name);
+                    saveUserFolders(currentUser, folders);
+                    renderFoldersList();
+                }
+            });
+        });
+    }
+
+    function createFolder(name) {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return alert('Войдите в аккаунт');
+        let folders = getUserFolders(currentUser);
+        if (folders.some(f => f.name === name)) return alert('Папка уже существует');
+        folders.push({ name, services: [] });
+        saveUserFolders(currentUser, folders);
+        renderFoldersList();
+    }
+
+    // --------------------------------------------------------------
+    // 7. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // --------------------------------------------------------------
+    function initTabs() {
+        const btns = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                contents.forEach(c => c.classList.remove('active'));
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                if (tabId === 'folders') renderFoldersList();
+                if (tabId === 'home') renderServices(document.getElementById('searchInput')?.value || '');
+            });
+        });
+    }
+
+    // --------------------------------------------------------------
+    // 8. ЗАПУСК
+    // --------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        initTabs();
+        renderServices('');
+        document.getElementById('searchInput').addEventListener('input', (e) => renderServices(e.target.value));
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const login = document.getElementById('loginInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            if (login && pass) login(login, pass);
+            else alert('Введите логин и пароль');
+        });
+        document.getElementById('registerBtn').addEventListener('click', () => {
+            const login = document.getElementById('loginInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            if (login && pass) register(login, pass);
+            else alert('Введите логин и пароль');
+        });
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('createFolderBtn').addEventListener('click', () => {
+            const name = document.getElementById('newFolderName').value.trim();
+            if (name) { createFolder(name); document.getElementById('newFolderName').value = ''; }
+            else alert('Введите название папки');
+        });
+        document.getElementById('sendSupportBtn').addEventListener('click', () => {
+            const msg = document.getElementById('supportMessage').value.trim();
+            if (!msg) return alert('Введите сообщение');
+            alert(`Спасибо! Ваше сообщение отправлено разработчику (демо). Текст: ${msg}`);
+            document.getElementById('supportMessage').value = '';
+        });
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) updateProfileUI(true, savedUser);
+        else updateProfileUI(false, '');
+        renderFoldersList();
     });
-}
+</script>
+</body>
+</html> <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>ГосНавигатор — агрегатор приложений и услуг РФ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='94' height='94' x='3' y='3' rx='22' fill='white' stroke='%23ef4444' stroke-width='6'/><text y='75' x='22' font-size='75' font-family='Arial, sans-serif' font-weight='900' fill='%23ef4444'>А</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+    <style>
+        :root {
+            --bg: #f2f4f7;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --accent: #ef4444;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --muted: #64748b;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #020617;
+                --card-bg: #0f172a;
+                --text: #ffffff;
+                --border: #1e293b;
+                --shadow: 0 10px 40px rgba(0,0,0,0.5);
+                --muted: #94a3b8;
+            }
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.4; padding-bottom: 70px; }
+        header { background: var(--bg); padding: 12px 15px; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; gap: 12px; }
+        .logo-box { background: #fff; border: 2px solid var(--accent); color: var(--accent); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 900; font-size: 22px; }
+        .tabs { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .tab-btn { background: none; border: none; padding: 8px 16px; font-size: 0.9rem; font-weight: 800; color: var(--muted); cursor: pointer; border-radius: 30px; transition: 0.2s; }
+        .tab-btn.active { background: var(--accent); color: white; }
+        .tab-content { display: none; padding: 20px 15px 30px; max-width: 800px; margin: 0 auto; }
+        .tab-content.active { display: block; }
+        .search-box { width: 100%; padding: 14px 20px; border-radius: 50px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 1rem; margin-bottom: 20px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+        .service-card { background: var(--card-bg); border-radius: 20px; padding: 12px 15px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .service-name { font-weight: 800; }
+        .open-btn { background: var(--accent); color: white; border: none; border-radius: 30px; padding: 6px 16px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .add-to-folder-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 8px; color: var(--muted); }
+        .folder-card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 900; }
+        .service-in-folder { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+        input, button, textarea { font-family: inherit; }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; padding: 12px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        .btn-secondary { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); }
+        .contact-links a { color: var(--accent); text-decoration: none; display: inline-block; margin: 5px 0; }
+        textarea { width: 100%; padding: 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical; }
+        .info-note { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo-box">А</div>
+    <div style="font-weight: 950; font-size: 1.3rem;">ГосНавигатор</div>
+</header>
 
-// ---------- ПОИСК РЕГИОНА НА ГЛАВНОЙ ----------
-const regInput = document.getElementById('regInput');
-const regSuggests = document.getElementById('regSuggests');
-const homeScreen = document.getElementById('home-screen');
-const regionScreen = document.getElementById('region-screen');
+<div class="tabs">
+    <button class="tab-btn active" data-tab="home">🏠 Главная</button>
+    <button class="tab-btn" data-tab="profile">👤 Профиль</button>
+    <button class="tab-btn" data-tab="folders">📁 Мои папки</button>
+    <button class="tab-btn" data-tab="support">💬 Поддержка</button>
+</div>
 
-regInput.addEventListener('input', (e) => {
-    const val = e.target.value.toLowerCase().trim();
-    regSuggests.innerHTML = '';
-    if (val.length < 1) { regSuggests.style.display = 'none'; return; }
-    const filtered = regionsDB.filter(r => r[1].toLowerCase().includes(val) || r[0].includes(val));
-    if (filtered.length) {
-        regSuggests.style.display = 'block';
-        filtered.forEach(r => {
-            const div = document.createElement('div');
-            div.className = 'suggest-item';
-            div.innerHTML = `<span>📍 ${r[1]}</span> <small>${r[0]}</small>`;
-            div.onclick = () => { window.location.hash = 'reg' + r[0]; };
-            regSuggests.appendChild(div);
+<!-- Главная -->
+<div id="home-tab" class="tab-content active">
+    <input type="text" id="searchInput" class="search-box" placeholder="Поиск приложений (Яндекс, такси, карты...)">
+    <div id="servicesContainer" class="services-grid"></div>
+    <div class="info-note">⭐ Нажмите «Открыть» → переход в магазин (Google Play / RuStore). Если приложение установлено, откроется сразу.</div>
+</div>
+
+<!-- Профиль -->
+<div id="profile-tab" class="tab-content">
+    <div id="authSection">
+        <h3>Вход / Регистрация</h3>
+        <div class="form-group"><input type="text" id="loginInput" placeholder="Логин"></div>
+        <div class="form-group"><input type="password" id="passwordInput" placeholder="Пароль"></div>
+        <button id="loginBtn" class="btn">Войти</button>
+        <button id="registerBtn" class="btn btn-secondary">Регистрация</button>
+    </div>
+    <div id="profileInfo" style="display: none;">
+        <p>👋 Привет, <span id="usernameSpan"></span>!</p>
+        <button id="logoutBtn" class="btn btn-secondary">Выйти</button>
+    </div>
+</div>
+
+<!-- Мои папки -->
+<div id="folders-tab" class="tab-content">
+    <div id="foldersRequireAuth" style="display: none;">
+        <p>🔐 Войдите в аккаунт, чтобы создавать папки и сохранять сервисы.</p>
+    </div>
+    <div id="foldersAuthContent" style="display: none;">
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="newFolderName" placeholder="Название папки" style="padding: 8px; border-radius: 30px; border:1px solid var(--border); background:var(--bg); width: 70%;">
+            <button id="createFolderBtn" class="btn" style="padding: 8px 16px;">➕ Создать</button>
+        </div>
+        <div id="foldersList"></div>
+        <div class="info-note">⭐ На главной у каждого сервиса есть кнопка «📂+» — добавьте в любую папку.</div>
+    </div>
+</div>
+
+<!-- Поддержка -->
+<div id="support-tab" class="tab-content">
+    <h3>📞 Контакты</h3>
+    <div class="contact-links">
+        <p>Telegram: <a href="https://t.me/IzanaKurokawa0" target="_blank">@IzanaKurokawa0</a></p>
+        <p>Email: <a href="mailto:bombafara@gmail.com">bombafara@gmail.com</a></p>
+    </div>
+    <div class="chat-message">
+        <h4>Написать разработчику</h4>
+        <textarea id="supportMessage" rows="3" placeholder="Ваше сообщение..."></textarea>
+        <button id="sendSupportBtn" class="btn" style="margin-top: 10px;">📨 Отправить</button>
+        <div class="info-note">(сообщение не отправляется реально, демо-режим)</div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. МАССИВ ПРИЛОЖЕНИЙ (100+ рабочих ссылок, доступных в РФ)
+    // --------------------------------------------------------------
+    const services = [
+        // Банки и финансы
+        { name: "СберБанк Онлайн", packageName: "ru.sberbankmobile", store: "googleplay" },
+        { name: "Т-Банк", packageName: "ru.tbank", store: "googleplay" },
+        { name: "ВТБ Онлайн", packageName: "ru.vtb24.mobile.android", store: "googleplay" },
+        { name: "Альфа-Банк", packageName: "ru.alfabank.mobile.android", store: "googleplay" },
+        { name: "Газпромбанк", packageName: "ru.gazprombank.android", store: "googleplay" },
+        { name: "ПСБ", packageName: "ru.psbank.mobile", store: "googleplay" },
+        { name: "Россельхозбанк", packageName: "ru.rshb.mobile", store: "googleplay" },
+        { name: "Совкомбанк", packageName: "ru.sovcombank.sovkombank", store: "googleplay" },
+        { name: "Открытие", packageName: "ru.openbank.mobile", store: "googleplay" },
+        { name: "Райффайзенбанк", packageName: "ru.raiffeisenbank.rbo", store: "googleplay" },
+        { name: "МТС Банк", packageName: "ru.mts.bank", store: "googleplay" },
+        { name: "Почта Банк", packageName: "ru.pochtabank.app", store: "googleplay" },
+        { name: "Mir Pay", packageName: "ru.nspk.mirpay", store: "rustore" },
+        // Маркетплейсы
+        { name: "Ozon", packageName: "ru.ozon.app.android", store: "googleplay" },
+        { name: "Wildberries", packageName: "com.wildberries.wildberries", store: "googleplay" },
+        { name: "Авито", packageName: "com.avito.android", store: "googleplay" },
+        { name: "Яндекс Маркет", packageName: "ru.yandex.market", store: "googleplay" },
+        { name: "Lamoda", packageName: "ru.lamoda", store: "googleplay" },
+        { name: "DNS Shop", packageName: "ru.dns.shop", store: "googleplay" },
+        { name: "Ситилинк", packageName: "com.citilink", store: "googleplay" },
+        { name: "М.Видео", packageName: "ru.mvideo.mvideoapp", store: "googleplay" },
+        { name: "Эльдорадо", packageName: "ru.eldorado.app", store: "googleplay" },
+        { name: "Юла", packageName: "com.youla.android", store: "googleplay" },
+        { name: "Магнит", packageName: "ru.magnit.magnitapp", store: "googleplay" },
+        { name: "Пятёрочка", packageName: "ru.pyaterochka", store: "googleplay" },
+        { name: "Перекрёсток", packageName: "com.perekrestok.app", store: "googleplay" },
+        { name: "Лента", packageName: "ru.lenta.lentaapp", store: "googleplay" },
+        // Транспорт и навигация
+        { name: "Яндекс Карты", packageName: "ru.yandex.yandexmaps", store: "googleplay" },
+        { name: "2ГИС", packageName: "ru.dublgis.dgismobile", store: "googleplay" },
+        { name: "Яндекс Go", packageName: "ru.yandex.taxi", store: "googleplay" },
+        { name: "Яндекс Метро", packageName: "ru.yandex.metro", store: "googleplay" },
+        { name: "Google Maps", packageName: "com.google.android.apps.maps", store: "googleplay" },
+        // Соцсети и мессенджеры
+        { name: "ВКонтакте", packageName: "com.vkontakte.android", store: "googleplay" },
+        { name: "Одноклассники", packageName: "ru.ok.android", store: "googleplay" },
+        { name: "Telegram", packageName: "org.telegram.messenger", store: "googleplay" },
+        { name: "WhatsApp", packageName: "com.whatsapp", store: "googleplay" },
+        { name: "VK Мессенджер", packageName: "com.vk.im", store: "googleplay" },
+        { name: "ТамТам", packageName: "ru.mail.tamtam", store: "googleplay" },
+        { name: "ICQ", packageName: "ru.icq", store: "googleplay" },
+        { name: "Yappy", packageName: "ru.yappy.app", store: "rustore" },
+        // Операторы
+        { name: "Мой МТС", packageName: "ru.mts.mymts", store: "googleplay" },
+        { name: "МегаФон", packageName: "ru.megafon.megafonapp", store: "googleplay" },
+        { name: "Билайн", packageName: "ru.beeline.beelineapp", store: "googleplay" },
+        { name: "Tele2", packageName: "ru.tele2.mytele2", store: "googleplay" },
+        { name: "Yota", packageName: "ru.yota.app", store: "googleplay" },
+        // Госуслуги
+        { name: "Госуслуги", packageName: "ru.gosuslugi.app", store: "googleplay" },
+        { name: "Госключ", packageName: "ru.gosuslugi.goskey", store: "googleplay" },
+        { name: "Моя Москва", packageName: "ru.mos.app", store: "googleplay" },
+        // Новости
+        { name: "Яндекс.Дзен", packageName: "ru.yandex.zen", store: "googleplay" },
+        { name: "РИА Новости", packageName: "ru.ria.ria", store: "googleplay" },
+        { name: "ТАСС", packageName: "ru.tass.app", store: "googleplay" },
+        { name: "Газета.Ru", packageName: "ru.gazeta.app", store: "googleplay" },
+        { name: "РБК", packageName: "ru.rbc.rbc", store: "googleplay" },
+        { name: "Известия", packageName: "ru.izvestia.iz", store: "googleplay" },
+        { name: "RT", packageName: "com.rt.news", store: "googleplay" },
+        // Видео, музыка
+        { name: "YouTube", packageName: "com.google.android.youtube", store: "googleplay" },
+        { name: "Кинопоиск", packageName: "ru.yandex.kinopoisk", store: "googleplay" },
+        { name: "Rutube", packageName: "ru.rutube.rutube", store: "rustore" },
+        { name: "VK Видео", packageName: "com.vk.video", store: "googleplay" },
+        { name: "VK Музыка", packageName: "com.vk.music", store: "googleplay" },
+        { name: "Яндекс Музыка", packageName: "ru.yandex.music", store: "googleplay" },
+        { name: "Звук", packageName: "ru.zvuk.app", store: "googleplay" },
+        { name: "Иви", packageName: "ru.ivi", store: "googleplay" },
+        { name: "Premier", packageName: "ru.premier", store: "googleplay" },
+        { name: "START", packageName: "ru.start.app", store: "googleplay" },
+        // Образование
+        { name: "Учи.ру", packageName: "ru.uchi.uchi", store: "googleplay" },
+        { name: "Дневник.ру", packageName: "ru.dnevnik.dnevnikapp", store: "googleplay" },
+        { name: "Яндекс Практикум", packageName: "ru.yandex.practicum", store: "googleplay" },
+        { name: "Skyeng", packageName: "com.skyeng", store: "googleplay" },
+        { name: "Duolingo", packageName: "com.duolingo", store: "googleplay" },
+        // Игры
+        { name: "Tanks Blitz", packageName: "net.wargaming.wot.blitz", store: "googleplay" },
+        { name: "CarX Drift Racing 2", packageName: "com.carx.drift2", store: "googleplay" },
+        { name: "Brawl Stars", packageName: "com.supercell.brawlstars", store: "googleplay" },
+        { name: "Clash of Clans", packageName: "com.supercell.clashofclans", store: "googleplay" },
+        { name: "Standoff 2", packageName: "com.standoff.standoff2", store: "googleplay" },
+        // Утилиты
+        { name: "Яндекс Браузер", packageName: "ru.yandex.browser", store: "googleplay" },
+        { name: "Яндекс Диск", packageName: "ru.yandex.disk", store: "googleplay" },
+        { name: "Gmail", packageName: "com.google.android.gm", store: "googleplay" },
+        { name: "Google Drive", packageName: "com.google.android.apps.docs", store: "googleplay" },
+        { name: "Microsoft Office", packageName: "com.microsoft.office.officehubrow", store: "googleplay" },
+        { name: "Kaspersky", packageName: "com.kms.free", store: "googleplay" },
+        { name: "Dr.Web Light", packageName: "com.drweb", store: "googleplay" },
+        { name: "CapCut", packageName: "com.lemon.lvoverseas", store: "googleplay" },
+        // Путешествия
+        { name: "Aviasales", packageName: "com.aviasales.android", store: "googleplay" },
+        { name: "Туту.ру", packageName: "ru.tutu.android", store: "googleplay" },
+        { name: "Яндекс Путешествия", packageName: "ru.yandex.travel", store: "googleplay" },
+        // Еда и доставка
+        { name: "Яндекс Еда", packageName: "ru.yandex.eda", store: "googleplay" },
+        { name: "Самокат", packageName: "com.samokat.android", store: "googleplay" },
+        { name: "Delivery Club", packageName: "com.deliveryclub", store: "googleplay" },
+        { name: "Кухня На Районе", packageName: "com.kuhnanyaraione", store: "googleplay" },
+        { name: "Яндекс Лавка", packageName: "ru.yandex.lavka", store: "googleplay" },
+        { name: "СберМаркет", packageName: "ru.sbermarket", store: "googleplay" },
+        { name: "KFC", packageName: "ru.kfc", store: "googleplay" },
+        { name: "McDonald's", packageName: "com.mcdonalds", store: "googleplay" },
+        { name: "Вкусно и точка", packageName: "com.vkusnoitochka", store: "googleplay" },
+        { name: "Burger King", packageName: "com.burgerking", store: "googleplay" },
+        // Дополнительно
+        { name: "ChatGPT", packageName: "com.openai.chatgpt", store: "googleplay" },
+        { name: "RuStore", packageName: "ru.rustore", store: "rustore" }
+    ];
+
+    // Сортировка (популярные — не выделяем, просто оставляем как есть)
+    const sortedServices = services;
+
+    // Умный поиск (fuse.js)
+    const fuse = new Fuse(sortedServices, { keys: ['name'], threshold: 0.3, ignoreLocation: true });
+
+    // --------------------------------------------------------------
+    // 2. ФУНКЦИЯ ОТКРЫТИЯ ПРИЛОЖЕНИЯ / МАГАЗИНА (простой переход)
+    // --------------------------------------------------------------
+    function openAppOrStore(packageName, store) {
+        let url = '';
+        if (store === 'rustore') {
+            url = `https://www.rustore.ru/catalog/app/${packageName}`;
+        } else {
+            url = `https://play.google.com/store/apps/details?id=${packageName}`;
+        }
+        window.location.href = url;
+    }
+
+    // --------------------------------------------------------------
+    // 3. РЕНДЕР СЕРВИСОВ НА ГЛАВНОЙ
+    // --------------------------------------------------------------
+    function renderServices(query = '') {
+        let items = sortedServices;
+        if (query.trim()) {
+            const results = fuse.search(query);
+            items = results.map(r => r.item);
+        }
+        const container = document.getElementById('servicesContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        items.forEach(service => {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            card.innerHTML = `
+                <span class="service-name">${service.name}</span>
+                <div>
+                    <button class="open-btn" data-pkg="${service.packageName}" data-store="${service.store}">Открыть</button>
+                    <button class="add-to-folder-btn" data-name="${service.name}" data-pkg="${service.packageName}" data-store="${service.store}" title="Добавить в папку">📂+</button>
+                </div>
+            `;
+            container.appendChild(card);
         });
-    } else regSuggests.style.display = 'none';
-});
+        // Обработчики открытия
+        document.querySelectorAll('.open-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const pkg = btn.getAttribute('data-pkg');
+                const store = btn.getAttribute('data-store');
+                openAppOrStore(pkg, store);
+            });
+        });
+        attachAddToFolderHandlers();
+    }
 
-function goHome() { window.location.hash = ''; homeScreen.style.display = 'flex'; regionScreen.style.display = 'none'; regInput.value = ''; regSuggests.style.display = 'none'; }
-function router() { const h = window.location.hash; if (h.startsWith('#reg')) renderRegion(h.replace('#reg', '')); else goHome(); }
-window.onhashchange = router;
-window.onload = router;
-document.addEventListener('click', (e) => { if (!e.target.closest('#regInput') && !e.target.closest('#regSuggests')) regSuggests.style.display = 'none'; });
-document.getElementById('searchBtn').addEventListener('click', () => { filterServices(document.getElementById('serviceSearchInput').value); });
-document.getElementById('serviceSearchInput').addEventListener('keyup', (e) => { if (e.key === 'Enter') filterServices(e.target.value); });
+    // --------------------------------------------------------------
+    // 4. ДОБАВЛЕНИЕ СЕРВИСА В ПАПКУ (только авторизованные)
+    // --------------------------------------------------------------
+    function attachAddToFolderHandlers() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return;
+        const btns = document.querySelectorAll('.add-to-folder-btn');
+        btns.forEach(btn => {
+            btn.removeEventListener('click', btn._listener);
+            const handler = (e) => {
+                const name = btn.getAttribute('data-name');
+                const pkg = btn.getAttribute('data-pkg');
+                const store = btn.getAttribute('data-store');
+                const folders = getUserFolders(currentUser);
+                if (folders.length === 0) {
+                    alert('У вас нет папок. Сначала создайте папку на вкладке "Мои папки".');
+                    return;
+                }
+                const folderName = prompt(`В какую папку добавить "${name}"? Доступные: ${folders.map(f => f.name).join(', ')}`);
+                if (!folderName) return;
+                const folder = folders.find(f => f.name === folderName);
+                if (folder) {
+                    if (!folder.services.some(s => s.packageName === pkg)) {
+                        folder.services.push({ name, packageName: pkg, store });
+                        saveUserFolders(currentUser, folders);
+                        renderFoldersList();
+                        alert(`Добавлено в папку "${folderName}"`);
+                    } else {
+                        alert('Этот сервис уже есть в этой папке');
+                    }
+                } else {
+                    alert('Папка не найдена');
+                }
+            };
+            btn.addEventListener('click', handler);
+            btn._listener = handler;
+        });
+    }
+
+    // --------------------------------------------------------------
+    // 5. ЛИЧНЫЙ КАБИНЕТ (LOCALSTORAGE)
+    // --------------------------------------------------------------
+    function getUsers() { return JSON.parse(localStorage.getItem('app_users') || '[]'); }
+    function saveUsers(users) { localStorage.setItem('app_users', JSON.stringify(users)); }
+    function getUserFolders(login) {
+        const users = getUsers();
+        const user = users.find(u => u.login === login);
+        return user ? user.folders : [];
+    }
+    function saveUserFolders(login, folders) {
+        const users = getUsers();
+        const idx = users.findIndex(u => u.login === login);
+        if (idx !== -1) {
+            users[idx].folders = folders;
+            saveUsers(users);
+        }
+    }
+    function register(login, password) {
+        let users = getUsers();
+        if (users.find(u => u.login === login)) return alert('Пользователь уже существует');
+        users.push({ login, password, folders: [] });
+        saveUsers(users);
+        alert('Регистрация успешна. Теперь войдите.');
+    }
+    function login(login, password) {
+        let users = getUsers();
+        let user = users.find(u => u.login === login && u.password === password);
+        if (user) {
+            localStorage.setItem('currentUser', login);
+            alert(`Добро пожаловать, ${login}!`);
+            updateProfileUI(true, login);
+            renderFoldersList();
+            attachAddToFolderHandlers();
+        } else alert('Неверный логин или пароль');
+    }
+    function logout() {
+        localStorage.removeItem('currentUser');
+        updateProfileUI(false, '');
+        renderFoldersList();
+    }
+    function updateProfileUI(isLogged, login) {
+        const authSection = document.getElementById('authSection');
+        const profileInfo = document.getElementById('profileInfo');
+        const usernameSpan = document.getElementById('usernameSpan');
+        if (isLogged) {
+            authSection.style.display = 'none';
+            profileInfo.style.display = 'block';
+            usernameSpan.innerText = login;
+        } else {
+            authSection.style.display = 'block';
+            profileInfo.style.display = 'none';
+        }
+        const foldersAuth = document.getElementById('foldersAuthContent');
+        const foldersNoAuth = document.getElementById('foldersRequireAuth');
+        if (isLogged) {
+            foldersAuth.style.display = 'block';
+            foldersNoAuth.style.display = 'none';
+        } else {
+            foldersAuth.style.display = 'none';
+            foldersNoAuth.style.display = 'block';
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 6. ОТОБРАЖЕНИЕ ПАПОК
+    // --------------------------------------------------------------
+    function renderFoldersList() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return;
+        const folders = getUserFolders(currentUser);
+        const container = document.getElementById('foldersList');
+        if (!container) return;
+        if (folders.length === 0) {
+            container.innerHTML = '<div>📭 Нет папок. Создайте первую!</div>';
+            return;
+        }
+        container.innerHTML = '';
+        folders.forEach((folder, idx) => {
+            const folderDiv = document.createElement('div');
+            folderDiv.className = 'folder-card';
+            folderDiv.innerHTML = `
+                <div class="folder-header">
+                    <span>📁 ${folder.name}</span>
+                    <button class="delete-folder-btn" data-name="${folder.name}" style="background:none; border:none; color:var(--accent);">🗑️</button>
+                </div>
+                <div id="folder-services-${idx}"></div>
+            `;
+            container.appendChild(folderDiv);
+            const servicesContainer = folderDiv.querySelector(`#folder-services-${idx}`);
+            if (folder.services.length === 0) {
+                servicesContainer.innerHTML = '<div style="color:var(--muted);">Нет сервисов</div>';
+            } else {
+                servicesContainer.innerHTML = folder.services.map(s => `
+                    <div class="service-in-folder">
+                        <span>${s.name}</span>
+                        <button class="open-folder-service" data-pkg="${s.packageName}" data-store="${s.store}">▶ Открыть</button>
+                    </div>
+                `).join('');
+            }
+            servicesContainer.querySelectorAll('.open-folder-service').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const pkg = btn.getAttribute('data-pkg');
+                    const store = btn.getAttribute('data-store');
+                    openAppOrStore(pkg, store);
+                });
+            });
+        });
+        document.querySelectorAll('.delete-folder-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = btn.getAttribute('data-name');
+                if (confirm(`Удалить папку "${name}"?`)) {
+                    let folders = getUserFolders(currentUser);
+                    folders = folders.filter(f => f.name !== name);
+                    saveUserFolders(currentUser, folders);
+                    renderFoldersList();
+                }
+            });
+        });
+    }
+
+    function createFolder(name) {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return alert('Войдите в аккаунт');
+        let folders = getUserFolders(currentUser);
+        if (folders.some(f => f.name === name)) return alert('Папка уже существует');
+        folders.push({ name, services: [] });
+        saveUserFolders(currentUser, folders);
+        renderFoldersList();
+    }
+
+    // --------------------------------------------------------------
+    // 7. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // --------------------------------------------------------------
+    function initTabs() {
+        const btns = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                contents.forEach(c => c.classList.remove('active'));
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                if (tabId === 'folders') renderFoldersList();
+                if (tabId === 'home') renderServices(document.getElementById('searchInput')?.value || '');
+            });
+        });
+    }
+
+    // --------------------------------------------------------------
+    // 8. ЗАПУСК
+    // --------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        initTabs();
+        renderServices('');
+        document.getElementById('searchInput').addEventListener('input', (e) => renderServices(e.target.value));
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const login = document.getElementById('loginInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            if (login && pass) login(login, pass);
+            else alert('Введите логин и пароль');
+        });
+        document.getElementById('registerBtn').addEventListener('click', () => {
+            const login = document.getElementById('loginInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            if (login && pass) register(login, pass);
+            else alert('Введите логин и пароль');
+        });
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('createFolderBtn').addEventListener('click', () => {
+            const name = document.getElementById('newFolderName').value.trim();
+            if (name) { createFolder(name); document.getElementById('newFolderName').value = ''; }
+            else alert('Введите название папки');
+        });
+        document.getElementById('sendSupportBtn').addEventListener('click', () => {
+            const msg = document.getElementById('supportMessage').value.trim();
+            if (!msg) return alert('Введите сообщение');
+            alert(`Спасибо! Ваше сообщение отправлено разработчику (демо). Текст: ${msg}`);
+            document.getElementById('supportMessage').value = '';
+        });
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) updateProfileUI(true, savedUser);
+        else updateProfileUI(false, '');
+        renderFoldersList();
+    });
 </script>
 </body>
 </html>
