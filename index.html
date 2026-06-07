@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>ГосНавигатор — агрегатор приложений и услуг РФ</title>
+    <title>ГосНавигатор — агрегатор приложений РФ</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='94' height='94' x='3' y='3' rx='22' fill='white' stroke='%23ef4444' stroke-width='6'/><text y='75' x='22' font-size='75' font-family='Arial, sans-serif' font-weight='900' fill='%23ef4444'>А</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <style>
@@ -50,8 +50,9 @@
         .btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-right: 10px; }
         .btn-secondary { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); }
         .contact-links a { color: var(--accent); text-decoration: none; display: inline-block; margin: 5px 0; }
-        textarea { width: 100%; padding: 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical; }
         .info-note { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 20px; }
+        .badge-rustore { background: #0066ff; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 20px; margin-left: 6px; }
+        .badge-google { background: #ff8c00; color: black; font-size: 0.6rem; padding: 2px 6px; border-radius: 20px; margin-left: 6px; }
     </style>
 </head>
 <body>
@@ -69,9 +70,9 @@
 
 <!-- Главная -->
 <div id="home-tab" class="tab-content active">
-    <input type="text" id="searchInput" class="search-box" placeholder="Поиск приложений (Яндекс, такси, карты...)">
+    <input type="text" id="searchInput" class="search-box" placeholder="Поиск приложений...">
     <div id="servicesContainer" class="services-grid"></div>
-    <div class="info-note">⭐ Нажмите «Открыть» → переход в магазин (Google Play / RuStore). Если приложение установлено, откроется сразу.</div>
+    <div class="info-note">⭐ Нажмите «Открыть» → переход в магазин (RuStore / Google Play). Российские приложения — в RuStore, международные — в Google Play.</div>
 </div>
 
 <!-- Профиль -->
@@ -111,155 +112,196 @@
         <p>Telegram: <a href="https://t.me/IzanaKurokawa0" target="_blank">@IzanaKurokawa0</a></p>
         <p>Email: <a href="mailto:bombafara@gmail.com">bombafara@gmail.com</a></p>
     </div>
-    <div class="chat-message">
-        <h4>Написать разработчику</h4>
-        <textarea id="supportMessage" rows="3" placeholder="Ваше сообщение..."></textarea>
-        <button id="sendSupportBtn" class="btn" style="margin-top: 10px;">📨 Отправить</button>
-        <div class="info-note">(сообщение не отправляется реально, демо-режим)</div>
-    </div>
+    <div class="info-note">По вопросам и предложениям пишите на почту или в Telegram.</div>
 </div>
 
 <script>
     // --------------------------------------------------------------
-    // 1. МАССИВ ПРИЛОЖЕНИЙ (100+ рабочих ссылок, доступных в РФ)
+    // 1. МАССИВ ПРИЛОЖЕНИЙ (130+). Российские → RuStore, международные → Google Play
     // --------------------------------------------------------------
     const services = [
-        // Банки и финансы
-        { name: "СберБанк Онлайн", packageName: "ru.sberbankmobile", store: "googleplay" },
-        { name: "Т-Банк", packageName: "ru.tbank", store: "googleplay" },
-        { name: "ВТБ Онлайн", packageName: "ru.vtb24.mobile.android", store: "googleplay" },
-        { name: "Альфа-Банк", packageName: "ru.alfabank.mobile.android", store: "googleplay" },
-        { name: "Газпромбанк", packageName: "ru.gazprombank.android", store: "googleplay" },
-        { name: "ПСБ", packageName: "ru.psbank.mobile", store: "googleplay" },
-        { name: "Россельхозбанк", packageName: "ru.rshb.mobile", store: "googleplay" },
-        { name: "Совкомбанк", packageName: "ru.sovcombank.sovkombank", store: "googleplay" },
-        { name: "Открытие", packageName: "ru.openbank.mobile", store: "googleplay" },
-        { name: "Райффайзенбанк", packageName: "ru.raiffeisenbank.rbo", store: "googleplay" },
-        { name: "МТС Банк", packageName: "ru.mts.bank", store: "googleplay" },
-        { name: "Почта Банк", packageName: "ru.pochtabank.app", store: "googleplay" },
+        // БАНКИ (все RuStore)
+        { name: "СберБанк Онлайн", packageName: "ru.sberbankmobile", store: "rustore" },
+        { name: "Т-Банк", packageName: "ru.tbank", store: "rustore" },
+        { name: "ВТБ Онлайн", packageName: "ru.vtb24.mobile.android", store: "rustore" },
+        { name: "Альфа-Банк", packageName: "ru.alfabank.mobile.android", store: "rustore" },
+        { name: "Газпромбанк", packageName: "ru.gazprombank.android", store: "rustore" },
+        { name: "ПСБ", packageName: "ru.psbank.mobile", store: "rustore" },
+        { name: "Россельхозбанк", packageName: "ru.rshb.mobile", store: "rustore" },
+        { name: "Совкомбанк", packageName: "ru.sovcombank.sovkombank", store: "rustore" },
+        { name: "Открытие", packageName: "ru.openbank.mobile", store: "rustore" },
+        { name: "Райффайзенбанк", packageName: "ru.raiffeisenbank.rbo", store: "rustore" },
+        { name: "МТС Банк", packageName: "ru.mts.bank", store: "rustore" },
+        { name: "Почта Банк", packageName: "ru.pochtabank.app", store: "rustore" },
+        { name: "УБРиР", packageName: "ru.ubrr.android", store: "rustore" },
+        { name: "Банк Санкт-Петербург", packageName: "ru.bspb.ru", store: "rustore" },
+        { name: "Хоум Кредит Банк", packageName: "ru.homecredit.android", store: "rustore" },
+        { name: "Росбанк", packageName: "ru.rosbank.android", store: "rustore" },
+        { name: "Азиатско-Тихоокеанский Банк", packageName: "ru.atb.app", store: "rustore" },
         { name: "Mir Pay", packageName: "ru.nspk.mirpay", store: "rustore" },
-        // Маркетплейсы
-        { name: "Ozon", packageName: "ru.ozon.app.android", store: "googleplay" },
-        { name: "Wildberries", packageName: "com.wildberries.wildberries", store: "googleplay" },
-        { name: "Авито", packageName: "com.avito.android", store: "googleplay" },
-        { name: "Яндекс Маркет", packageName: "ru.yandex.market", store: "googleplay" },
-        { name: "Lamoda", packageName: "ru.lamoda", store: "googleplay" },
-        { name: "DNS Shop", packageName: "ru.dns.shop", store: "googleplay" },
-        { name: "Ситилинк", packageName: "com.citilink", store: "googleplay" },
-        { name: "М.Видео", packageName: "ru.mvideo.mvideoapp", store: "googleplay" },
-        { name: "Эльдорадо", packageName: "ru.eldorado.app", store: "googleplay" },
-        { name: "Юла", packageName: "com.youla.android", store: "googleplay" },
-        { name: "Магнит", packageName: "ru.magnit.magnitapp", store: "googleplay" },
-        { name: "Пятёрочка", packageName: "ru.pyaterochka", store: "googleplay" },
-        { name: "Перекрёсток", packageName: "com.perekrestok.app", store: "googleplay" },
-        { name: "Лента", packageName: "ru.lenta.lentaapp", store: "googleplay" },
-        // Транспорт и навигация
-        { name: "Яндекс Карты", packageName: "ru.yandex.yandexmaps", store: "googleplay" },
-        { name: "2ГИС", packageName: "ru.dublgis.dgismobile", store: "googleplay" },
-        { name: "Яндекс Go", packageName: "ru.yandex.taxi", store: "googleplay" },
-        { name: "Яндекс Метро", packageName: "ru.yandex.metro", store: "googleplay" },
-        { name: "Google Maps", packageName: "com.google.android.apps.maps", store: "googleplay" },
-        // Соцсети и мессенджеры
-        { name: "ВКонтакте", packageName: "com.vkontakte.android", store: "googleplay" },
-        { name: "Одноклассники", packageName: "ru.ok.android", store: "googleplay" },
-        { name: "Telegram", packageName: "org.telegram.messenger", store: "googleplay" },
-        { name: "WhatsApp", packageName: "com.whatsapp", store: "googleplay" },
-        { name: "VK Мессенджер", packageName: "com.vk.im", store: "googleplay" },
-        { name: "ТамТам", packageName: "ru.mail.tamtam", store: "googleplay" },
-        { name: "ICQ", packageName: "ru.icq", store: "googleplay" },
+
+        // МАРКЕТПЛЕЙСЫ И ПОКУПКИ (RuStore)
+        { name: "Ozon", packageName: "ru.ozon.app.android", store: "rustore" },
+        { name: "Wildberries", packageName: "com.wildberries.wildberries", store: "rustore" },
+        { name: "Авито", packageName: "com.avito.android", store: "rustore" },
+        { name: "Яндекс Маркет", packageName: "ru.yandex.market", store: "rustore" },
+        { name: "Lamoda", packageName: "ru.lamoda", store: "rustore" },
+        { name: "DNS Shop", packageName: "ru.dns.shop", store: "rustore" },
+        { name: "Ситилинк", packageName: "com.citilink", store: "rustore" },
+        { name: "М.Видео", packageName: "ru.mvideo.mvideoapp", store: "rustore" },
+        { name: "Эльдорадо", packageName: "ru.eldorado.app", store: "rustore" },
+        { name: "Юла", packageName: "com.youla.android", store: "rustore" },
+        { name: "МегаМаркет", packageName: "ru.sbermegamarket", store: "rustore" },
+
+        // ПРОДУКТЫ И ДОСТАВКА (RuStore)
+        { name: "Магнит", packageName: "ru.magnit.magnitapp", store: "rustore" },
+        { name: "Пятёрочка", packageName: "ru.pyaterochka", store: "rustore" },
+        { name: "Перекрёсток", packageName: "com.perekrestok.app", store: "rustore" },
+        { name: "Лента", packageName: "ru.lenta.lentaapp", store: "rustore" },
+        { name: "Яндекс Еда", packageName: "ru.yandex.eda", store: "rustore" },
+        { name: "Самокат", packageName: "com.samokat.android", store: "rustore" },
+        { name: "Delivery Club", packageName: "com.deliveryclub", store: "rustore" },
+        { name: "Кухня На Районе", packageName: "com.kuhnanyaraione", store: "rustore" },
+        { name: "Яндекс Лавка", packageName: "ru.yandex.lavka", store: "rustore" },
+        { name: "СберМаркет (Купер)", packageName: "ru.sbermarket", store: "rustore" },
+        { name: "KFC", packageName: "ru.kfc", store: "rustore" },
+        { name: "McDonald's", packageName: "com.mcdonalds", store: "rustore" },
+        { name: "Вкусно и точка", packageName: "com.vkusnoitochka", store: "rustore" },
+        { name: "Burger King", packageName: "com.burgerking", store: "rustore" },
+
+        // ТРАНСПОРТ И НАВИГАЦИЯ (RuStore)
+        { name: "2ГИС", packageName: "ru.dublgis.dgismobile", store: "rustore" },
+        { name: "Яндекс Карты", packageName: "ru.yandex.yandexmaps", store: "rustore" },
+        { name: "Яндекс Go", packageName: "ru.yandex.taxi", store: "rustore" },
+        { name: "Яндекс Метро", packageName: "ru.yandex.metro", store: "rustore" },
+        { name: "Карты Mail.ru", packageName: "ru.mail.maps", store: "rustore" },
+        { name: "Urent", packageName: "com.urent.carsharing", store: "rustore" },
+
+        // СОЦСЕТИ И МЕССЕНДЖЕРЫ (RuStore)
+        { name: "ВКонтакте", packageName: "com.vkontakte.android", store: "rustore" },
+        { name: "Одноклассники", packageName: "ru.ok.android", store: "rustore" },
+        { name: "Telegram", packageName: "org.telegram.messenger", store: "rustore" },
+        { name: "VK Мессенджер", packageName: "com.vk.im", store: "rustore" },
+        { name: "ТамТам", packageName: "ru.mail.tamtam", store: "rustore" },
+        { name: "ICQ", packageName: "ru.icq", store: "rustore" },
         { name: "Yappy", packageName: "ru.yappy.app", store: "rustore" },
-        // Операторы
-        { name: "Мой МТС", packageName: "ru.mts.mymts", store: "googleplay" },
-        { name: "МегаФон", packageName: "ru.megafon.megafonapp", store: "googleplay" },
-        { name: "Билайн", packageName: "ru.beeline.beelineapp", store: "googleplay" },
-        { name: "Tele2", packageName: "ru.tele2.mytele2", store: "googleplay" },
-        { name: "Yota", packageName: "ru.yota.app", store: "googleplay" },
-        // Госуслуги
-        { name: "Госуслуги", packageName: "ru.gosuslugi.app", store: "googleplay" },
-        { name: "Госключ", packageName: "ru.gosuslugi.goskey", store: "googleplay" },
-        { name: "Моя Москва", packageName: "ru.mos.app", store: "googleplay" },
-        // Новости
-        { name: "Яндекс.Дзен", packageName: "ru.yandex.zen", store: "googleplay" },
-        { name: "РИА Новости", packageName: "ru.ria.ria", store: "googleplay" },
-        { name: "ТАСС", packageName: "ru.tass.app", store: "googleplay" },
-        { name: "Газета.Ru", packageName: "ru.gazeta.app", store: "googleplay" },
-        { name: "РБК", packageName: "ru.rbc.rbc", store: "googleplay" },
-        { name: "Известия", packageName: "ru.izvestia.iz", store: "googleplay" },
-        { name: "RT", packageName: "com.rt.news", store: "googleplay" },
-        // Видео, музыка
-        { name: "YouTube", packageName: "com.google.android.youtube", store: "googleplay" },
-        { name: "Кинопоиск", packageName: "ru.yandex.kinopoisk", store: "googleplay" },
+        { name: "Яндекс.Мессенджер", packageName: "ru.yandex.messenger", store: "rustore" },
+
+        // ОПЕРАТОРЫ (RuStore)
+        { name: "Мой МТС", packageName: "ru.mts.mymts", store: "rustore" },
+        { name: "МегаФон", packageName: "ru.megafon.megafonapp", store: "rustore" },
+        { name: "Билайн", packageName: "ru.beeline.beelineapp", store: "rustore" },
+        { name: "Tele2", packageName: "ru.tele2.mytele2", store: "rustore" },
+        { name: "Yota", packageName: "ru.yota.app", store: "rustore" },
+
+        // ГОСУСЛУГИ (RuStore)
+        { name: "Госуслуги", packageName: "ru.gosuslugi.app", store: "rustore" },
+        { name: "Госключ", packageName: "ru.gosuslugi.goskey", store: "rustore" },
+        { name: "Моя Москва", packageName: "ru.mos.app", store: "rustore" },
+        { name: "Госуслуги Авто", packageName: "ru.gosuslugi.auto", store: "rustore" },
+        { name: "Госуслуги Дом", packageName: "ru.gosuslugi.dom", store: "rustore" },
+
+        // НОВОСТИ И СМИ (RuStore)
+        { name: "Яндекс.Дзен", packageName: "ru.yandex.zen", store: "rustore" },
+        { name: "Новости Mail.ru", packageName: "ru.mail.news", store: "rustore" },
+        { name: "РИА Новости", packageName: "ru.ria.ria", store: "rustore" },
+        { name: "ТАСС", packageName: "ru.tass.app", store: "rustore" },
+        { name: "Газета.Ru", packageName: "ru.gazeta.app", store: "rustore" },
+        { name: "РБК", packageName: "ru.rbc.rbc", store: "rustore" },
+        { name: "Известия", packageName: "ru.izvestia.iz", store: "rustore" },
+        { name: "RT", packageName: "com.rt.news", store: "rustore" },
+        { name: "Спорт-Экспресс", packageName: "com.se.sportexpress", store: "rustore" },
+
+        // ВИДЕО, МУЗЫКА (RuStore для российских, Google Play для международных)
         { name: "Rutube", packageName: "ru.rutube.rutube", store: "rustore" },
-        { name: "VK Видео", packageName: "com.vk.video", store: "googleplay" },
-        { name: "VK Музыка", packageName: "com.vk.music", store: "googleplay" },
-        { name: "Яндекс Музыка", packageName: "ru.yandex.music", store: "googleplay" },
-        { name: "Звук", packageName: "ru.zvuk.app", store: "googleplay" },
-        { name: "Иви", packageName: "ru.ivi", store: "googleplay" },
-        { name: "Premier", packageName: "ru.premier", store: "googleplay" },
-        { name: "START", packageName: "ru.start.app", store: "googleplay" },
-        // Образование
-        { name: "Учи.ру", packageName: "ru.uchi.uchi", store: "googleplay" },
-        { name: "Дневник.ру", packageName: "ru.dnevnik.dnevnikapp", store: "googleplay" },
-        { name: "Яндекс Практикум", packageName: "ru.yandex.practicum", store: "googleplay" },
-        { name: "Skyeng", packageName: "com.skyeng", store: "googleplay" },
+        { name: "VK Видео", packageName: "com.vk.video", store: "rustore" },
+        { name: "VK Музыка", packageName: "com.vk.music", store: "rustore" },
+        { name: "Яндекс Музыка", packageName: "ru.yandex.music", store: "rustore" },
+        { name: "Звук", packageName: "ru.zvuk.app", store: "rustore" },
+        { name: "Кинопоиск", packageName: "ru.yandex.kinopoisk", store: "rustore" },
+        { name: "Иви", packageName: "ru.ivi", store: "rustore" },
+        { name: "Premier", packageName: "ru.premier", store: "rustore" },
+        { name: "START", packageName: "ru.start.app", store: "rustore" },
+        { name: "more.tv", packageName: "ru.more.tv", store: "rustore" },
+        { name: "KION", packageName: "ru.mts.kion", store: "rustore" },
+        { name: "Wink", packageName: "ru.rt.wink", store: "rustore" },
+        { name: "Амедиатека", packageName: "ru.amediateka.app", store: "rustore" },
+        // международные
+        { name: "YouTube", packageName: "com.google.android.youtube", store: "googleplay" },
+        { name: "Netflix", packageName: "com.netflix.mediaclient", store: "googleplay" },
+        { name: "Spotify", packageName: "com.spotify.music", store: "googleplay" },
+        { name: "Twitch", packageName: "tv.twitch.android.app", store: "googleplay" },
+
+        // ОБРАЗОВАНИЕ (RuStore)
+        { name: "Учи.ру", packageName: "ru.uchi.uchi", store: "rustore" },
+        { name: "Дневник.ру", packageName: "ru.dnevnik.dnevnikapp", store: "rustore" },
+        { name: "Яндекс Практикум", packageName: "ru.yandex.practicum", store: "rustore" },
+        { name: "Skyeng", packageName: "com.skyeng", store: "rustore" },
+        { name: "Stepik", packageName: "com.stepik", store: "rustore" },
+        { name: "Нетология", packageName: "ru.netology.app", store: "rustore" },
+        { name: "Умскул", packageName: "com.umschool", store: "rustore" },
         { name: "Duolingo", packageName: "com.duolingo", store: "googleplay" },
-        // Игры
+
+        // ИГРЫ (большинство в Google Play)
         { name: "Tanks Blitz", packageName: "net.wargaming.wot.blitz", store: "googleplay" },
         { name: "CarX Drift Racing 2", packageName: "com.carx.drift2", store: "googleplay" },
         { name: "Brawl Stars", packageName: "com.supercell.brawlstars", store: "googleplay" },
         { name: "Clash of Clans", packageName: "com.supercell.clashofclans", store: "googleplay" },
         { name: "Standoff 2", packageName: "com.standoff.standoff2", store: "googleplay" },
-        // Утилиты
-        { name: "Яндекс Браузер", packageName: "ru.yandex.browser", store: "googleplay" },
-        { name: "Яндекс Диск", packageName: "ru.yandex.disk", store: "googleplay" },
+        { name: "Grand Mobile", packageName: "com.grandmobile", store: "googleplay" },
+        { name: "PUBG Mobile", packageName: "com.tencent.ig", store: "googleplay" },
+        { name: "Call of Duty Mobile", packageName: "com.activision.callofduty.shooter", store: "googleplay" },
+        { name: "Genshin Impact", packageName: "com.miHoYo.GenshinImpact", store: "googleplay" },
+        { name: "Among Us", packageName: "com.innersloth.spacemafia", store: "googleplay" },
+        { name: "Last Day on Earth", packageName: "zombie.survival.craft.z", store: "googleplay" },
+
+        // УТИЛИТЫ И ИНСТРУМЕНТЫ (российские — RuStore, международные — Google Play)
+        { name: "Яндекс Браузер", packageName: "ru.yandex.browser", store: "rustore" },
+        { name: "Яндекс Диск", packageName: "ru.yandex.disk", store: "rustore" },
+        { name: "Яндекс Клавиатура", packageName: "ru.yandex.keyboard", store: "rustore" },
+        { name: "МойОфис", packageName: "com.myoffice", store: "rustore" },
+        { name: "Kaspersky", packageName: "com.kms.free", store: "rustore" },
+        { name: "Dr.Web", packageName: "com.drweb", store: "rustore" },
+        { name: "Punto Switcher", packageName: "com.yandex.punto", store: "rustore" },
+        { name: "Почта Mail.ru", packageName: "ru.mail.mailapp", store: "rustore" },
+        { name: "CapCut", packageName: "com.lemon.lvoverseas", store: "googleplay" },
         { name: "Gmail", packageName: "com.google.android.gm", store: "googleplay" },
         { name: "Google Drive", packageName: "com.google.android.apps.docs", store: "googleplay" },
         { name: "Microsoft Office", packageName: "com.microsoft.office.officehubrow", store: "googleplay" },
-        { name: "Kaspersky", packageName: "com.kms.free", store: "googleplay" },
-        { name: "Dr.Web Light", packageName: "com.drweb", store: "googleplay" },
-        { name: "CapCut", packageName: "com.lemon.lvoverseas", store: "googleplay" },
-        // Путешествия
-        { name: "Aviasales", packageName: "com.aviasales.android", store: "googleplay" },
-        { name: "Туту.ру", packageName: "ru.tutu.android", store: "googleplay" },
-        { name: "Яндекс Путешествия", packageName: "ru.yandex.travel", store: "googleplay" },
-        // Еда и доставка
-        { name: "Яндекс Еда", packageName: "ru.yandex.eda", store: "googleplay" },
-        { name: "Самокат", packageName: "com.samokat.android", store: "googleplay" },
-        { name: "Delivery Club", packageName: "com.deliveryclub", store: "googleplay" },
-        { name: "Кухня На Районе", packageName: "com.kuhnanyaraione", store: "googleplay" },
-        { name: "Яндекс Лавка", packageName: "ru.yandex.lavka", store: "googleplay" },
-        { name: "СберМаркет", packageName: "ru.sbermarket", store: "googleplay" },
-        { name: "KFC", packageName: "ru.kfc", store: "googleplay" },
-        { name: "McDonald's", packageName: "com.mcdonalds", store: "googleplay" },
-        { name: "Вкусно и точка", packageName: "com.vkusnoitochka", store: "googleplay" },
-        { name: "Burger King", packageName: "com.burgerking", store: "googleplay" },
-        // Дополнительно
+        { name: "Notion", packageName: "com.notion.labs", store: "googleplay" },
+        { name: "Todoist", packageName: "com.todoist", store: "googleplay" },
+        { name: "Evernote", packageName: "com.evernote", store: "googleplay" },
+
+        // ПУТЕШЕСТВИЯ (RuStore)
+        { name: "Aviasales", packageName: "com.aviasales.android", store: "rustore" },
+        { name: "Туту.ру", packageName: "ru.tutu.android", store: "rustore" },
+        { name: "Яндекс Путешествия", packageName: "ru.yandex.travel", store: "rustore" },
+        { name: "Ostrovok", packageName: "ru.ostrovok", store: "rustore" },
+        { name: "OneTwoTrip", packageName: "com.onetwotrip", store: "rustore" },
+        { name: "Maps.me", packageName: "com.mapswithme.maps.pro", store: "rustore" },
+
+        // ДРУГИЕ ПОПУЛЯРНЫЕ (международные → Google Play)
         { name: "ChatGPT", packageName: "com.openai.chatgpt", store: "googleplay" },
-        { name: "RuStore", packageName: "ru.rustore", store: "rustore" }
+        { name: "WhatsApp", packageName: "com.whatsapp", store: "googleplay" },
+        { name: "Instagram", packageName: "com.instagram.android", store: "googleplay" },
+        { name: "Facebook", packageName: "com.facebook.katana", store: "googleplay" },
+        { name: "Twitter", packageName: "com.twitter.android", store: "googleplay" },
+        { name: "LinkedIn", packageName: "com.linkedin.android", store: "googleplay" },
+        { name: "Zoom", packageName: "us.zoom.videomeetings", store: "googleplay" },
+        { name: "Discord", packageName: "com.discord", store: "googleplay" },
+        { name: "TikTok", packageName: "com.zhiliaoapp.musically", store: "googleplay" }
     ];
 
-    // Сортировка (популярные — не выделяем, просто оставляем как есть)
     const sortedServices = services;
-
-    // Умный поиск (fuse.js)
     const fuse = new Fuse(sortedServices, { keys: ['name'], threshold: 0.3, ignoreLocation: true });
 
-    // --------------------------------------------------------------
-    // 2. ФУНКЦИЯ ОТКРЫТИЯ ПРИЛОЖЕНИЯ / МАГАЗИНА (простой переход)
-    // --------------------------------------------------------------
     function openAppOrStore(packageName, store) {
-        let url = '';
-        if (store === 'rustore') {
-            url = `https://www.rustore.ru/catalog/app/${packageName}`;
-        } else {
-            url = `https://play.google.com/store/apps/details?id=${packageName}`;
-        }
-        window.location.href = url;
+        let url = store === 'rustore' 
+            ? `https://www.rustore.ru/catalog/app/${packageName}`
+            : `https://play.google.com/store/apps/details?id=${packageName}`;
+        window.open(url, '_blank');
     }
 
-    // --------------------------------------------------------------
-    // 3. РЕНДЕР СЕРВИСОВ НА ГЛАВНОЙ
-    // --------------------------------------------------------------
     function renderServices(query = '') {
         let items = sortedServices;
         if (query.trim()) {
@@ -270,10 +312,14 @@
         if (!container) return;
         container.innerHTML = '';
         items.forEach(service => {
+            const badge = service.store === 'rustore' ? '<span class="badge-rustore">RuStore</span>' : '<span class="badge-google">Google Play</span>';
             const card = document.createElement('div');
             card.className = 'service-card';
             card.innerHTML = `
-                <span class="service-name">${service.name}</span>
+                <div style="flex:1">
+                    <div class="service-name">${service.name}</div>
+                    ${badge}
+                </div>
                 <div>
                     <button class="open-btn" data-pkg="${service.packageName}" data-store="${service.store}">Открыть</button>
                     <button class="add-to-folder-btn" data-name="${service.name}" data-pkg="${service.packageName}" data-store="${service.store}" title="Добавить в папку">📂+</button>
@@ -281,7 +327,6 @@
             `;
             container.appendChild(card);
         });
-        // Обработчики открытия
         document.querySelectorAll('.open-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const pkg = btn.getAttribute('data-pkg');
@@ -293,46 +338,7 @@
     }
 
     // --------------------------------------------------------------
-    // 4. ДОБАВЛЕНИЕ СЕРВИСА В ПАПКУ (только авторизованные)
-    // --------------------------------------------------------------
-    function attachAddToFolderHandlers() {
-        const currentUser = localStorage.getItem('currentUser');
-        if (!currentUser) return;
-        const btns = document.querySelectorAll('.add-to-folder-btn');
-        btns.forEach(btn => {
-            btn.removeEventListener('click', btn._listener);
-            const handler = (e) => {
-                const name = btn.getAttribute('data-name');
-                const pkg = btn.getAttribute('data-pkg');
-                const store = btn.getAttribute('data-store');
-                const folders = getUserFolders(currentUser);
-                if (folders.length === 0) {
-                    alert('У вас нет папок. Сначала создайте папку на вкладке "Мои папки".');
-                    return;
-                }
-                const folderName = prompt(`В какую папку добавить "${name}"? Доступные: ${folders.map(f => f.name).join(', ')}`);
-                if (!folderName) return;
-                const folder = folders.find(f => f.name === folderName);
-                if (folder) {
-                    if (!folder.services.some(s => s.packageName === pkg)) {
-                        folder.services.push({ name, packageName: pkg, store });
-                        saveUserFolders(currentUser, folders);
-                        renderFoldersList();
-                        alert(`Добавлено в папку "${folderName}"`);
-                    } else {
-                        alert('Этот сервис уже есть в этой папке');
-                    }
-                } else {
-                    alert('Папка не найдена');
-                }
-            };
-            btn.addEventListener('click', handler);
-            btn._listener = handler;
-        });
-    }
-
-    // --------------------------------------------------------------
-    // 5. ЛИЧНЫЙ КАБИНЕТ (LOCALSTORAGE)
+    // 2. ЛИЧНЫЙ КАБИНЕТ И ПАПКИ (localStorage)
     // --------------------------------------------------------------
     function getUsers() { return JSON.parse(localStorage.getItem('app_users') || '[]'); }
     function saveUsers(users) { localStorage.setItem('app_users', JSON.stringify(users)); }
@@ -344,10 +350,7 @@
     function saveUserFolders(login, folders) {
         const users = getUsers();
         const idx = users.findIndex(u => u.login === login);
-        if (idx !== -1) {
-            users[idx].folders = folders;
-            saveUsers(users);
-        }
+        if (idx !== -1) { users[idx].folders = folders; saveUsers(users); }
     }
     function register(login, password) {
         let users = getUsers();
@@ -386,28 +389,16 @@
         }
         const foldersAuth = document.getElementById('foldersAuthContent');
         const foldersNoAuth = document.getElementById('foldersRequireAuth');
-        if (isLogged) {
-            foldersAuth.style.display = 'block';
-            foldersNoAuth.style.display = 'none';
-        } else {
-            foldersAuth.style.display = 'none';
-            foldersNoAuth.style.display = 'block';
-        }
+        if (isLogged) { foldersAuth.style.display = 'block'; foldersNoAuth.style.display = 'none'; }
+        else { foldersAuth.style.display = 'none'; foldersNoAuth.style.display = 'block'; }
     }
-
-    // --------------------------------------------------------------
-    // 6. ОТОБРАЖЕНИЕ ПАПОК
-    // --------------------------------------------------------------
     function renderFoldersList() {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) return;
         const folders = getUserFolders(currentUser);
         const container = document.getElementById('foldersList');
         if (!container) return;
-        if (folders.length === 0) {
-            container.innerHTML = '<div>📭 Нет папок. Создайте первую!</div>';
-            return;
-        }
+        if (folders.length === 0) { container.innerHTML = '<div>📭 Нет папок. Создайте первую!</div>'; return; }
         container.innerHTML = '';
         folders.forEach((folder, idx) => {
             const folderDiv = document.createElement('div');
@@ -421,23 +412,22 @@
             `;
             container.appendChild(folderDiv);
             const servicesContainer = folderDiv.querySelector(`#folder-services-${idx}`);
-            if (folder.services.length === 0) {
-                servicesContainer.innerHTML = '<div style="color:var(--muted);">Нет сервисов</div>';
-            } else {
+            if (folder.services.length === 0) servicesContainer.innerHTML = '<div style="color:var(--muted);">Нет сервисов</div>';
+            else {
                 servicesContainer.innerHTML = folder.services.map(s => `
                     <div class="service-in-folder">
                         <span>${s.name}</span>
                         <button class="open-folder-service" data-pkg="${s.packageName}" data-store="${s.store}">▶ Открыть</button>
                     </div>
                 `).join('');
-            }
-            servicesContainer.querySelectorAll('.open-folder-service').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const pkg = btn.getAttribute('data-pkg');
-                    const store = btn.getAttribute('data-store');
-                    openAppOrStore(pkg, store);
+                servicesContainer.querySelectorAll('.open-folder-service').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const pkg = btn.getAttribute('data-pkg');
+                        const store = btn.getAttribute('data-store');
+                        openAppOrStore(pkg, store);
+                    });
                 });
-            });
+            }
         });
         document.querySelectorAll('.delete-folder-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -451,7 +441,6 @@
             });
         });
     }
-
     function createFolder(name) {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) return alert('Войдите в аккаунт');
@@ -461,9 +450,36 @@
         saveUserFolders(currentUser, folders);
         renderFoldersList();
     }
+    function attachAddToFolderHandlers() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) return;
+        document.querySelectorAll('.add-to-folder-btn').forEach(btn => {
+            btn.removeEventListener('click', btn._listener);
+            const handler = (e) => {
+                const name = btn.getAttribute('data-name');
+                const pkg = btn.getAttribute('data-pkg');
+                const store = btn.getAttribute('data-store');
+                const folders = getUserFolders(currentUser);
+                if (folders.length === 0) { alert('У вас нет папок. Сначала создайте папку.'); return; }
+                const folderName = prompt(`В какую папку добавить "${name}"? Доступные: ${folders.map(f => f.name).join(', ')}`);
+                if (!folderName) return;
+                const folder = folders.find(f => f.name === folderName);
+                if (folder) {
+                    if (!folder.services.some(s => s.packageName === pkg)) {
+                        folder.services.push({ name, packageName: pkg, store });
+                        saveUserFolders(currentUser, folders);
+                        renderFoldersList();
+                        alert(`Добавлено в папку "${folderName}"`);
+                    } else alert('Этот сервис уже есть в этой папке');
+                } else alert('Папка не найдена');
+            };
+            btn.addEventListener('click', handler);
+            btn._listener = handler;
+        });
+    }
 
     // --------------------------------------------------------------
-    // 7. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // 3. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК И ЗАПУСК
     // --------------------------------------------------------------
     function initTabs() {
         const btns = document.querySelectorAll('.tab-btn');
@@ -480,10 +496,6 @@
             });
         });
     }
-
-    // --------------------------------------------------------------
-    // 8. ЗАПУСК
-    // --------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', () => {
         initTabs();
         renderServices('');
@@ -505,12 +517,6 @@
             const name = document.getElementById('newFolderName').value.trim();
             if (name) { createFolder(name); document.getElementById('newFolderName').value = ''; }
             else alert('Введите название папки');
-        });
-        document.getElementById('sendSupportBtn').addEventListener('click', () => {
-            const msg = document.getElementById('supportMessage').value.trim();
-            if (!msg) return alert('Введите сообщение');
-            alert(`Спасибо! Ваше сообщение отправлено разработчику (демо). Текст: ${msg}`);
-            document.getElementById('supportMessage').value = '';
         });
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) updateProfileUI(true, savedUser);
